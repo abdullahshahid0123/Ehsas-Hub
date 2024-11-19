@@ -5,8 +5,8 @@ import axios from "axios";
 const login = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [value,setValue]=useState({
-    email:" ",
-    password:" "
+    email:"",
+    password:""
 
   })
   const handleInput=(e)=>{
@@ -63,7 +63,6 @@ const login = () => {
               <span className="text-danger ">{errorMessage}</span>
             </div>
           )}
-
           <form onSubmit={Submit}>
             <div className="row">
               <div className="col-12 mb-4">

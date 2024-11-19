@@ -24,7 +24,7 @@ const Profileview = () => {
                 <div className='heart'><i class="fa-regular fa-heart"></i></div>
 
                 <div className="switch-to-donor">
-                    <button className="donor-button" onClick={toggleForm}>Switch to Donor</button>
+                    <button className="donor-button" onClick={toggleForm}>Switch to Donate</button>
                 </div>
                 <div className="navbar-profile">
                     <NavLink to="/Profileview"><img src="" alt="" /><i class="fa-solid fa-user"></i></NavLink>
@@ -34,39 +34,37 @@ const Profileview = () => {
 
 
 
-            <div class="container profile-container">
+            <div class="container profile-container bg-gray">
             
-            <div class="profile-left col-lg-3 col-md-4 col-sm-12">
+            <div class="profile-left col-lg-4 col-md-4 col-sm-12">
                 <div class="text-center">
-                    <img src="https://via.placeholder.com/150" alt="Profile Image" class="profile-img"/>
+                     <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8bWVucyUyMHdpdGglMjBjb2F0fGVufDB8fDB8fHww" alt="Profile Image" class="profile-img"/>
+                    
                     <h3 class="mt-2">John Doe</h3>
                     <p>Web Developer</p>
                 </div>
                 
                 <div>
-                    <h4 className='p-3'>Contact Information</h4>
-                    <ul class="list-group p-4">
+                    <h4 className='' style={{"padding-left":"60px", "padding-top":"30px"}}>Contact Information</h4>
+                    <ul class="list-group ">
                         <li class="list-group-item"><strong>Email:</strong> johndoe@example.com</li>
                         <li class="list-group-item"><strong>Phone:</strong> +1 234 567 890</li>
                         <li class="list-group-item"><strong>Gender:</strong> Male</li>
                     </ul>
                 </div>
                 
-                <div>
-                    <h4 className='p-3'>Social Links</h4>
-                    <div class="social-icons ">
-                        <a href="#" class="text-dark"><i class="fab fa-facebook"></i></a>
-                        <a href="#" class="text-dark"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-dark"><i class="fab fa-linkedin"></i></a>
-                    </div>
-                </div>
+                
             </div>
         
            
-            <div class="profile-right col-lg-9 col-md-8 col-sm-12">
+            
+            <div class="profile-right col-lg-8 col-md-8 col-sm-12">
                 <div>
-                    <h4>Documents</h4>
-                    <img src="https://via.placeholder.com/400x300" alt="ID Card Image" class="id-card-img"/>
+                <div className='' style={{height:"60px", boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)", backgroundColor: "white" , marginBottom: "16px" , borderRadius: "6px",
+              textAlign: "center",  display: "flex",    padding: "17px 16px",  fontWeight: "bold" , fontSize: "16px"   }}>
+                Activities
+                </div>
+                    <img src=" " alt="ID Card Image" class="id-card-img"/>
                 </div>
                 
                 <div class="mt-4">

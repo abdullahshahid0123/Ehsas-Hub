@@ -11,7 +11,7 @@ export const Sidebar = () => {
           <ul className="sidebar-nav">
             <li className="sidebar-header">Admin Elements</li>
             <li className="sidebar-item">
-              <NavLink to="/" className="sidebar-link">
+              <NavLink to="/AdminDashboard" className="sidebar-link">
                 <i className="fa-solid fa-house pe-2"></i>Dashboard
               </NavLink>
             </li>
@@ -47,44 +47,11 @@ export const Sidebar = () => {
               <a
                 href="#"
                 className="sidebar-link collapsed"
-                data-bs-target="#pages1"
-                data-bs-toggle="collapse"
-                arua-expended="false"
-              >
-              <i class="fa-solid fa-user"></i> Donor
-              </a>
-              <ul
-                id="pages1"
-                className="sidebar-dropdown list-unstyled collapse"
-                data-bs-parent="#sidebar"
-              >
-                <li className="sidebar-item">
-                  <a href="#" className="sidebar-link">
-                    <i className="fa-solid fa-clipboard-user px-2"></i>New Request
-
-                  </a>
-                </li>
-                <li className="sidebar-item">
-                  <a href="#" className="sidebar-link">
-                    <i className="fa-solid fa-check px-2"></i>Approved Request
-                  </a>
-                </li>
-                <li className="sidebar-item">
-                  <a href="#" className="sidebar-link">
-                    <i className="fa-solid fa-eye px-2"></i>Complete Request
-                  </a>
-                </li>
-              </ul>
-            </li>
-            <li className="sidebar-item">
-              <a
-                href="#"
-                className="sidebar-link collapsed"
                 data-bs-target="#pages2"
                 data-bs-toggle="collapse"
                 arua-expended="false"
               >
-              <i class="fa-solid fa-people-line"></i> Needy
+              <i class="fa-solid fa-user"></i> Donor
               </a>
               <ul
                 id="pages2"
@@ -92,20 +59,53 @@ export const Sidebar = () => {
                 data-bs-parent="#sidebar"
               >
                 <li className="sidebar-item">
-                  <a href="#" className="sidebar-link">
+                  <NavLink to="/Dnewrequest" className="sidebar-link">
                     <i className="fa-solid fa-clipboard-user px-2"></i>New Request
 
-                  </a>
+                  </NavLink>
                 </li>
                 <li className="sidebar-item">
-                  <a href="#" className="sidebar-link">
+                  <NavLink to="/Dapproverequest" className="sidebar-link">
                     <i className="fa-solid fa-check px-2"></i>Approved Request
-                  </a>
+                  </NavLink>
                 </li>
                 <li className="sidebar-item">
-                  <a href="#" className="sidebar-link">
+                  <NavLink to="/Dcompleterequest" className="sidebar-link">
                     <i className="fa-solid fa-eye px-2"></i>Complete Request
-                  </a>
+                  </NavLink>
+                </li>
+              </ul>
+            </li>
+            <li className="sidebar-item">
+              <a
+                href="#"
+                className="sidebar-link collapsed"
+                data-bs-target="#pages3"
+                data-bs-toggle="collapse"
+                arua-expended="false"
+              >
+              <i class="fa-solid fa-people-line"></i> Needy
+              </a>
+              <ul
+                id="pages3"
+                className="sidebar-dropdown list-unstyled collapse"
+                data-bs-parent="#sidebar"
+              >
+                <li className="sidebar-item">
+                  <NavLink to="/Nnewrequest" className="sidebar-link">
+                    <i className="fa-solid fa-clipboard-user px-2"></i>New Request
+
+                  </NavLink>
+                </li>
+                <li className="sidebar-item">
+                  <NavLink to="/Napproverequest" className="sidebar-link">
+                    <i className="fa-solid fa-check px-2"></i>Approved Request
+                  </NavLink>
+                </li>
+                <li className="sidebar-item">
+                  <NavLink to="/Ncompleterequest" className="sidebar-link">
+                    <i className="fa-solid fa-eye px-2"></i>Complete Request
+                  </NavLink>
                 </li>
               </ul>
             </li>
@@ -113,27 +113,26 @@ export const Sidebar = () => {
             <a
               href="#"
               className="sidebar-link collapsed"
-              data-bs-target="#pages3"
+              data-bs-target="#pages4"
               data-bs-toggle="collapse"
               arua-expended="false"
             >
             <i class="fa-solid fa-handshake-angle"></i> Volunteer
             </a>
             <ul
-              id="pages3"
+              id="pages4"
               className="sidebar-dropdown list-unstyled collapse"
               data-bs-parent="#sidebar"
             >
-              
               <li className="sidebar-item">
-                <a href="#" className="sidebar-link">
+                <NavLink to="/Vapproverequest" className="sidebar-link">
                   <i className="fa-solid fa-check px-2"></i>Approved Request
-                </a>
+                </NavLink>
               </li>
               <li className="sidebar-item">
-                <a href="#" className="sidebar-link">
+                <NavLink to="/Vcompleterequest" className="sidebar-link">
                   <i className="fa-solid fa-eye px-2"></i>Complete Request
-                </a>
+                </NavLink>
               </li>
             </ul>
           </li>

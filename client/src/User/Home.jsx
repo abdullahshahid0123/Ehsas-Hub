@@ -24,7 +24,7 @@ const Home = () => {
                 <div className='heart'><i class="fa-regular fa-heart"></i></div>
 
                 <div className="switch-to-donor">
-                    <button className="donor-button" onClick={toggleForm}>Switch to Donor</button>
+                    <button className="donor-button" onClick={toggleForm}>Switch to Donate</button>
                 </div>
                 <div className="navbar-profile">
                     <NavLink to="/Profileview"><img src="" alt="" /><i class="fa-solid fa-user"></i></NavLink>

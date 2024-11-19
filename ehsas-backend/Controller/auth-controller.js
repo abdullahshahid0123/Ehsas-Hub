@@ -53,7 +53,7 @@ const LoginUser = async (req, res) => {
   con.query(sql, [email], async (err, data) => {
     if (err) throw err;
     if (data < 0) {
-      return res.json({ msg: "try to login with correct credential", data });
+      return res.json({ msg: "user not found!!!", data });
     }
     const user = data[0];
     try {

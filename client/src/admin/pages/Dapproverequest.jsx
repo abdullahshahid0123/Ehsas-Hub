@@ -1,40 +1,20 @@
-import React, { useState, useEffect } from "react";
-
+import React, { useState } from "react";
 import { Sidebar } from "../components/Sidebar";
 import { Topbar } from "../components/Topbar";
-import axios from "axios";
-const ManageuserAccount = () => {
 
-useEffect(() => {
-  const fetchusers=async()=>{
-  try {
-    const res=await axios.get("http://localhost:8000/api/users")
-    
-  } catch (error) {
-    
-  }
-  }
-
-  
-}, [])
-
-
-
-
-
-  const [Open, setOpen] = useState(false);
-  const toggleOpen = () => {
-    setOpen((state) => !state);
-  };
-
+const Dapproverequest = () => {
+    const [Open, setOpen] = useState(false);
+    const toggleOpen = () => {
+      setOpen((state) => !state);
+    };
   return (
     <>
-      <div className="wrapper">
+    <div className="wrapper">
         <Sidebar />
         <div className="main">
           <Topbar />
           <div className="container mt-4">
-            <h2>User List</h2>
+            <h2>Donor Approved request List</h2>
             <table className="table table-striped table-bordered text-center">
               <thead>
                 <tr>
@@ -74,6 +54,7 @@ useEffect(() => {
                           >
                             View detail
                           </a>
+                          <li><a class="dropdown-item" href="#">Freeze</a></li>
                         </li>
                       </ul>
                     </div>
@@ -111,7 +92,7 @@ useEffect(() => {
               >
                 <div className="modal-content">
                   <div className="modal-header justify-content-center">
-                    <h5 className="modal-title mt-4">Donor Detail</h5>
+                    <h5 className="modal-title mt-4">Donor Approved request Detail</h5>
                   </div>
                   <div className="modal-body">
                     <form>
@@ -236,6 +217,7 @@ useEffect(() => {
         </div>
       </div>
     </>
-  );
-};
-export default ManageuserAccount;
+  )
+}
+
+export default Dapproverequest
