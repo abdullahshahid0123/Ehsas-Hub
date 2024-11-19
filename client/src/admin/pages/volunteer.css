@@ -1,0 +1,5 @@
+@media (max-width: 768px) {
+    th:nth-child(3), td:nth-child(3) { /* Hides Phone Number */
+      display: none;
+    }
+  }

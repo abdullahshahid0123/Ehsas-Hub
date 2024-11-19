@@ -1,0 +1,290 @@
+
+.app-container {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f2f5;
+        }
+        .container-user{
+          
+            width: 90%;
+            max-width: 900px;
+            background-color: #ffffff;
+            
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .header {
+            background-color: #4a90e2;
+            color: #fff;
+            padding: 20px;
+            font-size: 26px;
+            text-align: center;
+            border-bottom: 2px solid #357ab8;
+            
+        }
+        .input-box {
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .input-box input {
+            width: 100%;
+            max-width: 600px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .input-box input:focus {
+            border-color: #4a90e2;
+        }
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            padding: 20px;
+        }
+        .button {
+            flex: 1 1 140px;
+            margin: 10px;
+            background-color: #f0f2f5;
+            color: #333;
+            padding: 12px 20px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+        .button:hover {
+            background-color: #e0e4e8;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .footer {
+            background-color: #f1f1f1;
+            padding: 15px;
+            text-align: center;
+            font-size: 14px;
+            color: #555;
+        }
+        .button i {
+            color: #4a90e2;
+        }
+        @media (max-width: 600px) {
+            .buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            .button {
+                width: 100%;
+                max-width: 250px;
+            }
+            .container-user {
+                margin-top: 500px;
+            }
+        } 
+ /* navbar */
+
+
+ .navbar-user {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background-color: #4a90e2;
+    color: white;
+}
+
+/* Logo */
+.navbar-logo a {
+    font-size: 24px;
+    text-decoration: none;
+    color: white;
+}
+
+/* Profile Icon */
+.navbar-profile {
+    margin-left: 30px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #4a90e2; /* Adjusted for visibility against white background */
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+/* Icon Styles */
+.heart, .mail, .bell {
+    font-size: 18px;
+    margin-left: 30px;
+    color: white;
+    cursor: pointer;
+}
+
+.bell {
+    margin-left: auto; /* Pushes bell icon to the far right */
+}
+
+/* Switch to Donor button */
+.switch-to-donor {
+    margin-left: 40px;
+}
+
+.donor-button {
+    background-color: var(--text-color);
+    color: var(--navbar-bg);
+    border: 2px solid transparent;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.donor-button:hover {
+    color: #745c36;
+    transform: scale(1.1); /* Increased scale for a more noticeable hover effect */
+}
+
+/* Responsive Styling for Mobile */
+@media screen and (max-width: 768px) {
+    .heart, .mail, .bell {
+        display: none;
+    }
+     
+       
+   
+    .switch-to-donor{
+        margin-left: auto;
+    }
+}
+
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  /* register.jsx */
+
+  .custom-btn {
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.custom-btn:hover {
+    background-color: #0056b3; 
+    transform: scale(1.05); 
+}
+
+
+/* this is profile view */
+.profile-container {
+    display: flex;
+    flex-wrap: wrap;  /* Allows the layout to wrap on smaller screens */
+    margin-top: 30px;
+    padding: 20px;
+}
+.profile-left {
+    padding-right: 30px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+.profile-right {
+    flex-grow: 1;
+    padding-left: 30px;
+}
+.profile-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 20px;
+}
+.id-card-img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 8px;
+}
+.list-group-item {
+    border: none;
+    padding: 10px 0;
+}
+.list-group {
+    border: none;
+    padding: 0px;
+}
+.social-icons i {
+    font-size: 1.5em;
+    margin-right: 10px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .profile-container {
+        flex-direction: column;
+    }
+    .profile-left {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .profile-right {
+        width: 100%;
+        padding-left: 0;
+    }
+    .profile-img {
+        width: 120px;
+        height: 120px;
+    }
+    .id-card-img {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+/* For extra small screens (mobile) */
+@media (max-width: 576px) {
+    .profile-img {
+        width: 100px;
+        height: 100px;
+    }
+    .id-card-img {
+        width: 100%;
+        height: auto;
+    }
+}
+
+
+
+
+
