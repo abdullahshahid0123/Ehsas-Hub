@@ -69,7 +69,7 @@ const LoginUser = async (req, res) => {
       return res.json({ msg: "user login successfuly", token });
     } catch (error) {
         console.error("Password comparison error:", error);
-        return res.status(500).json({ msg: "An error occurred during login." });
+        return res.status(500).json({ msg: "An error occurred during login. " });
     }
   });
 };
