@@ -1,26 +1,26 @@
 import React, { useState, useEffect } from "react";
-
 import { Sidebar } from "../components/Sidebar";
 import { Topbar } from "../components/Topbar";
 import axios from "axios";
+
 const ManageuserAccount = () => {
+  const [post, setpost] = useState([]);
+  const fetchusers = async () => {
+    await axios
+      .get("http://localhost:8000/fetch-user")
+      .then((res) => {
+        setpost(res.data.data);
+        console.log(setpost);
+      })
+      .catch((err) => {
+        console.log(" error fetching", err);
+      });
+  };
 
-useEffect(() => {
-  const fetchusers=async()=>{
-  try {
-    const res=await axios.get("http://localhost:8000/api/users")
-    
-  } catch (error) {
-    
-  }
-  }
-
-  
-}, [])
-
-
-
-
+  useEffect(() => {
+    console.log("user");
+    fetchusers();
+  }, []);
 
   const [Open, setOpen] = useState(false);
   const toggleOpen = () => {
@@ -46,39 +46,49 @@ useEffect(() => {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>
-                    <strong>John Doe</strong>
-                  </td>
-                  <td>johndoe@example.com</td>
-                  <td>(123) 456-7890</td>
-                  <td>
-                    <span className="btn btn-success">Active</span>
-                  </td>
-                  <td>
-                    <div class="dropdown">
-                      <button
-                        class="btn btn-warning dropdown-toggle"
-                        type="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                      >
-                        Action
-                      </button>
-                      <ul class="dropdown-menu">
-                        <li>
-                          <a
-                            class="dropdown-item"
-                            href="#"
-                            onClick={toggleOpen}
-                          >
-                            View detail
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </td>
-                </tr>
+                {Array.isArray(post) && post.length > 0 ? (
+                  post.map((rs) => {
+                    const { id, name, email, phone } = rs;
+                    return (
+                      <tr key={id}>
+                        <td>
+                          <strong>{name}</strong>
+                        </td>
+                        <td>{email}</td>
+                        <td>{phone}</td>
+                        <td>
+                          <span className="btn btn-success">Active</span>
+                        </td>
+                        <td>
+                          <div className="dropdown">
+                            <button
+                              className="btn btn-warning dropdown-toggle"
+                              type="button"
+                              data-bs-toggle="dropdown"
+                              aria-expanded="false"
+                            >
+                              Action
+                            </button>
+                            <ul className="dropdown-menu">
+                              <li>
+                                <a className="dropdown-item" href="#" onClick={()=>toggleOpen(rs)}>
+                                  View detail
+                                </a>
+                                <li><a class="dropdown-item" href="#">Freeze</a></li>
+                              </li>
+                            </ul>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
+                ) : (
+                  <tr>
+                    <td colSpan="5" className="text-center">
+                      No data available.
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
@@ -111,7 +121,7 @@ useEffect(() => {
               >
                 <div className="modal-content">
                   <div className="modal-header justify-content-center">
-                    <h5 className="modal-title mt-4">Donor Detail</h5>
+                    <h5 className="modal-title mt-4">User Detail</h5>
                   </div>
                   <div className="modal-body">
                     <form>
@@ -123,7 +133,8 @@ useEffect(() => {
                             type="text"
                             className="form-control"
                             name="fullName"
-                            required
+                            value={selectedUser ? selectedUser.name : ""}
+                            
                           />
                         </div>
                         <div className="col-md-6">
@@ -132,11 +143,11 @@ useEffect(() => {
                             type="email"
                             className="form-control"
                             name="email"
-                            required
+                            
                           />
                         </div>
                       </div>
-
+    
                       {/* Single Fields Below */}
                       <div className="row mb-3">
                         <div className="col-md-6">
@@ -145,17 +156,17 @@ useEffect(() => {
                             type="text"
                             className="form-control"
                             name="phone"
-                            required
+                            
                           />
                         </div>
-
+    
                         <div className="col-md-6">
                           <label className="form-label">Address</label>
                           <input
                             type="text"
                             className="form-control"
                             name="address"
-                            required
+                            
                           />
                         </div>
                       </div>
@@ -166,7 +177,7 @@ useEffect(() => {
                             type="password"
                             className="form-control"
                             name="password"
-                            required
+                            
                           />
                         </div>
                         <div className="col-md-6">
@@ -175,16 +186,16 @@ useEffect(() => {
                             type="gender"
                             className="form-control"
                             name="gender"
-                            required
+                            
                           />
                         </div>
                       </div>
-
+    
                       <div className="mb-3">
                         <label className="form-label">
                           ID Card / Student Card Photo
                         </label>
-
+    
                         <div>
                           <img
                             src="imahe"
@@ -197,10 +208,10 @@ useEffect(() => {
                             }}
                           />
                         </div>
-
+    
                         <p>No image available</p>
                       </div>
-
+    
                       <div className="mb-3">
                         <label className="form-label">Comments</label>
                         <textarea
@@ -211,7 +222,7 @@ useEffect(() => {
                           required
                         ></textarea>
                       </div>
-
+    
                       <div className="modal-footer">
                         <button
                           type="button"
@@ -238,4 +249,5 @@ useEffect(() => {
     </>
   );
 };
+
 export default ManageuserAccount;

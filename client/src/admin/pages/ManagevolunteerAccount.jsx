@@ -11,10 +11,7 @@ const ManagevolunteerAccount = () => {
     setForm(state => !state)
 
   }
-
-
-
-
+  
   return (
     <>
       <div className="wrapper">
@@ -128,7 +125,6 @@ const ManagevolunteerAccount = () => {
                         <li><a class="dropdown-item" href="#">Freeze</a></li>
                       </ul>
                     </div>
-
                   </td>
                 </tr>
               </tbody>
@@ -136,9 +132,6 @@ const ManagevolunteerAccount = () => {
           </div>
         </div>
       </div>
-
-
-
     </>
   )
 }

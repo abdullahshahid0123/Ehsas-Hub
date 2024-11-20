@@ -15,7 +15,6 @@ const CreateUser = async (req, res) => {
     !password ||
     !address ||
     !gender ||
-    !password ||
     !image
   ) {
     return res.status(500).json({ msg: "Fields are required" });
@@ -74,7 +73,24 @@ const LoginUser = async (req, res) => {
   });
 };
 
+const FetchUser=async(req,res)=>{
+    console.log("fetchuser")
+    const sql="SELECT * FROM `users` "
+     con.query(sql,(err,data)=>{
+        if (err) {
+            console.log("error",err)
+            return res.status.json({msg: "error in fetching",err})
+            
+        }
+        return res.json({msg:"blog fetch",data})
+
+    })
+
+
+}
+
 module.exports = {
   CreateUser,
   LoginUser,
+  FetchUser
 };
