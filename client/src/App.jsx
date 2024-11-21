@@ -15,6 +15,7 @@ import Ncompleterequest from "./admin/pages/Ncompleterequest";
 import Napproverequest from "./admin/pages/Napproverequest";
 import Vcompleterequest from "./admin/pages/Vcompleterequest";
 import Vapproverequest from "./admin/pages/Vapproverequest";
+import UserInterest from "./User/UserInterest";
 
 function App() {
   return (
@@ -27,6 +28,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/verifyuser" element={<Verifyuser />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/userinterest" element={<UserInterest />} />
+
           {/*admin Routes*/}
 
           <Route path="/Dnewrequest" element={<Dnewrequest/>} />

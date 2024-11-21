@@ -8,15 +8,7 @@ const CreateUser = async (req, res) => {
   const { name, email, phone, password, address, gender, image } = req.body;
   console.log("req body", req.body);
 
-  if (
-    !name ||
-    !email ||
-    !phone ||
-    !password ||
-    !address ||
-    !gender ||
-    !image
-  ) {
+  if (!name || !email || !phone || !password || !address || !gender || !image) {
     return res.status(500).json({ msg: "Fields are required" });
   }
   const qry = "SELECT * FROM users WHERE email=?";
@@ -67,30 +59,47 @@ const LoginUser = async (req, res) => {
       );
       return res.json({ msg: "user login successfuly", token });
     } catch (error) {
-        console.error("Password comparison error:", error);
-        return res.status(500).json({ msg: "An error occurred during login. " });
+      console.error("Password comparison error:", error);
+      return res.status(500).json({ msg: "An error occurred during login. " });
     }
   });
 };
 
-const FetchUser=async(req,res)=>{
-    console.log("fetchuser")
-    const sql="SELECT * FROM `users` "
-     con.query(sql,(err,data)=>{
-        if (err) {
-            console.log("error",err)
-            return res.status.json({msg: "error in fetching",err})
-            
-        }
-        return res.json({msg:"blog fetch",data})
+const FetchUser = async (req, res) => {
+  console.log("fetchuser");
+  const sql = "SELECT * FROM `users` ";
+  con.query(sql, (err, data) => {
+    if (err) {
+      console.log("error", err);
+      return res.status.json({ msg: "error in fetching", err });
+    }
+    return res.json({ msg: "blog fetch", data });
+  });
+};
+const UpdateInterest = (req, res) => {
+  const { id } = req.params;
+  const { interest } = req.body;
+  console.log("params", req.params);
+  if (!id || !interest) {
+    return res.status(400).json({ msg: "id and interest required" });
+  }
 
-    })
-
-
-}
+  const sql = "UPDATE users SET interest = ?  WHERE id = ?";
+  con.query(sql, [interest,id], (err, result) => {
+    if (err) {
+      console.log(err);
+      return res.status(400).json({ msg: "error in updating",err });
+    }
+    if (result.affectedRows === 0) {
+      return res.status(400).json({ msg: "user not found" ,err});
+    }
+    return res.json({ msg: "successfuly update iinterest", result });
+  });
+};
 
 module.exports = {
   CreateUser,
   LoginUser,
-  FetchUser
+  FetchUser,
+  UpdateInterest,
 };
