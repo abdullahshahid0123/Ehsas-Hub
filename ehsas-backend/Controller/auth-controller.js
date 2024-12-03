@@ -66,16 +66,20 @@ const LoginUser = async (req, res) => {
 };
 
 const FetchUser = async (req, res) => {
-  console.log("fetchuser");
-  const sql = "SELECT * FROM `users` ";
-  con.query(sql, (err, data) => {
+  const userId=req.params.userId
+  const sql = "SELECT * FROM `users` WHERE id=? ";
+  con.query(sql, [userId],(err, data) => {
     if (err) {
       console.log("error", err);
-      return res.status.json({ msg: "error in fetching", err });
+      return res.status(404).json({ msg: "error in fetching", err });
     }
-    return res.json({ msg: "blog fetch", data });
+    if (data.affectedRows === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    return res.json({ msg: data[0] });
   });
 };
+
 const UpdateInterest = (req, res) => {
   const { id } = req.params;
   const { interest } = req.body;

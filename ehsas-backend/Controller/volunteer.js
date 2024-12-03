@@ -2,16 +2,16 @@ const { con } = require("../config/db");
 
 const CreateVolunteer = (req, res) => {
   // req body from the user
-  const { name, email, phone, password, address, cnic, profile } = req.body;
+  const { name, email, phone, password, address, profile } = req.body;
 
-  const user = [name, email, phone, password, address, cnic, profile];
+  const user = [name, email, phone, password, address, profile];
   //   check all fields from the user
-  if (!name || !email || !phone || !password || !address || !cnic || !profile) {
+  if (!name || !email || !phone || !password || !address  || !profile) {
     return res.status(500).json({ msg: "Fields are required" });
   }
   // sql  query for the database to create data
   const sql =
-    "INSERT INTO  volunteer( name, email, phone, password, address, cnic, profile) VALUES(?)";
+    "INSERT INTO  volunteer( name, email, phone, password, address, profile) VALUES(?)";
   con.query(sql, [user], (err, data) => {
     if (err) {
       console.log("error in create volunteer", err);

@@ -14,7 +14,7 @@ router.post("/create-user", CreateUser)
 router.post("/login", LoginUser)
 router.put("/update-interest/:id", UpdateInterest)
 // admin routes
-router.get("/fetch-user", FetchUser)
+router.get("/fetch-user/:userId", FetchUser)
 router.post("/create-volunteer", CreateVolunteer)
 router.get("/fetch-volunteer", FetchVolunteer)
 // admin donor routes
@@ -25,7 +25,7 @@ router.put("/complete-donor/:id", CompleteDonor)
 router.put("/approve-volunteer/:id", ApproveVolunteer)
 router.put("/complete-volunteer/:id", CompleteVolunteer)
 // admin needy routes
-router.get("/needy-request/:id", NeedyRequest )
+router.get("/needy-request/:id", NeedyRequest)
 router.get("/approve-needy/:id", ApproveNeedy)
 router.get("/complete-needy/:id", CompleteNeedy)
 

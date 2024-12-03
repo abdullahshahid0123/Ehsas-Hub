@@ -27,7 +27,7 @@ const login = () => {
       console.log("register successful",res.data)
 
       alert('Login Successfully')
-      navigate("/")
+      navigate("/home")
       setErrorMessage("");
       
     } catch (error) {

@@ -38,7 +38,7 @@ export const Sidebar = () => {
                 </li>
                 <li className="sidebar-item">
                   <NavLink to="/ManagevolunteerAccount" className="sidebar-link">
-                  <i class="fa-solid fa-user"></i>volunteer Account
+                  <i class="fa-solid fa-user px-2"></i>volunteer Account
                   </NavLink>
                 </li>
               </ul>
@@ -51,7 +51,7 @@ export const Sidebar = () => {
                 data-bs-toggle="collapse"
                 arua-expended="false"
               >
-              <i class="fa-solid fa-user"></i> Donor
+              <i class="fa-solid fa-user "></i> Donor
               </a>
               <ul
                 id="pages2"

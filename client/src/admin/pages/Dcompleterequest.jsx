@@ -13,8 +13,15 @@ const Dcompleterequest = () => {
     <Sidebar />
     <div className="main">
       <Topbar />
+      <nav className="navbar navbar-expand-md  bg-light ">
+          <div className="container">
+            <a href="#" className="navbar-brand">
+            Donor Complete Request
+            </a>
+          </div>
+        </nav>
       <div className="container mt-4">
-        <h2>Donor complete  request List</h2>
+       
         <table className="table table-striped table-bordered text-center">
           <thead>
             <tr>
@@ -78,17 +85,7 @@ const Dcompleterequest = () => {
           }}
         >
           <div
-            className="modal-dialog"
-            style={{
-              width: "50%",
-              maxWidth: "1000px",
-              margin: "auto",
-              position: "absolute",
-              top: "75%",
-              
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-            }}
+            className="modal-dialog1"
           >
             <div className="modal-content">
               <div className="modal-header justify-content-center">
@@ -141,15 +138,7 @@ const Dcompleterequest = () => {
                     </div>
                   </div>
                   <div className="row mb-3">
-                    <div className="col-md-6">
-                      <label className="form-label">Password</label>
-                      <input
-                        type="password"
-                        className="form-control"
-                        name="password"
-                        required
-                      />
-                    </div>
+                    
                     <div className="col-md-6">
                       <label className="form-label">Gender</label>
                       <input
@@ -179,7 +168,7 @@ const Dcompleterequest = () => {
                       />
                     </div>
 
-                    <p>No image available</p>
+                    
                   </div>
 
                   <div className="mb-3">
@@ -187,7 +176,7 @@ const Dcompleterequest = () => {
                     <textarea
                       className="form-control"
                       name="comments"
-                      rows="4"
+                      rows="2"
                       placeholder="Leave a comment..."
                       required
                     ></textarea>

@@ -1,5 +1,5 @@
 
-.app-container {
+ .app-container {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
@@ -69,12 +69,12 @@
             justify-content: center;
             gap: 8px;
             transition: background-color 0.3s, box-shadow 0.3s;
-        }
+        } 
         .button:hover {
             background-color: #e0e4e8;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
-        .footer {
+         .footer {
             background-color: #f1f1f1;
             padding: 15px;
             text-align: center;
@@ -100,24 +100,51 @@
  /* navbar */
 
 
- .navbar-user {
+  .navbar-user {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 30px;
+    padding: 15px 35px;
     background-color: #4a90e2;
     color: white;
 }
 
 /* Logo */
-.navbar-logo a {
+ .navbar-logo a {
     font-size: 24px;
     text-decoration: none;
     color: white;
+    
+} 
+/* search bar */
+ .navbar-search {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-left: auto;
 }
+.search-input {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+  }
+  .search-button {
+    margin-left: 5px;
+    padding: 5px 10px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+  } 
+   .search-button:hover {
+    background-color: #0056b3;
+  }   
+
 
 /* Profile Icon */
-.navbar-profile {
+ .navbar-profile {
     margin-left: 30px;
     width: 40px;
     height: 40px;
@@ -127,30 +154,31 @@
     align-items: center;
     justify-content: center;
     font-size: 18px;
-    color: #4a90e2; /* Adjusted for visibility against white background */
-    font-weight: bold;
+    color: #4a90e2;  /* Adjusted for visibility against white background */
+     font-weight: bold;
     text-transform: uppercase;
     cursor: pointer;
-}
+} 
 
 /* Icon Styles */
-.heart, .mail, .bell {
+ .heart, .mail, .bell {
     font-size: 18px;
     margin-left: 30px;
     color: white;
     cursor: pointer;
-}
+} 
 
-.bell {
-    margin-left: auto; /* Pushes bell icon to the far right */
-}
+ .bell {
+        margin-left: 100px; 
+} 
 
-/* Switch to Donor button */
-.switch-to-donor {
+ /* Switch to Donor button */ 
+
+ .switch-to-donor {
     margin-left: 40px;
-}
+} 
 
-.donor-button {
+ .donor-button {
     background-color: var(--text-color);
     color: var(--navbar-bg);
     border: 2px solid transparent;
@@ -159,28 +187,34 @@
     font-size: 16px;
     cursor: pointer;
     transition: transform 0.3s ease, color 0.3s ease;
-}
+} 
 
-.donor-button:hover {
+ .donor-button:hover {
     color: #745c36;
-    transform: scale(1.1); /* Increased scale for a more noticeable hover effect */
-}
+    transform: scale(1.1); 
+} 
 
 /* Responsive Styling for Mobile */
-@media screen and (max-width: 768px) {
+ @media screen and (max-width: 770px) {
     .heart, .mail, .bell {
         display: none;
     }
-     
-       
-   
     .switch-to-donor{
+        margin-left: auto;
+    }
+} 
+
+@media screen and (max-width: 1000px) {
+    .navbar-search{
+        display: none;
+    }
+    .bell {
         margin-left: auto;
     }
 }
 
 
-.modal-overlay {
+ .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -191,28 +225,33 @@
     align-items: center;
     justify-content: center;
     z-index: 1000;
-  }
+  } 
+  @media (max-width: 800px) {
+    .card {
+        margin: 8px;
+    }
+     }
 
   /* register.jsx */
 
-  .custom-btn {
+   .custom-btn {
     transition: background-color 0.3s ease, transform 0.2s ease;
-}
+} 
 
-.custom-btn:hover {
+ .custom-btn:hover {
     background-color: #0056b3; 
     transform: scale(1.05); 
-}
+} 
 
 
 /* this is profile view */
-.profile-container {
+ .profile-container {
     display: flex;
     flex-wrap: wrap;  /* Allows the layout to wrap on smaller screens */
     margin-top: 30px;
     padding: 20px;
 }
-.profile-left {
+.profile-left { 
     padding-right: 30px;
     background-color: #ffffff;
     border-radius: 8px;
@@ -231,13 +270,8 @@
     margin-bottom: 20px;
     margin-top: 20px;
 }
-.id-card-img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    border-radius: 8px;
-}
-.list-group-item {
+
+ .list-group-item {
     border: none;
     padding: 5px 0;
     margin-left: 50px;
@@ -248,7 +282,8 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
+
+ @media (max-width: 768px) {
     .profile-container {
         flex-direction: column;
     }
@@ -263,15 +298,16 @@
     .profile-img {
         width: 120px;
         height: 120px;
-    }
+    } 
     .id-card-img {
         max-width: 100%;
         height: auto;
     }
-}
+} 
 
 /* For extra small screens (mobile) */
-@media (max-width: 576px) {
+
+ @media (max-width: 576px) {
     .profile-img {
         width: 100px;
         height: 100px;
@@ -280,9 +316,5 @@
         width: 100%;
         height: auto;
     }
-}
-
-
-
-
+} 
 

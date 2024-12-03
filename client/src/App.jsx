@@ -16,6 +16,7 @@ import Napproverequest from "./admin/pages/Napproverequest";
 import Vcompleterequest from "./admin/pages/Vcompleterequest";
 import Vapproverequest from "./admin/pages/Vapproverequest";
 import UserInterest from "./User/UserInterest";
+import Main from "./User/Main";
 
 function App() {
   return (
@@ -23,9 +24,11 @@ function App() {
       <Router>
         <Routes>
         {/*user Routes*/}
+        <Route path="/" element={<Main/>} />
+
         <Route path="/profileview" element={<Profileview/>}/>
           <Route path="/login" element={<Login />} />
-          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/verifyuser" element={<Verifyuser />} />
           <Route path="/register" element={<Register />} />
           <Route path="/userinterest" element={<UserInterest />} />

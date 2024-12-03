@@ -21,7 +21,7 @@ export const Topbar = () => {
               <p className="marquee">
                 <span>
                   {" "}
-                  <strong>Abdul Rehman</strong> &nbsp;&nbsp;&nbsp;{" "}
+                  <strong>Ehsas Hub</strong> &nbsp;&nbsp;&nbsp;{" "}
                 </span>
               </p>
             </li>

@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Sidebar } from "../components/Sidebar";
 import { Topbar } from "../components/Topbar";
 import axios from "axios";
+import "./volunteer.css";
 
 const ManageuserAccount = () => {
+  const [selectedUser, setSelectedUser] = useState({});
   const [post, setpost] = useState([]);
   const fetchusers = async () => {
     await axios
@@ -16,15 +18,17 @@ const ManageuserAccount = () => {
         console.log(" error fetching", err);
       });
   };
-
+// use of useEffect
   useEffect(() => {
-    console.log("user");
     fetchusers();
   }, []);
 
   const [Open, setOpen] = useState(false);
-  const toggleOpen = () => {
+  const toggleOpen = (rs = {}) => {
+    setSelectedUser(rs);
+
     setOpen((state) => !state);
+    // console.log(selectedUser.image,"user passed") 
   };
 
   return (
@@ -33,9 +37,17 @@ const ManageuserAccount = () => {
         <Sidebar />
         <div className="main">
           <Topbar />
-          <div className="container mt-4">
-            <h2>User List</h2>
-            <table className="table table-striped table-bordered text-center">
+          <nav className="navbar navbar-expand-md  bg-light ">
+          <div className="container">
+            <a href="#" className="navbar-brand">
+            User List
+            </a>
+            
+          </div>
+        </nav>
+          <div className="container mt-4 mb-">
+            
+            <table className="table  table-striped table-bordered text-center">
               <thead>
                 <tr>
                   <th scope="col">Name</th>
@@ -48,7 +60,7 @@ const ManageuserAccount = () => {
               <tbody>
                 {Array.isArray(post) && post.length > 0 ? (
                   post.map((rs) => {
-                    const { id, name, email, phone } = rs;
+                    const { id, name, email, phone} = rs;
                     return (
                       <tr key={id}>
                         <td>
@@ -71,10 +83,18 @@ const ManageuserAccount = () => {
                             </button>
                             <ul className="dropdown-menu">
                               <li>
-                                <a className="dropdown-item" href="#" onClick={()=>toggleOpen(rs)}>
+                                <a
+                                  className="dropdown-item"
+                                  href="#"
+                                  onClick={() => toggleOpen(rs)}
+                                >
                                   View detail
                                 </a>
-                                <li><a class="dropdown-item" href="#">Freeze</a></li>
+                                <li>
+                                  <a class="dropdown-item" href="#">
+                                    Freeze
+                                  </a>
+                                </li>
                               </li>
                             </ul>
                           </div>
@@ -107,17 +127,8 @@ const ManageuserAccount = () => {
               }}
             >
               <div
-                className="modal-dialog"
-                style={{
-                  width: "50%",
-                  maxWidth: "1000px",
-                  margin: "auto",
-                  position: "absolute",
-                  top: "75%",
-                  
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                }}
+                className="modal-dialog1"
+                
               >
                 <div className="modal-content">
                   <div className="modal-header justify-content-center">
@@ -133,8 +144,8 @@ const ManageuserAccount = () => {
                             type="text"
                             className="form-control"
                             name="fullName"
-                            value={selectedUser ? selectedUser.name : ""}
-                            
+                            value={selectedUser.name}
+                            readOnly
                           />
                         </div>
                         <div className="col-md-6">
@@ -143,11 +154,12 @@ const ManageuserAccount = () => {
                             type="email"
                             className="form-control"
                             name="email"
-                            
+                            value={selectedUser.email}
+                            readOnly
                           />
                         </div>
                       </div>
-    
+
                       {/* Single Fields Below */}
                       <div className="row mb-3">
                         <div className="col-md-6">
@@ -156,49 +168,57 @@ const ManageuserAccount = () => {
                             type="text"
                             className="form-control"
                             name="phone"
-                            
+                            value={selectedUser.phone}
+                            readOnly
                           />
                         </div>
-    
+
                         <div className="col-md-6">
                           <label className="form-label">Address</label>
                           <input
                             type="text"
                             className="form-control"
                             name="address"
-                            
+                            value={selectedUser.address}
+                            readOnly
                           />
                         </div>
                       </div>
                       <div className="row mb-3">
-                        <div className="col-md-6">
+                      {/*  <div className="col-md-6">
                           <label className="form-label">Password</label>
                           <input
                             type="password"
                             className="form-control"
                             name="password"
-                            
+                            value={selectedUser.password || ""}
                           />
                         </div>
+                        */}
                         <div className="col-md-6">
                           <label className="form-label">Gender</label>
                           <input
                             type="gender"
                             className="form-control"
                             name="gender"
+                            value={selectedUser.gender}
+                            readOnly
                             
                           />
                         </div>
                       </div>
-    
+
                       <div className="mb-3">
                         <label className="form-label">
                           ID Card / Student Card Photo
                         </label>
-    
+
                         <div>
+                        {selectedUser.idimage ? (
+                          <>
+                          {console.log(selectedUser.image,"show")}
                           <img
-                            src="imahe"
+                            src={selectedUser.idimage}
                             alt="Student Card"
                             style={{
                               width: "100%",
@@ -206,23 +226,26 @@ const ManageuserAccount = () => {
                               borderRadius: "8px",
                               marginBottom: "10px",
                             }}
+                            onError={() => console.error("Image failed to load")}
                           />
+                          </>
+                        ):(
+                          <p>no post available</p>
+                        )}
                         </div>
-    
-                        <p>No image available</p>
                       </div>
-    
+
                       <div className="mb-3">
                         <label className="form-label">Comments</label>
                         <textarea
                           className="form-control"
                           name="comments"
-                          rows="4"
+                          rows="2"
                           placeholder="Leave a comment..."
                           required
                         ></textarea>
                       </div>
-    
+
                       <div className="modal-footer">
                         <button
                           type="button"
