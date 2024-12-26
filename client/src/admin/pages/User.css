@@ -1,0 +1,45 @@
+.custom-modal .modal-dialog {
+    max-width: 600px;
+    margin: auto;
+  }
+  
+  .custom-modal .modal-content {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .custom-modal .modal-header {
+    background-color: #343a40;
+    color: #fff;
+    border-bottom: none;
+  }
+  
+  .custom-modal input,
+  .custom-modal textarea {
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+    padding: 0.5rem;
+    width: 100%;
+  }
+  
+  .custom-modal input:focus,
+  .custom-modal textarea:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+
+  .custom-modal input {
+    border: 1px solid #ced4da; /* Override Bootstrap border */
+    border-radius: 5px; /* Reset border radius */
+  }
+  
+  .custom-modal label {
+    font-weight: 600;
+    color: #495057;
+  }
+  
+  .custom-modal textarea {
+    resize: none; /* Disable resize */
+  }

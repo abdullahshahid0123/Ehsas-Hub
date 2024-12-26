@@ -1,12 +1,40 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Sidebar } from "../components/Sidebar";
 import { Topbar } from "../components/Topbar";
+import axios from "axios";
 
 const Dcompleterequest = () => {
-    const [Open, setOpen] = useState(false);
-  const toggleOpen = () => {
-    setOpen((state) => !state);
+
+  const ActiveBook = async (id) => {
+    await axios
+      .put(`http://localhost:8000/Update-active/${id}`)
+      .then((res) => {
+        alert(res.data.msg);
+        window.location.reload();
+      })
+      .catch((err) => {
+        console.log(" error approving", err);
+      });
   };
+
+  const [request, setrequest] = useState([]);
+  const fetchDeliveredRequest = async () => {
+    await axios
+      .get("http://localhost:8000/fetch-donor-delivered")
+      .then((res) => {
+        setrequest(res.data.data);
+       
+      })
+      .catch((err) => {
+        console.log(" error fetching", err);
+      });
+  };
+  useEffect(() => {
+    fetchDeliveredRequest()
+  
+    
+  }, [])
+
   return (
     <>
     <div className="wrapper">
@@ -33,176 +61,53 @@ const Dcompleterequest = () => {
             </tr>
           </thead>
           <tbody>
-            <tr>
+          {Array.isArray(request) && request.length > 0 ? (
+            request.map((rs) => {
+              const {
+                id,
+                name,
+                email,
+                phone,
+               
+                status,
+               
+              } = rs;
+              return (
+            <tr key={id}>
               <td>
-                <strong>John Doe</strong>
+                <strong>{name}</strong>
               </td>
-              <td>johndoe@example.com</td>
-              <td>(123) 456-7890</td>
+              <td>{email}</td>
+              <td>{phone}</td>
               <td>
-                <span className="btn btn-success">Active</span>
+                <span className="btn btn-success">{status}</span>
               </td>
               <td>
                 <div class="dropdown">
                   <button
-                    class="btn btn-warning dropdown-toggle"
+                    class="btn btn-warning "
                     type="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
+                   onClick={()=>ActiveBook(id)}
                   >
-                    Action
+                    Active
                   </button>
-                  <ul class="dropdown-menu">
-                    <li>
-                      <a
-                        class="dropdown-item"
-                        href="#"
-                        onClick={toggleOpen}
-                      >
-                        View detail
-                      </a>
-                      <li><a class="dropdown-item" href="#">Freeze</a></li>
-                    </li>
-                  </ul>
+                  
                 </div>
               </td>
             </tr>
+          );
+        })
+      ) : (
+        <tr>
+          <td colSpan="5" className="text-center">
+            No data available.
+          </td>
+        </tr>
+      )}
           </tbody>
         </table>
       </div>
-      {Open && (
-        <div
-          className="modal show d-flex justify-content-center align-items-center"
-          style={{
-            display: "block",
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            backgroundColor: "rgba(0, 0, 0, 0.6)",
-            zIndex: 1050,
-          }}
-        >
-          <div
-            className="modal-dialog1"
-          >
-            <div className="modal-content">
-              <div className="modal-header justify-content-center">
-                <h5 className="modal-title mt-4">Donor complete request Detail</h5>
-              </div>
-              <div className="modal-body">
-                <form>
-                  {/* Two Fields in One Row */}
-                  <div className="row mb-3 mt-3">
-                    <div className="col-md-6">
-                      <label className="form-label">Full Name</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        name="fullName"
-                        required
-                      />
-                    </div>
-                    <div className="col-md-6">
-                      <label className="form-label">Email</label>
-                      <input
-                        type="email"
-                        className="form-control"
-                        name="email"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  {/* Single Fields Below */}
-                  <div className="row mb-3">
-                    <div className="col-md-6">
-                      <label className="form-label">Phone Number</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        name="phone"
-                        required
-                      />
-                    </div>
-
-                    <div className="col-md-6">
-                      <label className="form-label">Address</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        name="address"
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="row mb-3">
-                    
-                    <div className="col-md-6">
-                      <label className="form-label">Gender</label>
-                      <input
-                        type="gender"
-                        className="form-control"
-                        name="gender"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div className="mb-3">
-                    <label className="form-label">
-                      ID Card / Student Card Photo
-                    </label>
-
-                    <div>
-                      <img
-                        src="imahe"
-                        alt="Student Card"
-                        style={{
-                          width: "100%",
-                          maxWidth: "400px",
-                          borderRadius: "8px",
-                          marginBottom: "10px",
-                        }}
-                      />
-                    </div>
-
-                    
-                  </div>
-
-                  <div className="mb-3">
-                    <label className="form-label">Comments</label>
-                    <textarea
-                      className="form-control"
-                      name="comments"
-                      rows="2"
-                      placeholder="Leave a comment..."
-                      required
-                    ></textarea>
-                  </div>
-
-                  <div className="modal-footer">
-                    <button
-                      type="button"
-                      className="btn btn-secondary"
-                      onClick={toggleOpen}
-                    >
-                      Cancel
-                    </button>
-                    <button type="submit" className="btn btn-success">
-                      Approve
-                    </button>
-                    <button type="button" className="btn btn-danger">
-                      Reject
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      
     </div>
   </div>
     

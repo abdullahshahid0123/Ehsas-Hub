@@ -5,77 +5,50 @@ import { Topbar } from "../components/Topbar";
 import axios from "axios";
 
 const ManagevolunteerAccount = () => {
-  const [volunteer, setvolunteer] = useState([]);
-
   // here we create volunteer
-  const [value, setValue] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    password: "",
-    address: "",
-    profile: "",
-  });
-  const handleInput = (e) => {
-    setValue({ ...value, [e.target.name]: e.target.value });
-  };
-  const CreateVolunteer = async (e) => {
-    e.preventDefault();
-    const postData = { ...value };
-    try {
-      const res = await axios.post(
-        "http://localhost:8000/create-volunteer",
-        postData
-      );
-      console.log(res, "volunteer created successful");
-      alert("volunteer created successful");
-      setForm((state) => !state);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+
   // here we fetch volunteer
+  const [volunteer, setvolunteer] = useState([]);
   const fetchVolunteer = async () => {
-   
-    await axios.get("http://localhost:8000/fetch-volunteer").then((res)=>{
-      setvolunteer(res.data.data);
-    })
-      
-    .catch((error)=>{
-      console.log(error)
-    })
-    
+    await axios
+      .get("http://localhost:8000/fetch-volunteer")
+      .then((res) => {
+        setvolunteer(res.data.data);
+      })
+
+      .catch((error) => {
+        console.log(error);
+      });
   };
   useEffect(() => {
     fetchVolunteer();
   }, []);
+
   // status manage
-  const [Status, setStatus] = useState([]);
+  const [userr, setUserr] = useState({});
 
-  const handlefreez = (id) => {
-    setStatus((prevstate) =>{ if (Array.isArray(prevstate)) {
-      return prevstate.map((s)=>
-          s.id===id ? {...s, Status : s.Status===0 ? 1:0} : s
-       )
-    } else {
-      console.error("error",prevstate)
-      return prevstate;
-    } 
-
-    })
-  
-  
+  const Approveusers = async (id) => {
+    await axios
+      .put(`http://localhost:8000/approve-volunteer/${id}`)
+      .then((res) => {
+        alert(res.data.msg);
+        window.location.reload();
+      })
+      .catch((err) => {
+        console.log(" error approving", err);
+      });
   };
-
-  const [Form, setForm] = useState(false);
-  const toggleForm = () => {
-    setForm((state) => !state);
+  const Freezeusers = async (id) => {
+    await axios
+      .put(`http://localhost:8000/freeze-volunteer/${id}`)
+      .then((res) => {
+        alert(res.data.msg);
+        window.location.reload();
+      })
+      .catch((err) => {
+        console.log(" error approving", err);
+      });
   };
-  const [Open, setOpen] = useState(false);
-  const toggleOpen = () => {
-    setOpen((state) => !state);
-  };
-
   return (
     <>
       <div className="wrapper">
@@ -87,9 +60,6 @@ const ManagevolunteerAccount = () => {
               <a href="#" className="navbar-brand">
                 Volunteer
               </a>
-              <button className="btn btn-primary ms-auto" onClick={toggleForm}>
-                Create Volunteer
-              </button>
             </div>
           </nav>
 
@@ -105,305 +75,246 @@ const ManagevolunteerAccount = () => {
                 </tr>
               </thead>
               <tbody>
-              {Array.isArray(volunteer) && volunteer.length > 0 ? (volunteer.map(({id,name ,email,phone})=>{
-                
-                return(
-                <tr key={id}>
-                  <td>
-                    <strong>{name}</strong>
-                  </td>
-                  <td>{email}</td>
-                  <td>{phone}</td>
-                  <td>
-                    <span
-                      className={`btn ${
-                        Status === 0 ? "btn-success" : "btn-danger"
-                      }`}
-                    >
-                      {Status === 0 ? "Active" : "Freeze"}
-                    </span>
-                  </td>
-                  <td>
-                    <div class="dropdown">
-                      <button
-                        class="btn btn-warning dropdown-toggle"
-                        type="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                      >
-                        Action
-                      </button>
-                      <ul class="dropdown-menu">
-                        <li>
-                          <a
-                            class="dropdown-item"
-                            href="#"
-                            onClick={toggleOpen}
-                            key={id}
-                          >
-                            View Detail
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            class="dropdown-item"
-                            href="#"
-                            onClick={()=>handlefreez(id)}
-                          >
-                            {Status === 0 ? "freeze" : "active"}
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </td>
-                </tr>
-              )
-            })) : (
-              <tr>
+                {Array.isArray(volunteer) && volunteer.length > 0 ? (
+                  volunteer.map(
+                    ({
+                      id,
+                      name,
+                      email,
+                      phone,
+                      profile,
+                      password,
+                      status,
+                      address,
+                    }) => {
+                      return (
+                        <tr key={id}>
+                          <td>
+                            <strong>{name}</strong>
+                          </td>
+                          <td>{email}</td>
+                          <td>{phone}</td>
+                          <td>
+                            {status === null ? (
+                              <span className="btn btn-primary">Pending</span>
+                            ) : status === 1 ? (
+                              <span className="btn btn-success">Active</span>
+                            ) : status === 0 ? (
+                              <span className="btn btn-danger">Freeze</span>
+                            ) : (
+                              ""
+                            )}
+                          </td>
+                          <td>
+                            <div class="dropdown">
+                              <button
+                                class="btn btn-warning dropdown-toggle"
+                                type="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                              >
+                                Action
+                              </button>
+                              <ul class="dropdown-menu">
+                                <li>
+                                  <a
+                                    className="dropdown-item"
+                                    href="#"
+                                    onClick={() =>
+                                      setUserr({
+                                        id: id,
+                                        name: name,
+                                        email: email,
+                                        password: password,
+                                        image: profile,
+                                        phone: phone,
+                                        address: address,
+                                      })
+                                    }
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal"
+                                  >
+                                    View detail
+                                  </a>
+
+                                  {status === 1 ? (
+                                    <li>
+                                      <a
+                                        class="dropdown-item"
+                                        href="#"
+                                        onClick={() => Freezeusers(id)}
+                                      >
+                                        Freeze
+                                      </a>
+                                    </li>
+                                  ) : status === 0 ? (
+                                    <li>
+                                      <a
+                                        class="dropdown-item"
+                                        href="#"
+                                        onClick={() => Approveusers(id)}
+                                      >
+                                        Active
+                                      </a>
+                                    </li>
+                                  ) : (
+                                    ""
+                                  )}
+                                </li>
+                              </ul>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    }
+                  )
+                ) : (
+                  <tr>
                     <td colSpan="5" className="text-center">
                       No data available.
                     </td>
                   </tr>
-            )
-          }
+                )}
               </tbody>
             </table>
           </div>
-          {Form && (
-            <div
-              className="modal show d-flex justify-content-center align-items-center "
-              style={{
-                display: "block",
-                backgroundColor: "rgba(0, 0, 0, 0.6)",
-              }}
-            >
-              <div className="modal-dialog " style={{ width: "80%" }}>
-                <div className="modal-content">
-                  <div className="modal-header justify-content-center">
-                    <h5 className="modal-title ">ADD VOLUNTEER</h5>
-                  </div>
-                  <div className="modal-body">
-                    <form onSubmit={CreateVolunteer}>
-                      <div className="mb-3">
-                        <label className="form-label">Full Name</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          required
-                          name="name"
-                          onChange={handleInput}
-                        />
-                      </div>
-                      <div className="row ">
-                        <div className="mb-3 col-md-6">
-                          <label className="form-label">Email</label>
-                          <input
-                            className="form-control"
-                            type="email"
-                            required
-                            name="email"
-                            onChange={handleInput}
-                          />
-                        </div>
-                        <div className="mb-3 col-md-6">
-                          <label className="form-label">Password</label>
-                          <input
-                            className="form-control"
-                            type="password"
-                            required
-                            name="password"
-                            onChange={handleInput}
-                          />
-                        </div>
-                      </div>
-                      <div className="mb-3">
-                        <label className="form-label">Phone Number</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          required
-                          name="phone"
-                          onChange={handleInput}
-                        />
-                      </div>
-                      <div className="mb-3">
-                        <label className="form-label">Address</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          required
-                          name="address"
-                          onChange={handleInput}
-                        />
-                      </div>
-                      <div className="form-group mb-3">
-                        <label htmlFor="bookImage" className="text-dark">
-                          profile photo
-                        </label>
-                        <input
-                          type="file"
-                          className="form-control"
-                          id="bookImage"
-                          accept=".jpg, .jpeg, .png"
-                          placeholder="Upload book image"
-                          required
-                          name="profile"
-                          onChange={handleInput}
-                        />
-                        <img
-                          src=""
-                          alt=""
-                          width="150"
-                          height="80 "
-                          className="mt-2"
-                        />
-                      </div>
-                      <div className="modal-footer">
-                        <button
-                          type="button"
-                          className="btn btn-secondary"
-                          onClick={toggleForm}
-                        >
-                          Cancel
-                        </button>
-                        <button type="submit" className="btn btn-primary">
-                          Submit
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-          {Open && (
-            <div
-              className="modal show d-flex justify-content-center align-items-center"
-              style={{
-                display: "block",
-                position: "fixed",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "100%",
-                backgroundColor: "rgba(0, 0, 0, 0.6)",
-                zIndex: 1050,
-              }}
-            >
-              <div className="modal-dialog1">
-                <div className="modal-content">
-                  <div className="modal-header justify-content-center">
-                    <h5 className="modal-title mt-4">Volunteer Detail</h5>
-                  </div>
-                  <div className="modal-body">
-                    <form>
-                      {/* Two Fields in One Row */}
-                      <div className="row mb-3 mt-3">
-                        <div className="col-md-6">
-                          <label className="form-label">Full Name</label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            name="fullName"
-                            required
-                          />
-                        </div>
-                        <div className="col-md-6">
-                          <label className="form-label">Email</label>
-                          <input
-                            type="email"
-                            className="form-control"
-                            name="email"
-                            required
-                          />
-                        </div>
-                      </div>
 
-                      {/* Single Fields Below */}
-                      <div className="row mb-3">
-                        <div className="col-md-6">
-                          <label className="form-label">Phone Number</label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            name="phone"
-                            required
-                          />
+          <div
+            class="modal fade"
+            id="exampleModal"
+            tabindex="-1"
+            aria-labelledby="exampleModalLabel"
+            aria-hidden="true"
+          >
+            <div className="row">
+              <div className="col-sm-4"></div>
+              <div className="col-sm-4">
+                <div class="modal-dialog card">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="exampleModalLabel">
+                        Volunteer Detail
+                      </h1>
+                    </div>
+                    <div class="modal-body">
+                      <form>
+                        {/* Two Fields in One Row */}
+                        <div className="row mb-3 mt-3">
+                          <div className="col-md-6">
+                            <label className="form-label ">Full Name</label>
+                            <input
+                              type="text"
+                              className="form-control home-input"
+                              name="fullName"
+                              value={userr.name}
+                              readOnly
+                            />
+                          </div>
+                          <div className="col-md-6">
+                            <label className="form-label">Email</label>
+                            <input
+                              type="email"
+                              className="form-control home-input"
+                              name="email"
+                              value={userr.email}
+                              readOnly
+                            />
+                          </div>
                         </div>
 
-                        <div className="col-md-6">
-                          <label className="form-label">Address</label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            name="address"
+                        {/* Single Fields Below */}
+                        <div className="row mb-3">
+                          <div className="col-md-6">
+                            <label className="form-label">Phone Number</label>
+                            <input
+                              type="text"
+                              className="form-control home-input"
+                              name="phone"
+                              value={userr.phone}
+                              readOnly
+                            />
+                          </div>
+
+                          <div className="col-md-6">
+                            <label className="form-label">password</label>
+                            <input
+                              type="text"
+                              className="form-control home-input"
+                              name="gender"
+                              value={userr.password}
+                              readOnly
+                            />
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="col-md-">
+                            <label className="form-label">Address</label>
+                            <input
+                              type="text"
+                              className="form-control home-input"
+                              name="address"
+                              value={userr.address}
+                              readOnly
+                            />
+                          </div>
+                        </div>
+
+                        <div className="mb-3">
+                          <label className="form-label">
+                            ID Card / Student Card Photo
+                          </label>
+
+                          <div>
+                            <>
+                              <img
+                                src={userr.image}
+                                alt="Student Card"
+                                style={{
+                                  width: "100%",
+                                  maxWidth: "400px",
+                                  borderRadius: "8px",
+                                  marginBottom: "10px",
+                                }}
+                              />
+                            </>
+                          </div>
+                        </div>
+
+                        <div className="mb-3">
+                          <label className="form-label">Comments</label>
+                          <textarea
+                            className="form-control home-input"
+                            name="comments"
+                            rows="2"
+                            placeholder="Leave a comment..."
                             required
-                          />
+                          ></textarea>
                         </div>
-                      </div>
-                      <div className="row mb-3">
-                        <div className="col-md-6">
-                          <label className="form-label">Gender</label>
-                          <input
-                            type="gender"
-                            className="form-control"
-                            name="gender"
-                            required
-                          />
-                        </div>
-                      </div>
+                      </form>
+                    </div>
 
-                      <div className="mb-3">
-                        <label className="form-label">
-                          ID Card / Student Card Photo
-                        </label>
-
-                        <div>
-                          <img
-                            src="imahe"
-                            alt="Student Card"
-                            style={{
-                              width: "100%",
-                              maxWidth: "400px",
-                              borderRadius: "8px",
-                              marginBottom: "10px",
-                            }}
-                          />
-                        </div>
-                      </div>
-
-                      <div className="mb-3">
-                        <label className="form-label">Comments</label>
-                        <textarea
-                          className="form-control"
-                          name="comments"
-                          rows="2"
-                          placeholder="Leave a comment..."
-                          required
-                        ></textarea>
-                      </div>
-
-                      <div className="modal-footer">
-                        <button
-                          type="button"
-                          className="btn btn-secondary"
-                          onClick={toggleOpen}
-                        >
-                          Cancel
-                        </button>
-                        <button type="submit" className="btn btn-success">
-                          Approve
-                        </button>
-                        <button type="button" className="btn btn-danger">
-                          Reject
-                        </button>
-                      </div>
-                    </form>
+                    <div class="modal-footer">
+                      <button
+                        type="button"
+                        className="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        className="btn btn-success"
+                        onClick={() => Approveusers(userr.id)}
+                      >
+                        Approve
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          )}
+          </div>
+          <div className="col-sm-6"></div>
         </div>
       </div>
     </>

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { Sidebar } from "../components/Sidebar";
 import { Topbar } from "../components/Topbar";
-import axios from "axios";
 
-const Napproverequest = () => {
-
-  const Processneedy = async (id) => {
+export const AdminProcessReq = () => {
+  const id = sessionStorage.getItem("id");
+  const DeliveredReq = async (id) => {
     await axios
-      .put(`http://localhost:8000/update-needy-process/${id}`)
+      .put(`http://localhost:8000/update-deliver/${id}`)
       .then((res) => {
         alert(res.data.msg);
         window.location.reload();
@@ -16,23 +16,22 @@ const Napproverequest = () => {
         console.log(" error approving", err);
       });
   };
-
-
-
-  const [needy, setneedy] = useState({});
-  const fetchNeedy = async () => {
+  const [request, setrequest] = useState([]);
+  const fetchProcessRequest = async () => {
     await axios
-      .get("http://localhost:8000/fetch-needy-approved")
+      .get("http://localhost:8000/fetch-d-process")
       .then((res) => {
-        setneedy(res.data.data);
+        setrequest(res.data);
       })
       .catch((err) => {
         console.log(" error fetching", err);
       });
   };
   useEffect(() => {
-    fetchNeedy();
+    fetchProcessRequest();
   }, []);
+
+  console.log(request);
   return (
     <>
       <div className="wrapper">
@@ -42,7 +41,7 @@ const Napproverequest = () => {
           <nav className="navbar navbar-expand-md  bg-light ">
             <div className="container">
               <a href="#" className="navbar-brand">
-                Needy Approve Request
+                Donor Process Request
               </a>
             </div>
           </nav>
@@ -51,27 +50,27 @@ const Napproverequest = () => {
               <thead>
                 <tr>
                   <th scope="col">Name</th>
-                  <th scope="col">Email</th>
-                  <th scope="col">Phone Number</th>
+                  
+                  <th scope="col">Address</th>
+                  <th scope="col">Volunteer Name</th>
                   <th scope="col">Status</th>
-
                   <th scope="col">Action</th>
                 </tr>
               </thead>
               <tbody>
-                {Array.isArray(needy) && needy.length > 0 ? (
-                  needy.map((rs) => {
-                    const { id, name, email, phone, req_status } = rs;
-                    console.log(rs);
+                {Array.isArray(request) && request.length > 0 ? (
+                  request.map((rs) => {
+                    const { id, name, address, vname, status } = rs;
                     return (
                       <tr key={id}>
                         <td>
                           <strong>{name}</strong>
                         </td>
-                        <td>{email}</td>
-                        <td>{phone}</td>
+                       
+                        <td>{address}</td>
+                        <td>{vname}</td>
                         <td>
-                          <span className="btn btn-success">{req_status}</span>
+                          <span className="btn btn-success">{status}</span>
                         </td>
                         <td>
                           <div class="dropdown">
@@ -85,8 +84,12 @@ const Napproverequest = () => {
                             </button>
                             <ul class="dropdown-menu">
                               <li>
-                                <a class="dropdown-item" href="#" onClick={()=>Processneedy(id)}>
-                                  In Process
+                                <a
+                                  class="dropdown-item"
+                                  href="#"
+                                  onClick={() =>DeliveredReq(id)}
+                                >
+                                  Delivered
                                 </a>
                               </li>
                             </ul>
@@ -110,5 +113,3 @@ const Napproverequest = () => {
     </>
   );
 };
-
-export default Napproverequest;

@@ -1,25 +1,29 @@
-
+.modal-dialog1 {
+  width: "80%";
+  max-width: 1000px;
+  margin: "auto";
+  position: "absolute";
+  top: "50%";
+  left: "50%";
+  transform: "translate(-50%, -50%)";
+}
+@media (max-width: 768px) {
   .modal-dialog1 {
-    width: "80%";
-    max-width: 1000px;
-    margin: "auto";
-    position: "absolute";
-    top: "50%";
-    left: "50%";
-    transform: "translate(-50%, -50%)"
+    width: 93%;
   }
-  @media (max-width: 768px){
-    .modal-dialog1 {
-      width: 93%;
-    }
-    
+}
+@media (max-width: 768px) {
+  th:nth-child(3),
+  td:nth-child(3) {
+    display: none;
   }
- 
+}
 
+/* for the input and label */
+.home-input{
+  height: 40px;
+}
+.textarea-user-account{
 
-  @media (max-width: 768px) {
-    th:nth-child(3), td:nth-child(3) { /* Hides Phone Number */
-      display: none;
-    }
-  }
-  
+  height: 5px;
+}
