@@ -1,0 +1,8 @@
+.home-input{
+    height: 40px;
+    
+}
+.home-label{
+    justify-items: start;
+    display: flex;
+}
