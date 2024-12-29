@@ -1,45 +1,160 @@
-const express = require('express');
-const Test = require('../Controller/test-controller');
-const { CreateUser, LoginUser, FetchUser, UpdateInterest } = require('../Controller/auth-controller');
-const { CreateVolunteer, FetchVolunteer, ApproveVolunteer, CompleteVolunteer } = require('../Controller/Volunteer');
-const { CreateDonor, ApproveDonor, CompleteDonor } = require('../Controller/Donor');
-const { NeedyRequest, ApproveNeedy, CompleteNeedy } = require('../Controller/Needy');
+const express = require("express");
+const Test = require("../Controller/test-controller");
+const {
+  CreateUser,
+  LoginUser,
+  FetchUser,
+  UpdateInterest,
+  FetchUserById,
+  ApproveUser,
+  RejectUser,
+  FreezeUser,
+  UserForgotPassword,
+} = require("../Controller/auth-controller");
+const {
+  CreateVolunteer,
+  FetchVolunteer,
+  ApproveVolunteer,
+  CompleteVolunteer,
+  Freezvolunteer,
+
+  VolunteerAcceptRequest,
+  LoginVolunteer,
+  FetachVolProcessReq,
+  FetchVolunteerProcessAll,
+  FetchVolunteerCompleteAll,
+} = require("../Controller/Volunteer");
+const {
+  CreateDonor,
+  ApproveDonor,
+  CompleteDonor,
+  FetchDonor,
+
+  RejectDonor,
+  FetchDonorApproved,
+  FetchDonorDelivered,
+  UpdateDelivere,
+  FetchDonProcessReq,
+  UpdateActive,
+  FetchActive,
+  UpdateDeactivate,
+} = require("../Controller/Donor");
+const {
+  NeedyRequest,
+  ApproveNeedy,
+  CompleteNeedy,
+  FetchNeedyPending,
+  FetchNeedyApproved,
+  FetchNeedyDelivered,
+  UpdateNeedyApproved,
+  RejectNeedy,
+  FetchNeedyProcess,
+  UpdateNeedyProcess,
+  UpdateNeedyDelivered,
+} = require("../Controller/Needy");
+const {
+  CountPendingUsers,
+  CountActiveUsers,
+  CountFreezeUsers,
+  CountVolunteer,
+  CountPendingDonor,
+  CountApprovedDonor,
+  CountProcessDonor,
+  CountCompletedDonor,
+  CountPendingNeedy,
+  CountApprovedNeedy,
+  CountProcessNeedy,
+  CountCompletedNeedy,
+  CountVolNew,
+  CountVolProcess,
+  CountVolCompleted,
+} = require("../Controller/admin-stat-controller");
+const {
+  CreateAdmin,
+  LoginAdmin,
+  ForgotPassword,
+  FetchAdminById,
+} = require("../Controller/admin-login");
 
 const router = express.Router();
 
-
 router.get("/test", Test);
 // user routes
-router.post("/create-user", CreateUser)
-router.post("/login", LoginUser)
-router.put("/update-interest/:id", UpdateInterest)
+router.post("/create-user", CreateUser);
+router.post("/login", LoginUser);
+router.put("/update-interest/:id", UpdateInterest);
+router.post("/user-forgot-pass", UserForgotPassword);
+
 // admin routes
-router.get("/fetch-user/:userId", FetchUser)
-router.post("/create-volunteer", CreateVolunteer)
-router.get("/fetch-volunteer", FetchVolunteer)
+router.put("/approve-user/:id", ApproveUser);
+router.put("/freeze-user/:id", FreezeUser);
+router.delete("/reject-user/:id", RejectUser);
+router.get("/fetch-user", FetchUser);
+router.get("/fetchuser-byid/:userId", FetchUserById);
+router.post("/create-volunteer", CreateVolunteer);
+router.get("/fetch-volunteer", FetchVolunteer);
+// admin routes of login and signup
+router.post("/create-admin", CreateAdmin);
+router.post("/login-admin", LoginAdmin);
+router.post("/forgot-password", ForgotPassword);
+router.get("/fetchadmin-byid/:userId", FetchAdminById);
+
 // admin donor routes
-router.post("/create-donor", CreateDonor)
-router.put("/approve-donor/:id", ApproveDonor)
-router.put("/complete-donor/:id", CompleteDonor)
+router.post("/create-donor", CreateDonor);
+router.put("/approve-donor/:id", ApproveDonor);
+router.put("/complete-donor/:id", CompleteDonor);
+router.put("/update-deliver/:id", UpdateDelivere);
+router.put("/Reject-donor/:id", RejectDonor);
+router.get("/fetch-donor-pending", FetchDonor);
+router.get("/fetch-donor-approved", FetchDonorApproved);
+router.get("/fetch-d-process", FetchDonProcessReq);
+router.get("/fetch-donor-delivered", FetchDonorDelivered);
+router.put("/Update-active/:id", UpdateActive);
+// active list route of admin
+router.get("/fetch-active", FetchActive);
+router.put("/Update-deactivate/:id", UpdateDeactivate);
+
 //admin volunteer routes
-router.put("/approve-volunteer/:id", ApproveVolunteer)
-router.put("/complete-volunteer/:id", CompleteVolunteer)
+router.post("/vol-login", LoginVolunteer);
+router.put("/approve-volunteer/:id", ApproveVolunteer);
+router.put("/complete-volunteer/:id", CompleteVolunteer);
+router.put("/freeze-volunteer/:id", Freezvolunteer);
+router.put("/vol-req-accept/:id", VolunteerAcceptRequest);
+router.get("/fetch-vol-process/:id", FetachVolProcessReq);
+router.get("/fetch-vol-process-all/:id", FetchVolunteerProcessAll);
+router.get("/fetch-vol-complete-all/:id", FetchVolunteerCompleteAll);
+
 // admin needy routes
-router.get("/needy-request/:id", NeedyRequest)
-router.get("/approve-needy/:id", ApproveNeedy)
-router.get("/complete-needy/:id", CompleteNeedy)
+router.put("/needy-request/:id", NeedyRequest);
+router.get("/approve-needy/:id", ApproveNeedy);
+router.get("/complete-needy/:id", CompleteNeedy);
+router.get("/fetch-needy-pending", FetchNeedyPending);
+router.put("/update-needy-approved/:id", UpdateNeedyApproved);
+router.delete("/Reject-needy/:id", RejectNeedy);
+router.get("/fetch-needy-approved", FetchNeedyApproved);
+router.get("/fetch-needy-process", FetchNeedyProcess);
+router.put("/update-needy-process/:id", UpdateNeedyProcess);
+router.put("/update-needy-delivered/:id", UpdateNeedyDelivered);
+router.get("/fetch-needy-delivered", FetchNeedyDelivered);
 
+// statistics
+router.get("/count-pending-users", CountPendingUsers);
+router.get("/count-active-users", CountActiveUsers);
+router.get("/count-freeze-users", CountFreezeUsers);
+router.get("/count-vol", CountVolunteer);
 
+router.get("/count-pending-donor", CountPendingDonor);
+router.get("/count-approve-donor", CountApprovedDonor);
+router.get("/count-process-donor", CountProcessDonor);
+router.get("/count-complete-donor", CountCompletedDonor);
 
+router.get("/count-pending-needy", CountPendingNeedy);
+router.get("/count-approve-needy", CountApprovedNeedy);
+router.get("/count-process-needy", CountProcessNeedy);
+router.get("/count-complete-needy", CountCompletedNeedy);
 
-
-
-
-
-
-
-
-
-
+router.get("/vol-new-count/:id", CountVolNew);
+router.get("/vol-process-count/:id", CountVolProcess);
+router.get("/vol-completed-count/:id", CountVolCompleted);
 
 module.exports = router;

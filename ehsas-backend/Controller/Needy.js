@@ -2,36 +2,48 @@ const { con } = require("../config/db");
 
 const NeedyRequest = (req, res) => {
   const id = req.params.id;
-  const { bookname } = req.body;
+
+  const { reqId } = req.body;
+
+  console.log(req.body);
 
   const sql = "SELECT `request` AS requestCount FROM `users` WHERE id=?";
 
   con.query(sql, [id], (err, result) => {
     if (err) {
       console.log(err);
-      return res.status(400).json({ msg: "error in the check request", err });
-    }
-    const requestCount = result[0].requestCount;
-    console.log(requestCount);
-    if (requestCount >= 3) {
-      return res
-        .status(400)
-        .json({ msg: " request limit complete of this month", err });
-    }
-    // const user = { id,bookname };
-    const qry ="UPDATE `users` SET   `bookname`= ? , `request`=`request` + 1 WHERE id= ? ";
-    con.query(qry, [bookname,id], (err, data) => {
-      if (err) {
-        console.log(err);
-        return res.status(400).json({ msg: "error in the needy request", err });
+      return res.json({ msg: "error in the needy request request" });
+    } else {
+      const limitCount = result[0].requestCount;
+      console.log(limitCount);
+      if (limitCount > 2) {
+        return res.json({ msg: "request limit complete of this month" });
+      } else {
+        const sql = "INSERT INTO `needy`(`user_id`, `req_id`) VALUES (?, ?)";
+        con.query(sql, [id, reqId], (err, respo) => {
+          if (err) {
+            console.log(err);
+            return res.json(err);
+          } else {
+            IncreaseReq(id, limitCount);
+            return res.json({ msg: "Request submitted" });
+          }
+        });
       }
-      return res.json({ msg: "successfuly submit request", data });
-    });
+      // const user = { id,bookname };
+    }
   });
 };
 
+async function IncreaseReq(uid, limit) {
+  const newLimint = limit + 1;
 
-
+  const sql = "UPDATE `users` SET `request`= ? WHERE `id` = ?";
+  con.query(sql, [newLimint, uid], (err, data) => {
+    if (err) throw err;
+    console.log("Request Updated");
+  });
+}
 
 const ApproveNeedy = (req, res) => {
   const { id } = req.params;
@@ -47,21 +59,158 @@ const ApproveNeedy = (req, res) => {
   });
 };
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const CompleteNeedy = (req, res) => {
   const { id } = req.params;
-  const sql = "UPDATE `users` SET status='complete' WHERE id=? ";
+  const sql = "UPDATE `users` SET status='Delivered' WHERE id=? ";
   con.query(sql, [id], (err, data) => {
     if (err) {
       console.log(err);
       return res
         .status(400)
-        .json({ msg: "error in complete needy request ", err });
+        .json({ msg: "error in Delivered needy request ", err });
     }
-    return res.json({ msg: "successfuly complete request", data });
+    return res.json({ msg: "successfuly Delivered needy request", data });
   });
 };
+
+const FetchNeedyPending = (req, res) => {
+  const sql =
+    "SELECT n.*, u.name, u.email, u.phone, u.address, u.gender FROM needy n JOIN users u ON u.id=n.user_id  WHERE n.req_status = 'Pending'";
+  con.query(sql, (err, data) => {
+    if (err) {
+      console.log("error in fetch Needy", err);
+    }
+    return res.json({ msg: "Needy fetch successfuly ", data });
+  });
+};
+
+const UpdateNeedyApproved = (req, res) => {
+  const { id } = req.params;
+  if (!id) {
+    return res.status(400).json({ msg: "needy id is required" });
+  }
+  //   update query for status
+  const sql = "UPDATE `needy` SET req_status='Approved'  WHERE id=?";
+  con.query(sql, [id], (err, data) => {
+    if (err) {
+      console.log(err);
+      return res.json({ msg: "error in approving needy", err });
+    } else {
+      return res.json({ msg: " Needy Approve Successfuly" });
+    }
+  });
+};
+const UpdateNeedyProcess = (req, res) => {
+  const { id } = req.params;
+  if (!id) {
+    return res.status(400).json({ msg: "needy id is required" });
+  }
+  //   update query for status
+  const sql = "UPDATE `needy` SET req_status='Process'  WHERE id=?";
+  con.query(sql, [id], (err, data) => {
+    if (err) {
+      console.log(err);
+      return res.json({ msg: "error in Process needy", err });
+    } else {
+      return res.json({ msg: " Needy in  Process" });
+    }
+  });
+};
+const RejectNeedy = (req, res) => {
+  const { id } = req.params;
+  if (!id) {
+    return res.status(400).json({ msg: "try again" });
+  }
+  const qry = "DELETE FROM `needy` WHERE id=?";
+  con.query(qry, [id], (err, data) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({ msg: "error in reject donor", err });
+    } else {
+      return res.json({ msg: "donor request reject" });
+    }
+  });
+};
+
+const FetchNeedyApproved = (req, res) => {
+  const sql =
+    " SELECT n.*, u.name, u.email, u.phone FROM needy n JOIN users u ON u.id=n.user_id  WHERE n.req_status = 'Approved'";
+  con.query(sql, (err, data) => {
+    if (err) {
+      console.log("error in fetch Approved", err);
+    } else {
+      return res.json({ msg: "Approved fetch successfuly ", data });
+    }
+  });
+};
+const FetchNeedyProcess = (req, res) => {
+  const sql =
+    " SELECT n.*, u.name, u.email, u.phone FROM needy n JOIN users u ON u.id=n.user_id  WHERE n.req_status = 'Process'";
+  con.query(sql, (err, data) => {
+    if (err) {
+      console.log("error in fetch Approved", err);
+    } else {
+      return res.json(data);
+    }
+  });
+};
+const UpdateNeedyDelivered = (req, res) => {
+  const { id } = req.params;
+  if (!id) {
+    return res.status(400).json({ msg: "needy id is required" });
+  }
+  //   update query for status
+  const sql = "UPDATE `needy` SET req_status='Delivered'  WHERE id=?";
+  con.query(sql, [id], (err, data) => {
+    if (err) {
+      console.log(err);
+      return res.json({ msg: "error in Delivered needy", err });
+    } else {
+      return res.json({ msg: " Needy Book Delivered" });
+    }
+  });
+};
+const FetchNeedyDelivered = (req, res) => {
+  const sql =
+    "SELECT n.*, u.name, u.email, u.phone FROM needy n JOIN users u ON u.id=n.user_id  WHERE n.req_status = 'Delivered'";
+  con.query(sql, (err, data) => {
+    if (err) {
+      console.log("error in fetch Delivered", err);
+    } else {
+      return res.json({ msg: "Delivered fetch successfuly ", data });
+    }
+  });
+};
+
 module.exports = {
   ApproveNeedy,
   CompleteNeedy,
   NeedyRequest,
+  FetchNeedyPending,
+  FetchNeedyApproved,
+  FetchNeedyDelivered,
+  UpdateNeedyApproved,
+  RejectNeedy,
+  FetchNeedyProcess,
+  UpdateNeedyProcess,
+  UpdateNeedyDelivered,
 };
