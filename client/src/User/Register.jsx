@@ -2,16 +2,17 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
+import "./Login.css";
 
 const Register = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [value, setValue] = useState({
     name: "",
-    email:" ",
-    phone:" ",
+    email: " ",
+    phone: " ",
     password: "",
-    address:" ",
-    gender:" ",
+    address: " ",
+    gender: " ",
     image: " ",
   });
 
@@ -19,33 +20,33 @@ const Register = () => {
     setValue({ ...value, [e.target.name]: e.target.value });
   };
 
-    const handleImage = (e) => {
-      const file = e.target.files[0];
-      const reader = new FileReader();
+  const handleImage = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
 
-      reader.readAsDataURL(file);
-      reader.addEventListener("load", () => {
-        setValue({ ...value, image: reader.result });
-      });
-    };
-    const navigate = useNavigate();
+    reader.readAsDataURL(file);
+    reader.addEventListener("load", () => {
+      setValue({ ...value, image: reader.result });
+    });
+  };
+  const navigate = useNavigate();
 
   const Submit = async (e) => {
     e.preventDefault();
-    const postData = {...value};
-     try {
-         const res = await axios.post(
-             "http://localhost:8000/create-user",
-             postData
-          );
-           console.log("register successful", res);
-           alert("Register successful")
-           navigate("/login");
-        } catch (error) {
-          setErrorMessage("User Already exist. Please try again!");
-          console.log("register failed",error.message);
-         }
-    console.log(value);
+    const postData = { ...value };
+    try {
+      const res = await axios.post(
+        "http://localhost:8000/create-user",
+        postData
+      );
+
+      alert(res.msg);
+      navigate("/login");
+    } catch (error) {
+      setErrorMessage("User Already exist. Please try again!");
+      console.log("register failed", error.message);
+    }
+    // console.log(value);
   };
 
   return (
@@ -80,7 +81,7 @@ const Register = () => {
                 </label>
                 <input
                   type="text"
-                  className="form-control rounded-pill"
+                  className="form-control rounded-pill home-input"
                   id="name"
                   placeholder="Enter your name"
                   required
@@ -95,7 +96,7 @@ const Register = () => {
                 </label>
                 <input
                   type="text"
-                  className="form-control rounded-pill"
+                  className="form-control rounded-pill home-input"
                   id="email"
                   placeholder="Enter your email"
                   required
@@ -111,7 +112,7 @@ const Register = () => {
                 </label>
                 <input
                   type="text"
-                  className="form-control rounded-pill"
+                  className="form-control rounded-pill home-input"
                   id="phone"
                   required
                   placeholder="Enter your phone number"
@@ -125,7 +126,7 @@ const Register = () => {
                 </label>
                 <input
                   type="password"
-                  className="form-control rounded-pill"
+                  className="form-control rounded-pill home-input"
                   id="password"
                   placeholder="Enter your password"
                   required
@@ -138,7 +139,7 @@ const Register = () => {
               <label className="text-dark">Address</label>
               <input
                 type="text"
-                className="form-control rounded-pill"
+                className="form-control rounded-pill home-input"
                 id="address"
                 placeholder="Enter your address"
                 required
@@ -154,7 +155,7 @@ const Register = () => {
                     <select
                       name="gender"
                       id=""
-                      className="form-control"
+                      className="form-control home-input"
                       required
                       onChange={handlInput}
                     >
@@ -175,26 +176,37 @@ const Register = () => {
               <input
                 type="file"
                 required
-                className="form-control"
+                className="form-control home-input"
                 onChange={handleImage}
                 name="internImg"
                 accept=".jpg, .jpeg, .png"
                 id=""
               />
 
-              <img src={value.image} alt="" width={150} height={80} className="mt-2" />
+              <img
+                src={value.image}
+                alt=""
+                width={150}
+                height={80}
+                className="mt-2"
+              />
             </div>
             <div className="d-flex justify-content-center">
               <button
                 type="submit"
                 className="btn btn-primary mx-auto rounded-pill custom-btn"
-                style={{ backgroundColor: "#007bff", borderColor: "#007bff", width:"60%" }}
+                style={{
+                  backgroundColor: "#007bff",
+                  borderColor: "#007bff",
+                  width: "60%",
+                }}
               >
                 Sign Up
               </button>
-              
             </div>
-            <p className="d-flex justify-content-center mt-4">Already Have account? <NavLink to="/login" >Login here</NavLink></p>
+            <p className="d-flex justify-content-center mt-4">
+              Already Have account? <NavLink to="/login">Login here</NavLink>
+            </p>
           </form>
         </div>
       </div>

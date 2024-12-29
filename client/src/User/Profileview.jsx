@@ -1,51 +1,37 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./Navbar.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Profileview = () => {
   // for token check
-  // const navigate=useNavigate()
-  // useEffect(() => {
-  //   const token=localStorage.getItem("token")
-  //  if (!token) {
-  //   navigate("/login")
-    
-  //  }
-  
-  // }, [])
-  
-  // this is fetch profile
-  const [profile, setprofile] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    gender: "",
-  })
-  const Fetch=async()=>{
-    const userId=localStorage.getItem("userId")
-    if (!userId) {
-      console.log("user not logged in")
-    }
-    await axios.get(`http://localhost:8000/fetch-user/${userId}`).then((res)=>{
-      setprofile(res.data.data)
-    }).catch((error)=>{
-      console.log(error)
-
-    })
-
-  }
+  const navigate = useNavigate();
   useEffect(() => {
-    Fetch()
-  }, [])
-  
-  
-  // this is create donor code 
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+      navigate("/register");
+    }
+  }, []);
+  // this is fetch profile
+  const [profile, setprofile] = useState([]);
+  const Fetch = async () => {
+    const userId = sessionStorage.getItem("id");
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/fetchuser-byid/${userId}`
+      );
+      console.log("API Response:", response.data);
+      setprofile([response.data]); // Correct usage
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+  useEffect(() => {
+    Fetch();
+  }, []);
+
+  // this is create donor code
   const [value, setvalue] = useState({
-    name: "",
-    email: "",
-    address: "",
-    phone: "",
     book_name: "",
     book_edition: "",
     auther_name: "",
@@ -73,17 +59,16 @@ const Profileview = () => {
   const handleImage = (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
-
     reader.readAsDataURL(file);
     reader.addEventListener("load", () => {
       setvalue({ ...value, image: reader.result });
     });
   };
-  const [form, setForm] = useState();
+  // const [form, setForm] = useState();
 
-  const toggleForm = () => {
-    setForm((state) => !state);
-  };
+  // const toggleForm = () => {
+  //   setForm((state) => !state);
+  // };
   return (
     <>
       <nav className="navbar-user">
@@ -111,7 +96,11 @@ const Profileview = () => {
         </div>
 
         <div className="switch-to-donor">
-          <button className="donor-button" onClick={toggleForm}>
+          <button
+            className="donor-button"
+            data-bs-toggle="modal"
+            data-bs-target="#staticBackdrop"
+          >
             Switch to Donate
           </button>
         </div>
@@ -135,55 +124,55 @@ const Profileview = () => {
               </NavLink>
             </li>
             <li>
-              <button className="dropdown-item">
-                Logout
-              </button>
+              <button className="dropdown-item">Logout</button>
             </li>
           </ul>
         </div>
       </nav>
-      
-      <div class="container profile-container bg-gray">
-      {Array.isArray(profile) && profile.length >0 ? (profile.map((rs)=>{
-        const {id,name,email,phone,gender}=rs
-        return(
-        <div class="profile-left col-lg-4 col-md-4 col-sm-12" key={id}>
-          <div class="text-center">
-            <img
-              src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8bWVucyUyMHdpdGglMjBjb2F0fGVufDB8fDB8fHww"
-              alt="Profile Image"
-              class="profile-img"
-            />
-          
-            <h3 class="mt-2">{name}</h3>
-            <p>Web Developer</p>
-          </div>
 
-          <div>
-            <h4
-              className=""
-              style={{ "padding-left": "60px", "padding-top": "30px" }}
-            >
-              Contact Information
-            </h4>
-            <ul class="list-group ">
-              <li class="list-group-item">
-                <strong>Email:</strong> {email}
-              </li>
-              <li class="list-group-item">
-                <strong>Phone:</strong> {phone}
-              </li>
-              <li class="list-group-item">
-                <strong>Gender:</strong> {gender}
-              </li>
-            </ul>
-          </div>
-        </div>
-      )
-    })
-   ) : (
-<p> No data available.</p>
-   )}
+      <div class="container profile-container bg-gray">
+        {Array.isArray(profile) && profile.length > 0 ? (
+          profile.map((rs) => {
+            console.log("hey bhi", rs);
+            const { id, name, email, phone, gender } = rs;
+            return (
+              <div class="profile-left col-lg-4 col-md-4 col-sm-12" key={id}>
+                <div class="text-center">
+                  <img
+                    src=""
+                    alt="Profile Image"
+                    class="profile-img"
+                  />
+
+                  <h3 class="mt-2">{name}</h3>
+                  <p>Web Developer</p>
+                </div>
+
+                <div>
+                  <h4
+                    className=""
+                    style={{ "padding-left": "60px", "padding-top": "30px" }}
+                  >
+                    Contact Information
+                  </h4>
+                  <ul class="list-group ">
+                    <li class="list-group-item">
+                      <strong>Email:</strong> {email}
+                    </li>
+                    <li class="list-group-item">
+                      <strong>Phone:</strong> {phone}
+                    </li>
+                    <li class="list-group-item">
+                      <strong>Gender:</strong> {gender}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            );
+          })
+        ) : (
+          <p> No data available.</p>
+        )}
 
         <div class="profile-right col-lg-8 col-md-8 col-sm-12">
           <div>
@@ -209,8 +198,7 @@ const Profileview = () => {
           <div class="mt-4">
             <h4>About</h4>
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
-              nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi.
+              Student of Riphah
             </p>
           </div>
         </div>
@@ -230,7 +218,7 @@ const Profileview = () => {
             <div class="modal-content">
               <div class="modal-header">
                 <h1 class="modal-title fs-5" id="staticBackdropLabel">
-                  Modal title
+                  Donate Book
                 </h1>
                 <button
                   type="button"
@@ -250,79 +238,20 @@ const Profileview = () => {
                   </p>
                 </div>
 
-                <form onSubmit={Submit} className="">
-                  <div className="row">
-                    <div className="col-md-6 mb-3">
-                      <label htmlFor="name" className="text-dark">
-                        Name
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control rounded-pill"
-                        id="name"
-                        placeholder=" your name"
-                        required
-                        name="name"
-                        onChange={handleInput}
-                      />
-                    </div>
-                    <div className="col-md-6 mb-3">
-                      <label htmlFor="email" className="text-dark">
-                        Email
-                      </label>
-                      <input
-                        type="email"
-                        className="form-control rounded-pill"
-                        id="email"
-                        placeholder="your Email"
-                        required
-                        name="email"
-                        onChange={handleInput}
-                      />
-                    </div>
-                  </div>
-                  <div className="form-group mb-3">
-                    <label className="text-dark">Address</label>
+                <form onSubmit={Submit}>
+                  <div className="col-md-12 mb-3">
+                    <label htmlFor="book" className="text-dark">
+                      Book Name
+                    </label>
                     <input
                       type="text"
                       className="form-control rounded-pill"
-                      id="address"
-                      placeholder=" your address"
+                      id="book"
+                      placeholder="your book name"
                       required
-                      name="address"
+                      name="book_name"
                       onChange={handleInput}
                     />
-                  </div>
-
-                  <div className="row">
-                    <div className="col-md-6 mb-3">
-                      <label htmlFor="phone" className="text-dark">
-                        Phone Number
-                      </label>
-                      <input
-                        type="phone"
-                        className="form-control rounded-pill"
-                        id="phone"
-                        placeholder="your phone number"
-                        required
-                        name="phone"
-                        onChange={handleInput}
-                      />
-                    </div>
-                    <div className="col-md-6 mb-3">
-                      <label htmlFor="book" className="text-dark">
-                        Book Name
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control rounded-pill"
-                        id="book"
-                        placeholder="your book name"
-                        required
-                        name="book_name"
-                        onChange={handleInput}
-                      />
-                    </div>
                   </div>
 
                   <div className="row">
@@ -378,9 +307,7 @@ const Profileview = () => {
                     />
                   </div>
 
-                  <div className="d-flex justify-content-center gap-4">
-                  
-                  </div>
+                  <div className="d-flex justify-content-center gap-4"></div>
                 </form>
               </div>
               <div class="modal-footer">

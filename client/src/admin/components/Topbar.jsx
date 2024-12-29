@@ -1,6 +1,16 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 
 export const Topbar = () => {
+
+  const LogOut=()=>{
+  const token=sessionStorage.getItem("token")
+  if(token){
+    sessionStorage.removeItem("token")
+    alert("successfuly logout")
+    window.location.href="/login"
+  }
+}
   return (
     <>
       <nav className="navbar navbar-expand px-3 border-bottom">
@@ -40,12 +50,12 @@ export const Topbar = () => {
               <div className="dropdown-menu dropdown-menu-end">
                 <ul>
                   <li>
-                    <a href="profile.html" className="dropdown-item">
+                    <NavLink to="/adminprofileview" className="dropdown-item">
                       Profile
-                    </a>
+                    </NavLink>
                   </li>
                   <li>
-                    <a href="login.html" className="dropdown-item border-top">
+                    <a href="login.html" className="dropdown-item border-top" onClick={LogOut}>
                       Logout
                     </a>
                   </li>

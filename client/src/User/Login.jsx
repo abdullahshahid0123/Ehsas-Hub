@@ -1,47 +1,43 @@
-import React,{useState} from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate , NavLink } from "react-router-dom";
 import axios from "axios";
+import "./Login.css"
 
 const login = () => {
   const [errorMessage, setErrorMessage] = useState("");
-  const [value,setValue]=useState({
-    email:"",
-    password:""
+  const [value, setValue] = useState({
+    email: "",
+    password: "",
+  });
+  const handleInput = (e) => {
+    setValue({ ...value, [e.target.name]: e.target.value });
+  };
+  const navigate = useNavigate();
 
-  })
-  const handleInput=(e)=>{
-    setValue({ ...value,[e.target.name]: e.target.value})
-  }
-  const navigate=useNavigate()
-
-  const Submit=async(e)=>{
-    e.preventDefault()
-    const logData={...value}
+  const Submit = async (e) => {
+    e.preventDefault();
+    const logData = { ...value };
     try {
-      const res=await axios.post("http://localhost:8000/login",logData)
+      const res = await axios.post("http://localhost:8000/login", logData);
 
-      const token=res.data.token
-      localStorage.setItem("authtoken",token)
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      const token = res.data.token;
+      sessionStorage.setItem("token", token);
+      sessionStorage.setItem("id", res.data.user.id);
+      // axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
-      console.log("register successful",res.data)
+      console.log("register successful", res.data);
 
-      alert('Login Successfully')
-      navigate("/home")
+      alert("Login Successfully");
       setErrorMessage("");
-      
+      navigate("/home");
     } catch (error) {
       setErrorMessage("Invalid Credential. Please try again!");
-      console.log("login here",error.message)
-
-      
+      console.log("login here", error.message);
     }
-    
-
-  }
+  };
   return (
     <>
-    <div className="signup-container d-flex align-items-center justify-content-center min-vh-100 ">
+      <div className="signup-container d-flex align-items-center justify-content-center min-vh-100 ">
         <div
           className="card shadow-lg p-4 "
           style={{
@@ -71,7 +67,7 @@ const login = () => {
                 </label>
                 <input
                   type="text"
-                  className="form-control rounded-pill"
+                  className="form-control rounded-pill home-input"
                   id="email"
                   placeholder=" Your email"
                   name="email"
@@ -87,7 +83,7 @@ const login = () => {
               </label>
               <input
                 type="password"
-                className="form-control rounded-pill"
+                className="form-control rounded-pill home-input"
                 id="password"
                 placeholder=" Your password"
                 required
@@ -95,8 +91,11 @@ const login = () => {
                 onChange={handleInput}
               />
             </div>
+            <p className="d-flex justify-content-end ">
+              <NavLink to="/resetpass">Forgot Password?</NavLink>
+            </p>
 
-            <div className="d-flex justify-content-center mt-5 mb-3">
+            <div className="d-flex justify-content-center mt-4 mb-3">
               <button
                 type="submit"
                 className="btn btn-primary w-75 mx-auto rounded-pill custom-btn"
@@ -105,6 +104,9 @@ const login = () => {
                 Login
               </button>
             </div>
+            <p className="d-flex justify-content-center mt-4">
+            Not Have account? <NavLink to="/register">Signup here</NavLink>
+          </p>
           </form>
         </div>
       </div>
