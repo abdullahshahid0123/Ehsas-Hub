@@ -38,7 +38,7 @@ async function SendMailRequest(name, email) {
               overflow: hidden;
           }
           .email-header {
-              background-color:rgb(9, 13, 20);
+              background-color: #0d6efd;
               color: #ffffff;
               padding: 20px;
               text-align: center;
