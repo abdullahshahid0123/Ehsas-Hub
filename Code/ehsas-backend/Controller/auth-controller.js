@@ -10,7 +10,19 @@ const {
 } = require("../mail/app-mailer");
 
 const CreateUser = async (req, res) => {
-  console.log("Route hit");
+//  const ValidPassword=()=>{
+//   if(!password.lengt<8) return "password must be 8 character "
+//   if(!/[A-Z]/.test(password)) return "password must have uppercase "
+//   if(!/[a-z])/.test(password)) return "password must have lowercase "
+//   if(!/[0-9])/.test(password)) return "password must have Numbers"
+//   if(!/[@#$%^&*(),.?":{}|<>]]/.test(password)) return "passsword must have special character"
+
+
+
+
+  
+
+//  }
   const { name, email, phone, password, address, gender, image } = req.body;
 
   if (!name || !email || !phone || !password || !address || !gender || !image) {
@@ -25,6 +37,7 @@ const CreateUser = async (req, res) => {
     if (data.length > 0) {
       return res.status(500).json({ msg: "user already exist", data });
     }
+
 
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(password, salt);
@@ -88,7 +101,7 @@ const UserForgotPassword = (req, res) => {
     if (err) throw err;
 
     if (data.length === 0) {
-      return res.status(404).json({ msg: "User not found" });
+      return res.status(404).json({ msg: "email and password are incorrect" });
     }
 
     // Hash the new password

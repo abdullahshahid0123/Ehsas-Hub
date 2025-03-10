@@ -139,7 +139,7 @@ const Profileview = () => {
               <div class="profile-left col-lg-4 col-md-4 col-sm-12" key={id}>
                 <div class="text-center">
                   <img
-                    src=""
+                    src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8bWVucyUyMHdpdGglMjBjb2F0fGVufDB8fDB8fHww"
                     alt="Profile Image"
                     class="profile-img"
                   />
@@ -198,7 +198,8 @@ const Profileview = () => {
           <div class="mt-4">
             <h4>About</h4>
             <p>
-              Student of Riphah
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
+              nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi.
             </p>
           </div>
         </div>

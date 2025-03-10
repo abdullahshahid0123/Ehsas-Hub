@@ -26,14 +26,6 @@ const CountFreezeUsers = (req, res) => {
   });
 };
 
-
-
-
-
-
-
-
-
 const CountVolunteer = (req, res) => {
   const sql = "SELECT COUNT(id) as volUsers FROM `volunteer` WHERE status = 1";
   con.query(sql, (err, data) => {

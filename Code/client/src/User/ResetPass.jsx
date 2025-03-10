@@ -53,7 +53,7 @@ const ResetPass = () => {
               <i class="fa-solid fa-right-to-bracket fa-3x"></i>
             </div>
             <h3 className="text-primary">Reset Your Password</h3>
-             <p className="text-secondary">Reset User Password</p>
+             
           </div>
           {errorMessage && (
             <div className="text-center mb-4">
@@ -86,7 +86,7 @@ const ResetPass = () => {
                 type="password"
                 className="form-control rounded-pill home-input"
                 id="password"
-                placeholder="Your New password"
+                placeholder="Enter New password"
                 required
                 name="password"
                 onChange={handleInput}

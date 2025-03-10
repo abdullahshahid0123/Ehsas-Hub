@@ -59,25 +59,6 @@ const ApproveNeedy = (req, res) => {
   });
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 const CompleteNeedy = (req, res) => {
   const { id } = req.params;
   const sql = "UPDATE `users` SET status='Delivered' WHERE id=? ";
