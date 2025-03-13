@@ -3,13 +3,13 @@ import React from "react";
 const Verifyuser = () => {
   return (
     <>
-      <div className="container " style={{ "margin-top": "12%" }}>
+      <div className="container " style={{ "margin-top": "8%" }}>
         <div className="row justify-content-center">
           <div className="col-md-5">
             <div className="card shadow-lg p-4 ">
               <div className="card-body">
                 <h4 className="card-title text-center mb-3 text-primary ">
-                  Verify Your Account
+                  Verify Account And Create Password
                 </h4>
                 <p className="text-center text-muted mb-4">
                   Please enter the 4-digit code sent to your email.
@@ -32,6 +32,27 @@ const Verifyuser = () => {
                       }}
                     />
                   </div>
+                  <div>
+                  
+                <label htmlFor="Password" className="text-dark ml-20">
+                  New Password
+                </label>
+                    <input
+                      type="text"
+                      class="form-control mb-4"
+                      maxlength="10"
+                      placeholder="Enter new Password "
+                      required
+                      style={{
+                        margin: "auto",
+                        width: "70%",
+
+                        "text-align": "",
+                        " font-size": "50%",
+                        "vertical-align": "middle",
+                      }}
+                    />
+                  </div>
                   <div
                     className="d-flex justify-content-center align-items-center mb-4 "
                     style={{ gap: "30%" }}
@@ -42,10 +63,10 @@ const Verifyuser = () => {
                       id="resendCode"
                       disabled
                     >
-                      Resend Code <span id="timer">(60s)</span>
+                   <span>Click To verify</span>
                     </button>
-                    <button type="submit" className="btn btn-primary">
-                      Verify
+                    <button type="submit" className="btn btn-primary ml-">
+                     Reset Password 
                     </button>
                   </div>
                 </form>

@@ -1,10 +1,10 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { useNavigate,NavLink } from "react-router-dom";
-import "./Login.css"
+import { useNavigate, NavLink } from "react-router-dom";
+import "./Login.css";
 
 const ResetPass = () => {
-    const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [value, setValue] = useState({
     email: "",
   });
@@ -17,19 +17,20 @@ const ResetPass = () => {
     e.preventDefault();
     const logData = { ...value };
     try {
-      const res = await axios.post("http://localhost:8000/user-forgot-pass", logData);
+      const res = await axios.post(
+        "http://localhost:8000/user-forgot-pass",
+        logData
+      );
 
       const token = res.data.token;
-    sessionStorage.setItem("token", token);
+      sessionStorage.setItem("token", token);
       // sessionStorage.setItem("id", res.data.user.id);
-      
 
       console.log("register successful", res.data);
 
-      alert("Set Password Successfully");
+      alert("User found successfully");
       setErrorMessage("");
       navigate("/verifyuser");
-      
     } catch (error) {
       setErrorMessage("Invalid Credential. Please try again!");
       console.log("login here", error.message);
@@ -52,7 +53,6 @@ const ResetPass = () => {
               <i class="fa-solid fa-right-to-bracket fa-3x"></i>
             </div>
             <h3 className="text-primary">Reset Password</h3>
-             
           </div>
           {errorMessage && (
             <div className="text-center mb-4">
@@ -77,20 +77,18 @@ const ResetPass = () => {
               </div>
             </div>
 
-          
-
             <div className="d-flex justify-content-center mt-5 mb-3">
               <button
                 type="submit"
                 className="btn btn-primary w-75 mx-auto rounded-pill custom-btn"
                 style={{ backgroundColor: "#007bff", borderColor: "#007bff" }}
               >
-                Reset Password
+                Verify
               </button>
             </div>
             <p className="d-flex justify-content-center mt-4">
-            Not Have account? <NavLink to="/adminsignup">Signup here</NavLink>
-          </p>
+              Not Have account? <NavLink to="/adminsignup">Signup here</NavLink>
+            </p>
           </form>
         </div>
       </div>

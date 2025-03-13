@@ -10,6 +10,7 @@ const {
   RejectUser,
   FreezeUser,
   UserForgotPassword,
+  userResetPass,
 } = require("../Controller/auth-controller");
 const {
   CreateVolunteer,
@@ -84,6 +85,8 @@ router.post("/create-user", CreateUser);
 router.post("/login", LoginUser);
 router.put("/update-interest/:id", UpdateInterest);
 router.post("/user-forgot-pass", UserForgotPassword);
+router.post("/user-reset-pass",userResetPass );
+
 
 // admin routes
 router.put("/approve-user/:id", ApproveUser);

@@ -293,11 +293,11 @@ async function SendMailRejectUser(name, email) {
   });
 }
 
-async function SendMailVerifyEmail() {
-  const verificationCode=()=>{
-    Math.floor(1000 + Math.random() *1000)
-  }
-  const generateCode=verificationCode()
+async function SendMailVerifyEmail(user, email) {
+  const verificationCode = () => {
+    Math.floor(1000 + Math.random() * 1000);
+  };
+  const generateCode = verificationCode();
   const transporter = nodemailer.createTransport({
     service: "gmail", // or use 'smtp' for custom configuration
     auth: {
@@ -306,10 +306,13 @@ async function SendMailVerifyEmail() {
     },
   });
 
+  // console.log("mailuser", process.env.MAILUSER),
+  //   console.log("mailuser", process.env.MAILPASS);
+
   // Define the email options
   const mailOptions = {
     from: "Ehsas Hub <ehsashubb@gmail.com>",
-    to: "qamargill427@gmail.com",
+    to:email,
     subject: "Verify Your Email Address for Ehsas Hub",
     html: `
     <!DOCTYPE html>

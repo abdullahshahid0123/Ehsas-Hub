@@ -2,11 +2,13 @@ const { con } = require("../config/db");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const { v4: uuidv4 } = require("uuid");
+const nodemailer = require("nodemailer");
 const {
   SendMailApproveUser,
   SendMailRequest,
   SendMailRejectUser,
   SendMailFreeze,
+  SendMailVerifyEmail,
 } = require("../mail/app-mailer");
 
 const CreateUser = async (req, res) => {
@@ -97,39 +99,16 @@ const UserForgotPassword = (req, res) => {
     if (data.length === 0) {
       return res.status(404).json({ msg: "email not found" });
     }
-    const resetCode = Math.floor(1000 + Math.random() * 1000);
-
-    const sql = "INSERT INTO `verify`(`email`, `code`) VALUES (?,?)";
-    con.query(sql, [resetCode, email], async (err) => {
+    const code = await SendMailVerifyEmail(email);
+if (!code) {
+  return res.json({message:"code verification failed"})
+  
+}
+    const sql = "INSERT INTO `verify`(email, code) VALUES (?, ?)";
+    con.query(sql, [ email,code], async (err) => {
       if (err) throw err;
       else {
         res.json({ message: "save successfuly" });
-      }
-      const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: process.env.MAILUSER,
-          pass: process.env.MAILPASS,
-        },
-      });
-
-      const mailOptions = {
-        from: "Ehsas Hub <ehsashubb@gmail.com>",
-        to: email,
-        subject: "Password Reset Code",
-        html: `
-          <h2>Password Reset Request</h2>
-          <p>Use this verification code to reset your password:</p>
-          <h3>${resetCode}</h3>
-          <p>This code will expire in 15 minutes.</p>
-        `,
-      };
-
-      try {
-        await transporter.sendMail(mailOptions);
-        return res.json({ msg: "Reset code sent to your email" });
-      } catch (emailError) {
-        return res.status(500).json({ msg: "Failed to send reset email" });
       }
     });
   });
@@ -147,25 +126,21 @@ const userResetPass = (req, res) => {
       return res.json({ message: "data not found" });
     }
     // Hash the new password
+
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
 
     const updateSql = "UPDATE users SET password=? WHERE email=?";
     con.query(updateSql, [hashedPassword, email], (err) => {
       if (err) {
         return res.status(500).json({ msg: "Failed to update password" });
-      } else {
-        return res.json({ msg: "Password reset successfully" });
       }
-      const delete="DELETE FROM `verify` WHERE email = ?"
-      con.query(delete, [email]);
-        
+      const del = "DELETE FROM `verify` WHERE email = ?";
+      con.query(del, [email]);
       return res.json({ msg: "Password reset successfully" });
-
-    
+    });
   });
-});
-}
+};
 
 const FreezeUser = (req, res) => {
   const { id } = req.params;
@@ -279,4 +254,5 @@ module.exports = {
   FetchUserById,
   UpdateInterest,
   FreezeUser,
+  userResetPass,
 };
