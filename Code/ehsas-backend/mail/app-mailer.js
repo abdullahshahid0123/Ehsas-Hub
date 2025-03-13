@@ -294,6 +294,10 @@ async function SendMailRejectUser(name, email) {
 }
 
 async function SendMailVerifyEmail() {
+  const verificationCode=()=>{
+    Math.floor(1000 + Math.random() *1000)
+  }
+  const generateCode=verificationCode()
   const transporter = nodemailer.createTransport({
     service: "gmail", // or use 'smtp' for custom configuration
     auth: {
@@ -375,9 +379,9 @@ async function SendMailVerifyEmail() {
         </div>
         <div class="email-body">
             <h2>Verify Your Email Address</h2>
-            <p>Dear [User Name],</p>
+            <p>Dear ${user}</p>
             <p>Thank you for signing up with Ehsas Hub. Please use the verification code below to complete your registration process.</p>
-            <div class="verification-code">[Verification Code]</div>
+            <div class="verification-code">${generateCode}</div>
             <p>If you did not request this code, please ignore this email or contact our support team for assistance.</p>
         </div>
         <div class="email-footer">

@@ -24,7 +24,7 @@ const Verifyuser = () => {
                       required
                       style={{
                         margin: "auto",
-                        width: "80%",
+                        width: "70%",
 
                         "text-align": "center",
                         " font-size": "50%",

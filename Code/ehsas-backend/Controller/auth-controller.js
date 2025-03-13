@@ -10,19 +10,14 @@ const {
 } = require("../mail/app-mailer");
 
 const CreateUser = async (req, res) => {
-//  const ValidPassword=()=>{
-//   if(!password.lengt<8) return "password must be 8 character "
-//   if(!/[A-Z]/.test(password)) return "password must have uppercase "
-//   if(!/[a-z])/.test(password)) return "password must have lowercase "
-//   if(!/[0-9])/.test(password)) return "password must have Numbers"
-//   if(!/[@#$%^&*(),.?":{}|<>]]/.test(password)) return "passsword must have special character"
+  //  const ValidPassword=()=>{
+  //   if(!password.lengt<8) return "password must be 8 character "
+  //   if(!/[A-Z]/.test(password)) return "password must have uppercase "
+  //   if(!/[a-z])/.test(password)) return "password must have lowercase "
+  //   if(!/[0-9])/.test(password)) return "password must have Numbers"
+  //   if(!/[@#$%^&*(),.?":{}|<>]]/.test(password)) return "passsword must have special character"
 
-
-
-
-  
-
-//  }
+  //  }
   const { name, email, phone, password, address, gender, image } = req.body;
 
   if (!name || !email || !phone || !password || !address || !gender || !image) {
@@ -37,7 +32,6 @@ const CreateUser = async (req, res) => {
     if (data.length > 0) {
       return res.status(500).json({ msg: "user already exist", data });
     }
-
 
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(password, salt);
@@ -91,9 +85,9 @@ const LoginUser = async (req, res) => {
 };
 
 const UserForgotPassword = (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return res.status(400).json({ msg: "Email and new password are required" });
+  const { email } = req.body;
+  if (!email) {
+    return res.status(400).json({ msg: "Email is required" });
   }
 
   const sql = "SELECT * FROM users WHERE email=?";
@@ -101,23 +95,78 @@ const UserForgotPassword = (req, res) => {
     if (err) throw err;
 
     if (data.length === 0) {
-      return res.status(404).json({ msg: "email and password are incorrect" });
+      return res.status(404).json({ msg: "email not found" });
     }
+    const resetCode = Math.floor(1000 + Math.random() * 1000);
 
+    const sql = "INSERT INTO `verify`(`email`, `code`) VALUES (?,?)";
+    con.query(sql, [resetCode, email], async (err) => {
+      if (err) throw err;
+      else {
+        res.json({ message: "save successfuly" });
+      }
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.MAILUSER,
+          pass: process.env.MAILPASS,
+        },
+      });
+
+      const mailOptions = {
+        from: "Ehsas Hub <ehsashubb@gmail.com>",
+        to: email,
+        subject: "Password Reset Code",
+        html: `
+          <h2>Password Reset Request</h2>
+          <p>Use this verification code to reset your password:</p>
+          <h3>${resetCode}</h3>
+          <p>This code will expire in 15 minutes.</p>
+        `,
+      };
+
+      try {
+        await transporter.sendMail(mailOptions);
+        return res.json({ msg: "Reset code sent to your email" });
+      } catch (emailError) {
+        return res.status(500).json({ msg: "Failed to send reset email" });
+      }
+    });
+  });
+};
+
+const userResetPass = (req, res) => {
+  const { email, resetCode, newPassword } = req.body;
+  if (!email || !resetCode || !newPassword) {
+    res.json({ message: "fields are required" });
+  }
+  const sql = "SELECT * FROM `verify` WHERE email = ? AND resetCode = ? ";
+  con.query(sql, [email, resetCode], async (err) => {
+    if (err) res.json({ message: "field not match" });
+    if (data.length === 0) {
+      return res.json({ message: "data not found" });
+    }
     // Hash the new password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const updateSql = "UPDATE users SET password=? WHERE email=?";
-    con.query(updateSql, [hashedPassword, email], (err, result) => {
+    con.query(updateSql, [hashedPassword, email], (err) => {
       if (err) {
         return res.status(500).json({ msg: "Failed to update password" });
       } else {
         return res.json({ msg: "Password reset successfully" });
       }
-    });
+      const delete="DELETE FROM `verify` WHERE email = ?"
+      con.query(delete, [email]);
+        
+      return res.json({ msg: "Password reset successfully" });
+
+    
   });
-};
+});
+}
+
 const FreezeUser = (req, res) => {
   const { id } = req.params;
   const { name, email } = req.body;

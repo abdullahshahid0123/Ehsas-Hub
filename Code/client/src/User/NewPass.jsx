@@ -1,12 +1,10 @@
-import axios from "axios";
-import React, { useState } from "react";
-import { useNavigate,NavLink } from "react-router-dom";
-import "./Login.css"
+import React from "react";
+import {  NavLink, useNavigate } from "react-router-dom";
 
-const ResetPass = () => {
-    const [errorMessage, setErrorMessage] = useState("");
+const NewPass = () => {
+  const [errorMessage, setErrorMessage] = useState("");
   const [value, setValue] = useState({
-    email: "",
+    password: "",
   });
   const handleInput = (e) => {
     setValue({ ...value, [e.target.name]: e.target.value });
@@ -17,24 +15,26 @@ const ResetPass = () => {
     e.preventDefault();
     const logData = { ...value };
     try {
-      const res = await axios.post("http://localhost:8000/user-forgot-pass", logData);
+      const res = await axios.post(
+        "http://localhost:8000/user-forgot-pass",
+        logData
+      );
 
       const token = res.data.token;
-    sessionStorage.setItem("token", token);
+      sessionStorage.setItem("token", token);
       // sessionStorage.setItem("id", res.data.user.id);
-      
 
       console.log("register successful", res.data);
 
       alert("Set Password Successfully");
       setErrorMessage("");
       navigate("/verifyuser");
-      
     } catch (error) {
       setErrorMessage("Invalid Credential. Please try again!");
       console.log("login here", error.message);
     }
   };
+
   return (
     <>
       <div className="signup-container d-flex align-items-center justify-content-center min-vh-100 ">
@@ -52,7 +52,6 @@ const ResetPass = () => {
               <i class="fa-solid fa-right-to-bracket fa-3x"></i>
             </div>
             <h3 className="text-primary">Reset Password</h3>
-             
           </div>
           {errorMessage && (
             <div className="text-center mb-4">
@@ -77,8 +76,6 @@ const ResetPass = () => {
               </div>
             </div>
 
-          
-
             <div className="d-flex justify-content-center mt-5 mb-3">
               <button
                 type="submit"
@@ -89,8 +86,8 @@ const ResetPass = () => {
               </button>
             </div>
             <p className="d-flex justify-content-center mt-4">
-            Not Have account? <NavLink to="/adminsignup">Signup here</NavLink>
-          </p>
+              Not Have account? <NavLink to="/adminsignup">Signup here</NavLink>
+            </p>
           </form>
         </div>
       </div>
@@ -98,4 +95,4 @@ const ResetPass = () => {
   );
 };
 
-export default ResetPass;
+export default NewPass;

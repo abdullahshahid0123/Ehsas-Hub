@@ -38,6 +38,7 @@ import AdminProfileView from "./admin/pages/AdminProfileView";
 import CreateVolunteer from "./components/CreateVolunteer";
 import Preloader from "./components/Preloader";
 import { useEffect, useState } from "react";
+import NewPass from "./User/NewPass";
 
 function AppWrapper() {
   const location = useLocation();
@@ -65,6 +66,7 @@ function AppWrapper() {
         <Route path="/login" element={<Login />} />
         <Route path="/home" element={<Home />} />
         <Route path="/verifyuser" element={<Verifyuser />} />
+        <Route path="/newpass" element={<NewPass/>} />
         <Route path="/register" element={<Register />} />
         <Route path="/userinterest" element={<UserInterest />} />
 
