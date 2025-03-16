@@ -47,6 +47,7 @@ const CreateUser = async (req, res) => {
       SendMailRequest(name, email);
       return res.json({ msg: "User Created successfully" });
     });
+    console.log(sql)
   });
 };
 

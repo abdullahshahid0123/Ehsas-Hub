@@ -2,9 +2,17 @@ import React, { useState, useEffect } from "react";
 import "./Navbar.css";
 import axios from "axios";
 import { NavLink, useNavigate } from "react-router-dom";
-import "./Home.css"
+import "./Home.css";
 
 const Home = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+
+    if (!token) {
+      navigate("/login");
+    }
+  }, []);
   const LogOut = () => {
     const token = sessionStorage.getItem("token");
     if (token) {
@@ -47,18 +55,6 @@ const Home = () => {
   }, []);
 
   // for token ckecking
-  const navigate = useNavigate();
-  useEffect(() => {
-    const token = sessionStorage.getItem("token");
-    const id = sessionStorage.getItem("id");
-
-    // if (!token) {
-    //   navigate("/register");
-    // }
-    // if (!id) {
-    //   navigate("/login");
-    // }
-  }, []);
 
   const [value, setvalue] = useState({
     id: parseInt(userId),
@@ -145,7 +141,10 @@ const Home = () => {
             <i className="fa-solid fa-user"></i>
           </NavLink>
 
-          <ul className="dropdown-menu  justify-content-start" aria-labelledby="navbarDropdown">
+          <ul
+            className="dropdown-menu  justify-content-start"
+            aria-labelledby="navbarDropdown"
+          >
             <li>
               <NavLink className="dropdown-item  " to="/Profileview">
                 Profile
@@ -230,7 +229,6 @@ const Home = () => {
                     <h1 class="modal-title fs-5" id="staticBackdropLabel">
                       Donate Books
                     </h1>
-                    
                   </div>
                   <div class="modal-body card-body">
                     <div className="text-center mb-3">

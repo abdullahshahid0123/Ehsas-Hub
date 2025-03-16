@@ -3,8 +3,17 @@ import { Sidebar } from "../components/Sidebar";
 import { Topbar } from "../components/Topbar";
 import axios from "axios";
 import "./volunteer.css";
+import { useNavigate } from "react-router-dom";
 
 const Nnewrequest = () => {
+   const navigate = useNavigate();
+    useEffect(() => {
+      const token = sessionStorage.getItem("token");
+      if (!token) {
+        navigate("/adminlogin");
+      }
+    }, []);
+  
   const Approveneedy = async (id) => {
     await axios
       .put(`http://localhost:8000/update-needy-approved/${id}`)

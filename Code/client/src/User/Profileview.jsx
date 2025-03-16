@@ -4,12 +4,20 @@ import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Profileview = () => {
+  const LogOut = () => {
+    const token = sessionStorage.getItem("token");
+    if (token) {
+      sessionStorage.removeItem("token");
+      alert("successfuly logout");
+      window.location.href = "/login";
+    }
+  };
   // for token check
   const navigate = useNavigate();
   useEffect(() => {
     const token = sessionStorage.getItem("token");
     if (!token) {
-      navigate("/register");
+      navigate("/login");
     }
   }, []);
   // this is fetch profile
@@ -20,7 +28,7 @@ const Profileview = () => {
       const response = await axios.get(
         `http://localhost:8000/fetchuser-byid/${userId}`
       );
-      console.log("API Response:", response.data);
+      // console.log("API Response:", response.data);
       setprofile([response.data]); // Correct usage
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -31,11 +39,13 @@ const Profileview = () => {
   }, []);
 
   // this is create donor code
+  const userId = sessionStorage.getItem("id");
   const [value, setvalue] = useState({
+    id: parseInt(userId),
     book_name: "",
     book_edition: "",
     auther_name: "",
-    book_imag: "",
+ 
   });
   const handleInput = (e) => {
     setvalue({ ...value, [e.target.name]: e.target.value });
@@ -52,6 +62,7 @@ const Profileview = () => {
       console.log("donation successful", res);
       setForm((state) => !state);
       setvalue({ book_imag: " " });
+      window.location.reload()
     } catch (error) {
       console.log("donation not create", error);
     }
@@ -61,14 +72,10 @@ const Profileview = () => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.addEventListener("load", () => {
-      setvalue({ ...value, image: reader.result });
+      setvalue({ ...value,  book_image: reader.result });
     });
   };
-  // const [form, setForm] = useState();
-
-  // const toggleForm = () => {
-  //   setForm((state) => !state);
-  // };
+  
   return (
     <>
       <nav className="navbar-user">
@@ -124,7 +131,7 @@ const Profileview = () => {
               </NavLink>
             </li>
             <li>
-              <button className="dropdown-item">Logout</button>
+              <button className="dropdown-item" onClick={LogOut}>Logout</button>
             </li>
           </ul>
         </div>
@@ -206,127 +213,139 @@ const Profileview = () => {
       </div>
 
       <>
-        <div
-          class="modal fade"
-          id="staticBackdrop"
-          data-bs-backdrop="static"
-          data-bs-keyboard="false"
-          tabindex="-1"
-          aria-labelledby="staticBackdropLabel"
-          aria-hidden="true"
-        >
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">
-                  Donate Book
-                </h1>
-                <button
-                  type="button"
-                  class="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                ></button>
-              </div>
-              <div class="modal-body">
-                <div className="text-center mb-3">
-                  <div className="text-success">
-                    <i class="fa-solid fa-book fa-3x"></i>
-                  </div>
-                  <h3 className="text-primary">Donate Books</h3>
-                  <p className="text-secondary">
-                    Join us to donate books for needy
-                  </p>
+      <div
+        class="modal fade"
+        id="staticBackdrop"
+        data-bs-backdrop="static"
+        data-bs-keyboard="false"
+        tabindex="-1"
+        aria-labelledby="staticBackdropLabel"
+        aria-hidden="true"
+      >
+        <div className="row">
+          <div className="col-sm-4"></div>
+          <div className="col-sm-4">
+            <div class="modal-dialog card">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="staticBackdropLabel">
+                    Donate Books
+                  </h1>
+                  
                 </div>
-
-                <form onSubmit={Submit}>
-                  <div className="col-md-12 mb-3">
-                    <label htmlFor="book" className="text-dark">
-                      Book Name
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control rounded-pill"
-                      id="book"
-                      placeholder="your book name"
-                      required
-                      name="book_name"
-                      onChange={handleInput}
-                    />
-                  </div>
-
-                  <div className="row">
-                    <div className="col-md-6 mb-3">
-                      <label htmlFor="edition" className="text-dark">
-                        Book Edition
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control rounded-pill"
-                        id="Edition"
-                        placeholder=" book edition"
-                        required
-                        name="book_edition"
-                        onChange={handleInput}
-                      />
+                <div class="modal-body card-body">
+                  <div className="text-center mb-3">
+                    <div className="text-success">
+                      <i class="fa-solid fa-book fa-3x"></i>
                     </div>
-                    <div className="col-md-6 mb-3">
-                      <label htmlFor="auther" className="text-dark">
-                        Auther Name
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control rounded-pill"
-                        id="password"
-                        placeholder="book auther name"
-                        required
-                        name="auther_name"
-                        onChange={handleInput}
-                      />
-                    </div>
-                  </div>
-                  <div className="form-group mb-3">
-                    <label htmlFor="bookImage" className="text-dark">
-                      Book Image
-                    </label>
-                    <input
-                      type="file"
-                      className="form-control"
-                      id="bookImage"
-                      accept=".jpg, .jpeg, .png"
-                      placeholder="Upload book image"
-                      required
-                      name="book_imag"
-                      onChange={handleImage}
-                    />
-                    <img
-                      src={value.image}
-                      alt=""
-                      width="150"
-                      height="80 "
-                      className="mt-2"
-                    />
-                  </div>
+                    <h3 className="text-primary">Donate Books</h3>
+                    <p className="text-secondary">
+                      Join us to donate books for needy
+                    </p>
 
-                  <div className="d-flex justify-content-center gap-4"></div>
-                </form>
-              </div>
-              <div class="modal-footer">
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  data-bs-dismiss="modal"
-                >
-                  Close
-                </button>
-                <button type="submit" class="btn btn-primary">
-                  Donate
-                </button>
+                    <form onSubmit={Submit}>
+                      <div className="col-md- mb-3">
+                        <label
+                          htmlFor="book"
+                          className="text-dark home-label"
+                        >
+                          Book Name
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control rounded-pill home-input"
+                          id="book"
+                          placeholder="your book name"
+                          required
+                          name="book_name"
+                          onChange={handleInput}
+                        />
+                      </div>
+
+                      <div className="row">
+                        <div className="col-md-6 mb-3">
+                          <label
+                            htmlFor="edition"
+                            className="text-dark home-label"
+                          >
+                            Book Edition
+                          </label>
+                          <input
+                            type="text"
+                            className="form-control rounded-pill home-input"
+                            id="Edition"
+                            placeholder=" book edition"
+                            required
+                            name="book_edition"
+                            onChange={handleInput}
+                          />
+                        </div>
+                        <div className="col-md-6 mb-3">
+                          <label
+                            htmlFor="auther"
+                            className="text-dark home-label"
+                          >
+                            Auther Name
+                          </label>
+                          <input
+                            type="text"
+                            className="form-control rounded-pill home-input"
+                            id="password"
+                            placeholder="book auther name"
+                            required
+                            name="auther_name"
+                            onChange={handleInput}
+                          />
+                        </div>
+                      </div>
+                      <div className="form-group mb-3">
+                        <label
+                          htmlFor="bookImage"
+                          className="text-dark home-label"
+                        >
+                          Book Image
+                        </label>
+                        <input
+                          type="file"
+                          className="form-control rounded-pill home-input"
+                          id="bookImage"
+                          accept=".jpg, .jpeg, .png"
+                          placeholder="Upload book image"
+                          required
+                          name="book_image"
+                          onChange={handleImage}
+                        />
+                        <img
+                          src={value.image}
+                          alt=""
+                          width="150"
+                          height="80 "
+                          className="mt-2 home-label"
+                        />
+                      </div>
+
+                      <div class="modal-footer">
+                        <button
+                          type="button"
+                          class="btn btn-secondary"
+                          data-bs-dismiss="modal"
+                        >
+                          Close
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                          Donate
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+          <div className="col-sm-4"></div>
         </div>
-      </>
+      </div>
+    </>
     </>
   );
 };

@@ -1,14 +1,15 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 export const Topbar = () => {
-
+const navigate=useNavigate()
   const LogOut=()=>{
   const token=sessionStorage.getItem("token")
   if(token){
     sessionStorage.removeItem("token")
     alert("successfuly logout")
-    window.location.href="/login"
+    
+    navigate("/adminlogin")
   }
 }
   return (

@@ -2,8 +2,17 @@ import React, { useEffect, useState } from "react";
 import { Sidebar } from "../components/Sidebar";
 import { Topbar } from "../components/Topbar";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const NeedyProcessReq = () => {
+   const navigate = useNavigate();
+    useEffect(() => {
+      const token = sessionStorage.getItem("token");
+      if (!token) {
+        navigate("/adminlogin");
+      }
+    }, []);
+  
   const Deliverneedy = async (id) => {
     await axios
       .put(`http://localhost:8000/update-needy-delivered/${id}`)

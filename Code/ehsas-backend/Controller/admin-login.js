@@ -15,7 +15,7 @@ const CreateAdmin = async (req, res) => {
       console.log(err);
     }
     if (data.length > 0) {
-      return res.status(500).json({ msg: "user already exist", data });
+      return res.status(500).json({ msg: "user already exist"});
     }
 
     const salt = await bcrypt.genSalt(10);

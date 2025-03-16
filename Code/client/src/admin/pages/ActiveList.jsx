@@ -1,24 +1,30 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react";
 import { Sidebar } from "../components/Sidebar";
 import { Topbar } from "../components/Topbar";
-import axios from 'axios';
-
-
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 const ActiveList = () => {
+   const navigate = useNavigate();
+    useEffect(() => {
+      const token = sessionStorage.getItem("token");
+      if (!token) {
+        navigate("/adminlogin");
+      }
+    }, []);
+  
+  const Deactivate = async (id) => {
+    await axios
+      .put(`http://localhost:8000/Update-deactivate/${id}`)
+      .then((res) => {
+        alert(res.data.msg);
+        window.location.reload();
+      })
+      .catch((err) => {
+        console.log(" error approving", err);
+      });
+  };
 
-    const Deactivate = async (id) => {
-        await axios
-          .put(`http://localhost:8000/Update-deactivate/${id}`)
-          .then((res) => {
-            alert(res.data.msg);
-            window.location.reload();
-          })
-          .catch((err) => {
-            console.log(" error approving", err);
-          });
-      };
-
-    const [request, setrequest] = useState([]);
+  const [request, setrequest] = useState([]);
   const fetchaAtive = async () => {
     await axios
       .get("http://localhost:8000/fetch-active")
@@ -34,8 +40,8 @@ const ActiveList = () => {
   }, []);
 
   return (
-   <>
-   <div className="wrapper">
+    <>
+      <div className="wrapper">
         <Sidebar />
         <div className="main">
           <Topbar />
@@ -53,7 +59,7 @@ const ActiveList = () => {
                   <th scope="col">book_name</th>
                   <th scope="col">auther_name</th>
                   <th scope="col">book_edition</th>
-                 
+
                   <th scope="col">Status</th>
                   <th scope="col">Action</th>
                 </tr>
@@ -61,7 +67,8 @@ const ActiveList = () => {
               <tbody>
                 {Array.isArray(request) && request.length > 0 ? (
                   request.map((rs) => {
-                    const { id, book_name, book_edition, auther_name, status } = rs;
+                    const { id, book_name, book_edition, auther_name, status } =
+                      rs;
                     return (
                       <tr key={id}>
                         <td>
@@ -69,7 +76,7 @@ const ActiveList = () => {
                         </td>
                         <td>{book_edition}</td>
                         <td>{auther_name}</td>
-                        
+
                         <td>
                           <span className="btn btn-success">{status}</span>
                         </td>
@@ -99,8 +106,8 @@ const ActiveList = () => {
           </div>
         </div>
       </div>
-   </>
-  )
-}
+    </>
+  );
+};
 
-export default ActiveList
+export default ActiveList;

@@ -7,12 +7,15 @@ import { useNavigate } from "react-router-dom";
 
 export const AdminDashboard = () => {
   const navigate = useNavigate();
-  // useEffect(() => {
-  //   const token = sessionStorage.getItem("token");
-  //   if (!token) {
-  //     navigate("/adminlogin");
-  //   }
-  // }, []);
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+      navigate("/adminlogin");
+    }
+  }, []);
+
+  
+
   const [pUsers, setpUsers] = useState(0);
   const [aUsers, setaUsers] = useState(0);
   const [fUsers, setfUsers] = useState(0);
@@ -202,7 +205,6 @@ export const AdminDashboard = () => {
                 <div className="col-12">
                   <div class="card flex-fill border-0 illustration shadow">
                     <div class="card-body p-2 flex-fill">
-                      
                       <small>
                         <h4>Users Statistics</h4>
                       </small>

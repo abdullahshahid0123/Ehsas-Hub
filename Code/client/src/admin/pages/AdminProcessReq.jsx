@@ -2,8 +2,17 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Sidebar } from "../components/Sidebar";
 import { Topbar } from "../components/Topbar";
+import { useNavigate } from "react-router-dom";
 
 export const AdminProcessReq = () => {
+   const navigate = useNavigate();
+    useEffect(() => {
+      const token = sessionStorage.getItem("token");
+      if (!token) {
+        navigate("/adminlogin");
+      }
+    }, []);
+  
   const id = sessionStorage.getItem("id");
   const DeliveredReq = async (id) => {
     await axios

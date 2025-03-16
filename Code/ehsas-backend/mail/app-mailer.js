@@ -293,26 +293,30 @@ async function SendMailRejectUser(name, email) {
   });
 }
 
-async function SendMailVerifyEmail(user, email) {
+async function SendMailVerifyEmail(email) {
   const verificationCode = () => {
-    Math.floor(1000 + Math.random() * 1000);
+    return Math.floor(1000 + Math.random() * 1000);
   };
   const generateCode = verificationCode();
   const transporter = nodemailer.createTransport({
+    // host: "smtp.gmail.com",
+    // port:465,
     service: "gmail", // or use 'smtp' for custom configuration
+    
+
     auth: {
       user: process.env.MAILUSER, // Your email
       pass: process.env.MAILPASS, // Your email password
     },
   });
 
-  // console.log("mailuser", process.env.MAILUSER),
-  //   console.log("mailuser", process.env.MAILPASS);
+  console.log("mailuser", process.env.MAILUSER),
+    console.log("mailuser", process.env.MAILPASS);
 
   // Define the email options
   const mailOptions = {
-    from: "Ehsas Hub <ehsashubb@gmail.com>",
-    to:email,
+    from: process.env.MAILUSER,
+    to: email,
     subject: "Verify Your Email Address for Ehsas Hub",
     html: `
     <!DOCTYPE html>
@@ -382,7 +386,7 @@ async function SendMailVerifyEmail(user, email) {
         </div>
         <div class="email-body">
             <h2>Verify Your Email Address</h2>
-            <p>Dear ${user}</p>
+            
             <p>Thank you for signing up with Ehsas Hub. Please use the verification code below to complete your registration process.</p>
             <div class="verification-code">${generateCode}</div>
             <p>If you did not request this code, please ignore this email or contact our support team for assistance.</p>

@@ -3,8 +3,17 @@ import { Sidebar } from "../components/Sidebar";
 import { Topbar } from "../components/Topbar";
 import axios from "axios";
 import "./volunteer.css";
+import { useNavigate } from "react-router-dom";
 
 const ManageuserAccount = () => {
+   const navigate = useNavigate();
+    useEffect(() => {
+      const token = sessionStorage.getItem("token");
+      if (!token) {
+        navigate("/adminlogin");
+      }
+    }, []);
+  
   // const [User, setUser] = useState([]);
   const [userr, setUserr] = useState({});
 

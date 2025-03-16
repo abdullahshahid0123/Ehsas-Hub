@@ -23,7 +23,7 @@ const login = () => {
       const token = res.data.token;
       sessionStorage.setItem("token", token);
       sessionStorage.setItem("id", res.data.user.id);
-      // axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      // axios.defaults.headers.common["Authorization"] = `Bearer ${token}`
 
       console.log("register successful", res.data);
 
