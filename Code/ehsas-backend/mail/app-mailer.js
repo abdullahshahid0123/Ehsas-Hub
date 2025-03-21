@@ -14,12 +14,6 @@ async function SendMailRequest(name, email) {
 
 
 
-
-  .
-
-
-
-
   
   // Define the email options
   const mailOptions = {
