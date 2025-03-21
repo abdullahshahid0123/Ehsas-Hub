@@ -10,6 +10,17 @@ async function SendMailRequest(name, email) {
     },
   });
 
+
+
+
+
+
+  .
+
+
+
+
+  
   // Define the email options
   const mailOptions = {
     from: "Ehsas Hub <ehsashubb@gmail.com>",
