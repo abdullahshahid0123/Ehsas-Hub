@@ -23,12 +23,12 @@ const ResetPass = () => {
       );
 
       const token = res.data.token;
-      sessionStorage.setItem("token", token);
-      // sessionStorage.setItem("id", res.data.user.id);
+      sessionStorage.setItem("token",token)
+       sessionStorage.setItem("email", value.email);
+   
+     
 
-      console.log("register successful", res.data);
-
-      alert("User found successfully");
+      alert("Next");
       setErrorMessage("");
       navigate("/verifyuser");
     } catch (error) {

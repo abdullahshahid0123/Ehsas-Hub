@@ -252,7 +252,7 @@ const Dnewrequest = () => {
                               type="text"
                               className="form-control home-input"
                               name="book_name"
-                              value={user.book_name}
+                              value={user.book_edition}
                               readOnly
                             />
                           </div>

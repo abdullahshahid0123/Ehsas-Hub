@@ -1,6 +1,40 @@
-import React from "react";
+import axios from "axios";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Verifyuser = () => {
+  const [errorMessage, setErrorMessage] = useState("");
+  const [value, setValue] = useState({
+    code: "",
+    password: "",
+  });
+  const handleInput = (e) => {
+    setValue({ ...value, [e.target.name]: e.target.value });
+  };
+  const navigate = useNavigate();
+
+  const Submit = async (e) => {
+    e.preventDefault();
+    const logData = { ...value };
+    try {
+      const email = sessionStorage.getItem("email");
+      console.log(email);
+      const res = await axios.post(
+        `http://localhost:8000/user-reset-pass/${email}`,
+        logData
+      );
+
+      console.log("response data", res.data);
+
+      
+      alert(res.data.msg);
+      setErrorMessage("");
+      navigate("/login");
+    } catch (error) {
+      setErrorMessage("Invalid Credential. Please try again!");
+      console.log("login here", error.message);
+    }
+  };
   return (
     <>
       <div className="container " style={{ "margin-top": "8%" }}>
@@ -14,7 +48,12 @@ const Verifyuser = () => {
                 <p className="text-center text-muted mb-4">
                   Please enter the 4-digit code sent to your email.
                 </p>
-                <form>
+                {errorMessage && (
+                  <div className="text-center mb-4">
+                    <span className="text-danger ">{errorMessage}</span>
+                  </div>
+                )}
+                <form onSubmit={Submit}>
                   <div>
                     <input
                       type="text"
@@ -22,6 +61,8 @@ const Verifyuser = () => {
                       maxlength="10"
                       placeholder="xxxx "
                       required
+                      name="code"
+                      onChange={handleInput}
                       style={{
                         margin: "auto",
                         width: "70%",
@@ -33,16 +74,17 @@ const Verifyuser = () => {
                     />
                   </div>
                   <div>
-                  
-                <label htmlFor="Password" className="text-dark ml-20">
-                  New Password
-                </label>
+                    <label htmlFor="Password" className="text-dark ml-20">
+                      New Password
+                    </label>
                     <input
                       type="text"
                       class="form-control mb-4"
                       maxlength="10"
                       placeholder="Enter new Password "
                       required
+                      name="password"
+                      onChange={handleInput}
                       style={{
                         margin: "auto",
                         width: "70%",
@@ -63,27 +105,13 @@ const Verifyuser = () => {
                       id="resendCode"
                       disabled
                     >
-                   <span>Click To verify</span>
+                      <span>Click To verify</span>
                     </button>
                     <button type="submit" className="btn btn-primary ml-">
-                     Reset Password 
+                      Reset Password
                     </button>
                   </div>
                 </form>
-                <div
-                  id="successMessage"
-                  className="alert alert-success d-none mt-3"
-                  role="alert"
-                >
-                  Verification successful!
-                </div>
-                <div
-                  id="errorMessage"
-                  className="alert alert-danger d-none mt-3"
-                  role="alert"
-                >
-                  Verification failed. Please try again.
-                </div>
               </div>
             </div>
           </div>

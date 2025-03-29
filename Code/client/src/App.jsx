@@ -38,6 +38,7 @@ import AdminProfileView from "./admin/pages/AdminProfileView";
 import CreateVolunteer from "./components/CreateVolunteer";
 import Preloader from "./components/Preloader";
 import { useEffect, useState } from "react";
+import Profile from "./components/Profile";
 
 function AppWrapper() {
   const location = useLocation();
@@ -68,6 +69,8 @@ function AppWrapper() {
 
         <Route path="/register" element={<Register />} />
         <Route path="/userinterest" element={<UserInterest />} />
+        <Route path="/profile" element={<Profile/>} />
+
 
         {/*admin Routes*/}
         <Route path="/adminprofileview" element={<AdminProfileView />} />

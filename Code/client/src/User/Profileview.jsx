@@ -1,17 +1,9 @@
 import React, { useState, useEffect } from "react";
-import "./Navbar.css";
 import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
+import Profile from "../components/Profile";
 
 const Profileview = () => {
-  const LogOut = () => {
-    const token = sessionStorage.getItem("token");
-    if (token) {
-      sessionStorage.removeItem("token");
-      alert("successfuly logout");
-      window.location.href = "/login";
-    }
-  };
   // for token check
   const navigate = useNavigate();
   useEffect(() => {
@@ -21,331 +13,253 @@ const Profileview = () => {
     }
   }, []);
   // this is fetch profile
+  const [isEditing, setIsEditing] = useState(true);
+  const [editData, setEditData] = useState({});
   const [profile, setprofile] = useState([]);
+  const [showcode, setshowcode] = useState(false);
+  const [verification, setverification] = useState("");
+
+  const userId = sessionStorage.getItem("id");
+  const id = sessionStorage.getItem("id");
+
+  console.log(id);
+
+  const email = sessionStorage.getItem("email");
+  console.log(email);
+
   const Fetch = async () => {
-    const userId = sessionStorage.getItem("id");
     try {
       const response = await axios.get(
-        `http://localhost:8000/fetchuser-byid/${userId}`
+        `http://localhost:8000/fetchuser-byid/${id}`
       );
-      // console.log("API Response:", response.data);
+
       setprofile([response.data]); // Correct usage
+      // setEditData(profile[0]);
+      // console.log(response.data);
+      setEditData(response.data);
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
   };
   useEffect(() => {
     Fetch();
-  }, []);
+  }, [userId]);
 
-  // this is create donor code
-  const userId = sessionStorage.getItem("id");
-  const [value, setvalue] = useState({
-    id: parseInt(userId),
-    book_name: "",
-    book_edition: "",
-    auther_name: "",
- 
-  });
-  const handleInput = (e) => {
-    setvalue({ ...value, [e.target.name]: e.target.value });
+  const handleEdit = (e) => {
+    const { name, value } = e.target;
+    setEditData((prev) => ({ ...prev, [name]: value }));
+    console.log(editData);
   };
-  const Submit = async (e) => {
-    e.preventDefault();
-    const postData = { ...value };
+  const Update = async () => {
     try {
-      const res = await axios.post(
-        "http://localhost:8000/create-donor",
-        postData
+      const res = await axios.put(
+        `http://localhost:8000/update-profile/${userId}`,
+        editData
       );
-      alert("donation successful");
-      console.log("donation successful", res);
-      setForm((state) => !state);
-      setvalue({ book_imag: " " });
-      window.location.reload()
+      const { token, msg, email } = res.data;
+      sessionStorage.setItem("token", token);
+      sessionStorage.setItem("email", email);
+      if (res.data.msg === "code send to your email") {
+        setshowcode(true);
+      }
+
+      alert(msg);
+      Fetch();
     } catch (error) {
-      console.log("donation not create", error);
+      console.log("eror in updating", error);
     }
   };
-  const handleImage = (e) => {
+
+  const UpdateVerify = async () => {
+    try {
+      // console.log("this is email", email);
+      const res = await axios.post(
+        `http://localhost:8000/user-profile-verify/${email}`,
+        { code: verification }
+      );
+      alert(res.data.msg);
+      // setIsEditing(true);
+    } catch (error) {
+      console.log("error in code matching", error);
+    }
+  };
+  const handleEditImage = (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.addEventListener("load", () => {
-      setvalue({ ...value,  book_image: reader.result });
+      setEditData({ ...value, image: reader.result });
     });
   };
-  
+
+  const ClickToEdit = () => {
+    setIsEditing(false);
+    setopen(true);
+  };
+  const [getvalue, setgetvalue] = useState([]);
+  const FetchState = async (id) => {
+    try {
+      const res = await axios.get(
+        `http://localhost:8000/count-donate-books/${id}`
+      );
+      setgetvalue(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const [reqvalue, setreqvalue] = useState([]);
+  const FetchReqState = async (id) => {
+    try {
+      const res = await axios.get(
+        `http://localhost:8000/count-req-books/${id}`
+      );
+      setreqvalue(res.data);
+      // console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    FetchState(id);
+    FetchReqState(id);
+  }, [id]);
+  const [open, setopen] = useState(false);
+
   return (
     <>
-      <nav className="navbar-user">
-        <div className="navbar-logo">
-          <a href="/">EHSAS-HUB</a>
-        </div>
-        <div className="navbar-search ">
-          <input
-            type="text"
-            className="search-input "
-            placeholder="Search..."
-          />
-          <button className="search-button">
-            <i className="fa-solid fa-magnifying-glass"></i>
-          </button>
-        </div>
-        <div className="bell">
-          <i class="fa-regular fa-bell"></i>
-        </div>
-        <div className="mail">
-          <i class="fa-regular fa-envelope"></i>
-        </div>
-        <div className="heart">
-          <i class="fa-regular fa-heart"></i>
-        </div>
-
-        <div className="switch-to-donor">
-          <button
-            className="donor-button"
-            data-bs-toggle="modal"
-            data-bs-target="#staticBackdrop"
-          >
-            Switch to Donate
-          </button>
-        </div>
-        <div className="navbar-profile dropdown">
-          <NavLink
-            className="nav-link"
-            to="#"
-            id="navbarDropdown"
-            role="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            <img src="" alt="" className=" img-fluid rounded-circle" />
-            <i className="fa-solid fa-user"></i>
-          </NavLink>
-
-          <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li>
-              <NavLink className="dropdown-item" to="/Profileview">
-                Profile
-              </NavLink>
-            </li>
-            <li>
-              <button className="dropdown-item" onClick={LogOut}>Logout</button>
-            </li>
-          </ul>
-        </div>
-      </nav>
-
-      <div class="container profile-container bg-gray">
-        {Array.isArray(profile) && profile.length > 0 ? (
-          profile.map((rs) => {
-            console.log("hey bhi", rs);
-            const { id, name, email, phone, gender } = rs;
-            return (
-              <div class="profile-left col-lg-4 col-md-4 col-sm-12" key={id}>
-                <div class="text-center">
-                  <img
-                    src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8bWVucyUyMHdpdGglMjBjb2F0fGVufDB8fDB8fHww"
-                    alt="Profile Image"
-                    class="profile-img"
+      <div>
+        <Profile />
+        <div class="container profile-container bg-gray">
+          <div className="col-6">
+            <div>
+              <img src={editData.image} alt="" width={100} height={100} />
+              <input
+                type="file"
+                hidden={isEditing}
+                onChange={handleEditImage}
+              />
+            </div>
+            <strong className="text-black">Name</strong>
+            <input
+              type="text"
+              value={editData.name}
+              name="name"
+              readOnly={isEditing}
+              onChange={handleEdit}
+            />
+            <strong className="text-black">Email</strong>
+            <input
+              type="text"
+              name="email"
+              value={editData.email}
+              readOnly={isEditing}
+              onChange={handleEdit}
+            />
+            <div>
+              {showcode && (
+                <>
+                  <strong className="my-4 text-black">verfication code</strong>
+                  <input
+                    className="text-center"
+                    maxlength="4"
+                    type="text"
+                    placeholder="xxxx"
+                    value={verification}
+                    onChange={(e) => {
+                      setverification(e.target.value);
+                    }}
                   />
+                  <button className="my-4" onClick={UpdateVerify}>
+                    verify
+                  </button>
+                </>
+              )}
+            </div>
+            <strong className="text-black">Phone</strong>
+            <input
+              type="text"
+              name="phone"
+              value={editData.phone}
+              readOnly={isEditing}
+              onChange={handleEdit}
+            />
+            <strong className="text-black">gender</strong>{" "}
+            <input
+              className="mb-5"
+              type="text"
+              name="gender"
+              value={editData.gender}
+              readOnly={isEditing}
+              onChange={handleEdit}
+            />
+            <div className="mb-5">
+              {open ? (
+                <>
+                  <button className="mr-10" onClick={Update}>
+                    Save
+                  </button>
 
-                  <h3 class="mt-2">{name}</h3>
-                  <p>Web Developer</p>
-                </div>
-
-                <div>
-                  <h4
-                    className=""
-                    style={{ "padding-left": "60px", "padding-top": "30px" }}
+                  <button
+                    onClick={() => {
+                      setIsEditing(true);
+                      setopen(false);
+                    }}
                   >
-                    Contact Information
-                  </h4>
-                  <ul class="list-group ">
-                    <li class="list-group-item">
-                      <strong>Email:</strong> {email}
-                    </li>
-                    <li class="list-group-item">
-                      <strong>Phone:</strong> {phone}
-                    </li>
-                    <li class="list-group-item">
-                      <strong>Gender:</strong> {gender}
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            );
-          })
-        ) : (
-          <p> No data available.</p>
-        )}
-
-        <div class="profile-right col-lg-8 col-md-8 col-sm-12">
-          <div>
-            <div
-              className=""
-              style={{
-                height: "60px",
-                boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
-                backgroundColor: "white",
-                marginBottom: "16px",
-                borderRadius: "6px",
-                textAlign: "center",
-                display: "flex",
-                padding: "17px 16px",
-                fontWeight: "bold",
-                fontSize: "16px",
-              }}
-            >
-              Activities
+                    cancle
+                  </button>
+                </>
+              ) : (
+                <button className="mr-10" onClick={ClickToEdit}>
+                  Edit profile
+                </button>
+              )}
             </div>
           </div>
+          <div class="profile-right col-lg-6 col-md-8 col-sm-12">
+            <div>
+              <div
+                className=""
+                style={{
+                  height: "60px",
+                  boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
+                  backgroundColor: "white",
+                  marginBottom: "16px",
+                  borderRadius: "6px",
+                  textAlign: "center",
+                  display: "flex",
+                  padding: "17px 16px",
+                  fontWeight: "bold",
+                  fontSize: "16px",
+                }}
+              >
+                Activities
+              </div>
+            </div>
 
-          <div class="mt-4">
-            <h4>About</h4>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
-              nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <>
-      <div
-        class="modal fade"
-        id="staticBackdrop"
-        data-bs-backdrop="static"
-        data-bs-keyboard="false"
-        tabindex="-1"
-        aria-labelledby="staticBackdropLabel"
-        aria-hidden="true"
-      >
-        <div className="row">
-          <div className="col-sm-4"></div>
-          <div className="col-sm-4">
-            <div class="modal-dialog card">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="staticBackdropLabel">
-                    Donate Books
-                  </h1>
-                  
-                </div>
-                <div class="modal-body card-body">
-                  <div className="text-center mb-3">
-                    <div className="text-success">
-                      <i class="fa-solid fa-book fa-3x"></i>
+            <div class="mt-4">
+              
+              <div className="row">
+                <div class="col-sm-6">
+                  <div class="card flex-fill border-0 shadow">
+                    <div class="card-body p-5 text-center flex-fill">
+                      <h3>{getvalue !== 0 ? getvalue : 0}</h3>
+                      <h6>Donate books</h6>
                     </div>
-                    <h3 className="text-primary">Donate Books</h3>
-                    <p className="text-secondary">
-                      Join us to donate books for needy
-                    </p>
-
-                    <form onSubmit={Submit}>
-                      <div className="col-md- mb-3">
-                        <label
-                          htmlFor="book"
-                          className="text-dark home-label"
-                        >
-                          Book Name
-                        </label>
-                        <input
-                          type="text"
-                          className="form-control rounded-pill home-input"
-                          id="book"
-                          placeholder="your book name"
-                          required
-                          name="book_name"
-                          onChange={handleInput}
-                        />
-                      </div>
-
-                      <div className="row">
-                        <div className="col-md-6 mb-3">
-                          <label
-                            htmlFor="edition"
-                            className="text-dark home-label"
-                          >
-                            Book Edition
-                          </label>
-                          <input
-                            type="text"
-                            className="form-control rounded-pill home-input"
-                            id="Edition"
-                            placeholder=" book edition"
-                            required
-                            name="book_edition"
-                            onChange={handleInput}
-                          />
-                        </div>
-                        <div className="col-md-6 mb-3">
-                          <label
-                            htmlFor="auther"
-                            className="text-dark home-label"
-                          >
-                            Auther Name
-                          </label>
-                          <input
-                            type="text"
-                            className="form-control rounded-pill home-input"
-                            id="password"
-                            placeholder="book auther name"
-                            required
-                            name="auther_name"
-                            onChange={handleInput}
-                          />
-                        </div>
-                      </div>
-                      <div className="form-group mb-3">
-                        <label
-                          htmlFor="bookImage"
-                          className="text-dark home-label"
-                        >
-                          Book Image
-                        </label>
-                        <input
-                          type="file"
-                          className="form-control rounded-pill home-input"
-                          id="bookImage"
-                          accept=".jpg, .jpeg, .png"
-                          placeholder="Upload book image"
-                          required
-                          name="book_image"
-                          onChange={handleImage}
-                        />
-                        <img
-                          src={value.image}
-                          alt=""
-                          width="150"
-                          height="80 "
-                          className="mt-2 home-label"
-                        />
-                      </div>
-
-                      <div class="modal-footer">
-                        <button
-                          type="button"
-                          class="btn btn-secondary"
-                          data-bs-dismiss="modal"
-                        >
-                          Close
-                        </button>
-                        <button type="submit" class="btn btn-primary">
-                          Donate
-                        </button>
-                      </div>
-                    </form>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="card flex-fill border-0  shadow">
+                    <div class="card-body p-5 text-center flex-fill">
+                      <h3>{reqvalue !== 0 ? reqvalue : 0}</h3>
+                      <h6>Request books</h6>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div className="col-sm-4"></div>
         </div>
       </div>
-    </>
     </>
   );
 };

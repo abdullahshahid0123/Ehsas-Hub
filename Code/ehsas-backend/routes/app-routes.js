@@ -11,6 +11,10 @@ const {
   FreezeUser,
   UserForgotPassword,
   userResetPass,
+  UpdateProfile,
+  UserProfileVerify,
+  CountDonateBooks,
+  CountReqBook,
 } = require("../Controller/auth-controller");
 const {
   CreateVolunteer,
@@ -85,7 +89,12 @@ router.post("/create-user", CreateUser);
 router.post("/login", LoginUser);
 router.put("/update-interest/:id", UpdateInterest);
 router.post("/user-forgot-pass", UserForgotPassword);
-router.post("/user-reset-pass",userResetPass );
+router.post("/user-reset-pass/:email", userResetPass);
+router.put("/update-profile/:userId", UpdateProfile);
+router.post("/user-profile-verify/:email", UserProfileVerify);
+// user state
+router.get("/count-donate-books/:id", CountDonateBooks);
+router.get("/count-req-books/:id", CountReqBook);
 
 
 // admin routes

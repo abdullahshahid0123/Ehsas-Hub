@@ -294,24 +294,16 @@ async function SendMailRejectUser(name, email) {
 }
 
 async function SendMailVerifyEmail(email) {
-  const verificationCode = () => {
-    return Math.floor(1000 + Math.random() * 1000);
-  };
-  const generateCode = verificationCode();
+  const code = Math.floor(1000 + Math.random() * 9000);
+
   const transporter = nodemailer.createTransport({
-    // host: "smtp.gmail.com",
-    // port:465,
     service: "gmail", // or use 'smtp' for custom configuration
-    
 
     auth: {
       user: process.env.MAILUSER, // Your email
       pass: process.env.MAILPASS, // Your email password
     },
   });
-
-  console.log("mailuser", process.env.MAILUSER),
-    console.log("mailuser", process.env.MAILPASS);
 
   // Define the email options
   const mailOptions = {
@@ -361,7 +353,7 @@ async function SendMailVerifyEmail(email) {
             .verification-code {
                 display: inline-block;
                 background-color: var(--theme-color2);
-                color: #ffffff;
+                color:rgb(88, 88, 88);
                 font-size: 18px;
                 font-weight: bold;
                 padding: 10px 20px;
@@ -388,7 +380,7 @@ async function SendMailVerifyEmail(email) {
             <h2>Verify Your Email Address</h2>
             
             <p>Thank you for signing up with Ehsas Hub. Please use the verification code below to complete your registration process.</p>
-            <div class="verification-code">${generateCode}</div>
+            <div class="verification-code ">${code}</div>
             <p>If you did not request this code, please ignore this email or contact our support team for assistance.</p>
         </div>
         <div class="email-footer">
@@ -402,13 +394,32 @@ async function SendMailVerifyEmail(email) {
   };
 
   // Send the email
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log("Error:", error);
-    } else {
-      console.log("Email sent:", info.response);
-    }
-  });
+  try {
+    // ✅ Wrap sendMail in a Promise
+    const info = await new Promise((resolve, reject) => {
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(info);
+        }
+      });
+    });
+
+    console.log("Email sent:", info.response);
+    return code; // ✅ Return the code after email sends
+  } catch (error) {
+    console.log("Error:", error);
+    return null; // Return null on failure
+  }
+  // transporter.sendMail(mailOptions, (error, info) => {
+  //   if (error) {
+  //     console.log("Error:", error);
+  //   } else {
+  //     console.log("Email sent:", info.response);
+  //     return code;
+  //   }
+  // });
 }
 
 async function SendMailFreeze(name, email) {

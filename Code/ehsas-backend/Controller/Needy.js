@@ -14,8 +14,8 @@ const NeedyRequest = (req, res) => {
       console.log(err);
       return res.json({ msg: "error in the needy request request" });
     } else {
-      const limitCount = result[0].requestCount;
-      console.log(limitCount);
+      const limitCount = result[0]?.requestCount;
+      console.log("limit of this month", limitCount);
       if (limitCount > 2) {
         return res.json({ msg: "request limit complete of this month" });
       } else {
@@ -74,12 +74,16 @@ const CompleteNeedy = (req, res) => {
 };
 
 const FetchNeedyPending = (req, res) => {
+  // "SELECT n.* u.id, u.name, u.email, u.phone, u.gender, u.address, d.book_name, d.book_edition, d.auther_name, d.book_image, n.req_status FROM needy n JOIN users u ON u.id = n.req_id JOIN donor d ON d.id = n.user_id WHERE n.req_status = 'Pending'";
+
   const sql =
     "SELECT n.*, u.name, u.email, u.phone, u.address, u.gender FROM needy n JOIN users u ON u.id=n.user_id  WHERE n.req_status = 'Pending'";
   con.query(sql, (err, data) => {
+    console.log(data);
     if (err) {
       console.log("error in fetch Needy", err);
     }
+    console.log(data);
     return res.json({ msg: "Needy fetch successfuly ", data });
   });
 };

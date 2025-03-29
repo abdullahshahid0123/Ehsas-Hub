@@ -40,7 +40,7 @@ const Register = () => {
         postData
       );
 
-      alert(res.msg);
+      alert(res.data. msg);
       navigate("/login");
     } catch (error) {
       setErrorMessage("User Already exist. Please try again!");

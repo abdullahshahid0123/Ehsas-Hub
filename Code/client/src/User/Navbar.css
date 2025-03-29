@@ -246,7 +246,7 @@
   display: flex;
   flex-wrap: wrap; /* Allows the layout to wrap on smaller screens */
   margin-top: 30px;
-  padding: 20px;
+  padding:20px;
 }
 .profile-left {
   padding-right: 30px;
@@ -260,12 +260,13 @@
   padding-left: 30px;
 }
 .profile-img {
-  width: 150px;
-  height: 150px;
+  width: 130px;
+  height: 130px;
   border-radius: 50%;
   object-fit: cover;
   margin-bottom: 20px;
   margin-top: 20px;
+ 
 }
 
 .list-group-item {
@@ -285,16 +286,17 @@
     flex-direction: column;
   }
   .profile-left {
-    width: 100%;
+   
     margin-bottom: 20px;
+   
   }
   .profile-right {
     width: 100%;
-    padding-left: 0;
+    padding-left:0;
   }
   .profile-img {
     width: 120px;
-    height: 120px;
+    height: 10px;
   }
   .id-card-img {
     max-width: 100%;
@@ -307,7 +309,7 @@
 @media (max-width: 576px) {
   .profile-img {
     width: 100px;
-    height: 100px;
+    height: 10px;
   }
   .id-card-img {
     width: 100%;

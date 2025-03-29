@@ -47,7 +47,7 @@ const CreateUser = async (req, res) => {
       SendMailRequest(name, email);
       return res.json({ msg: "User Created successfully" });
     });
-    console.log(sql)
+    console.log(sql);
   });
 };
 
@@ -101,35 +101,37 @@ const UserForgotPassword = (req, res) => {
       return res.status(404).json({ msg: "email not found" });
     }
     const code = await SendMailVerifyEmail(email);
-if (!code) {
-  return res.json({message:"code verification failed"})
-  
-}
-    const sql = "INSERT INTO `verify`(email, code) VALUES (?, ?)";
-    con.query(sql, [ email,code], async (err) => {
-      if (err) throw err;
-      else {
-        res.json({ message: "save successfuly" });
+    if (!code) {
+      console.log(code);
+      return res.json({ message: "code verification failed" });
+    }
+    const sql = "INSERT INTO verify ( email, code) VALUES (? , ?)";
+    con.query(sql, [email, code], async (err) => {
+      if (err) {
+        return res.json({ message: "code verification failed" });
       }
+
+      return res.json({ message: "code verification send successfully  " });
     });
   });
 };
 
 const userResetPass = (req, res) => {
-  const { email, resetCode, newPassword } = req.body;
-  if (!email || !resetCode || !newPassword) {
+  const { code, password } = req.body;
+  const { email } = req.params;
+  if (!email || !code || !password) {
     res.json({ message: "fields are required" });
   }
-  const sql = "SELECT * FROM `verify` WHERE email = ? AND resetCode = ? ";
-  con.query(sql, [email, resetCode], async (err) => {
+  const sql = "SELECT * FROM `verify` WHERE email = ? AND code = ? ";
+  con.query(sql, [email, code], async (err, result) => {
     if (err) res.json({ message: "field not match" });
-    if (data.length === 0) {
+    if (result.length === 0) {
       return res.json({ message: "data not found" });
     }
     // Hash the new password
 
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(newPassword, salt);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
     const updateSql = "UPDATE users SET password=? WHERE email=?";
     con.query(updateSql, [hashedPassword, email], (err) => {
@@ -223,6 +225,73 @@ const FetchUserById = (req, res) => {
     }
   });
 };
+const UpdateProfile = (req, res) => {
+  const { userId } = req.params;
+
+  const { name, email, phone, gender, image } = req.body;
+
+  if (!name && !email && !phone && !gender && !image) {
+    return res.json({ msg: "atleast one field required" });
+  }
+  const check = "SELECT email  FROM `users` WHERE id=?";
+  con.query(check, [userId], async (err, result) => {
+    if (err) throw err;
+    currentemail = result[0]?.email;
+    if (email && email !== currentemail) {
+      const token = jwt.sign({ userId, email }, process.env.JWT_SECRET);
+      const code = await SendMailVerifyEmail(email);
+      console.log(code);
+      if (!code) {
+        return res.json({ msg: "cannot generate code" });
+      }
+      const sql = "INSERT INTO `verify`(email ,code) VALUES(? , ?)";
+      con.query(sql, [email, code], (err) => {
+        console.log(email, "email ha ye");
+        if (err) {
+          return res.json({ msg: "error in the code " });
+        }
+        return res.json({ msg: "code send to your email", token, email });
+      });
+    } else {
+      const qry =
+        "UPDATE `users` SET name= ?, email= ?, phone= ?, gender= ? , image= ? WHERE id = ?";
+      con.query(
+        qry,
+        [name, email, phone, gender, image, userId],
+        (error, data) => {
+          console.log(data);
+          if (error) {
+            return res.status(404).json({ msg: "error in updating", error });
+          }
+          if (data.affectedRows === 0) {
+            return res.json({ msg: "updating error" });
+          }
+          return res.json({ msg: "update successfull" });
+        }
+      );
+    }
+  });
+};
+
+const UserProfileVerify = (req, res) => {
+  const { email } = req.params;
+  const { code } = req.body;
+  console.log(req.params);
+  console.log(req.body);
+  if (!email || !code) {
+    return res.json({ message: "fields are required" });
+  }
+  const sql = "SELECT * FROM `verify` WHERE email = ? AND code = ? ";
+  con.query(sql, [email, code], async (err, result) => {
+    if (err) res.json({ message: "field not match" });
+    if (result.length === 0) {
+      return res.json({ message: "data not found" });
+    }
+    const del = "DELETE FROM `verify` WHERE email = ?";
+    con.query(del, [email]);
+    return res.json({ msg: "verify successfuly" });
+  });
+};
 
 const UpdateInterest = (req, res) => {
   const { id } = req.params;
@@ -245,6 +314,29 @@ const UpdateInterest = (req, res) => {
   });
 };
 
+const CountDonateBooks = (req, res) => {
+  const { id } = req.params;
+
+  const sql =
+    "SELECT COUNT(user_id) as DonateBook FROM `donor`  WHERE  user_id = ?  ";
+
+  con.query(sql, [id], (err, data) => {
+    if (err) throw err;
+
+    return res.json(data[0].DonateBook);
+  });
+};
+const CountReqBook = (req, res) => {
+  const { id } = req.params;
+  const sql = "SELECT request FROM `users`  WHERE  id = ?  ";
+
+  con.query(sql, [id], (err, data) => {
+    if (err) throw err;
+    
+    return res.json(data[0].request);
+  });
+};
+
 module.exports = {
   CreateUser,
   LoginUser,
@@ -256,4 +348,8 @@ module.exports = {
   UpdateInterest,
   FreezeUser,
   userResetPass,
+  UpdateProfile,
+  UserProfileVerify,
+  CountDonateBooks,
+  CountReqBook,
 };

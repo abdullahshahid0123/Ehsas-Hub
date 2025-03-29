@@ -40,7 +40,7 @@ export const AdminProcessReq = () => {
     fetchProcessRequest();
   }, []);
 
-  console.log(request);
+  // console.log(request);
   return (
     <>
       <div className="wrapper">
@@ -59,7 +59,7 @@ export const AdminProcessReq = () => {
               <thead>
                 <tr>
                   <th scope="col">Name</th>
-                  
+                 
                   <th scope="col">Address</th>
                   <th scope="col">Volunteer Name</th>
                   <th scope="col">Status</th>

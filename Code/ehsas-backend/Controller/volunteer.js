@@ -1,5 +1,6 @@
 const { con } = require("../config/db");
 const jwt = require("jsonwebtoken");
+const { SendMailRequest } = require("../mail/app-mailer");
 
 const LoginVolunteer = async (req, res) => {
   console.log("Rout hit");
@@ -35,6 +36,7 @@ const CreateVolunteer = (req, res) => {
   if (!name || !email || !phone || !password || !address || !image) {
     return res.status(500).json({ msg: "Fields are required" });
   }
+
   // sql  query for the database to create data
   const sql =
     "INSERT INTO  volunteer( name, email, phone, password, address, profile) VALUES(?)";
@@ -42,6 +44,7 @@ const CreateVolunteer = (req, res) => {
     if (err) {
       console.log("error in create volunteer", err);
     } else {
+      SendMailRequest(name, email);
       return res.json({ msg: "Request submitted successfuly " });
     }
   });

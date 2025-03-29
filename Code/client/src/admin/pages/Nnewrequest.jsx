@@ -6,14 +6,14 @@ import "./volunteer.css";
 import { useNavigate } from "react-router-dom";
 
 const Nnewrequest = () => {
-   const navigate = useNavigate();
-    useEffect(() => {
-      const token = sessionStorage.getItem("token");
-      if (!token) {
-        navigate("/adminlogin");
-      }
-    }, []);
-  
+  const navigate = useNavigate();
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+      navigate("/adminlogin");
+    }
+  }, []);
+
   const Approveneedy = async (id) => {
     await axios
       .put(`http://localhost:8000/update-needy-approved/${id}`)
@@ -93,6 +93,7 @@ const Nnewrequest = () => {
                       book_image,
                       req_status,
                     } = rs;
+                    
                     return (
                       <tr key={id}>
                         <td>
@@ -176,11 +177,11 @@ const Nnewrequest = () => {
                         {/* Two Fields in One Row */}
                         <div className="row mb-3 mt-3">
                           <div className="col-md-6">
-                            <label className="form-label">Full Name</label>
+                            <label className="form-label">Name</label>
                             <input
                               type="text"
                               className="form-control home-input"
-                              name="fullName"
+                              name="name"
                               value={user.name}
                               readOnly
                             />
@@ -234,9 +235,7 @@ const Nnewrequest = () => {
                         </div>
 
                         <div className="mb-3">
-                          <label className="form-label">
-                            ID Card / Student Card Photo
-                          </label>
+                          <label className="form-label">Id card/image</label>
 
                           <div>
                             <>
