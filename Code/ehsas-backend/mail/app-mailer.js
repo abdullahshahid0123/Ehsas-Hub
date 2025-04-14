@@ -10,11 +10,6 @@ async function SendMailRequest(name, email) {
     },
   });
 
-
-
-
-
-  
   // Define the email options
   const mailOptions = {
     from: "Ehsas Hub <ehsashubb@gmail.com>",
@@ -384,7 +379,7 @@ async function SendMailVerifyEmail(email) {
         <div class="email-body">
             <h2>Verify Your Email Address</h2>
             
-            <p>Thank you for signing up with Ehsas Hub. Please use the verification code below to complete your registration process.</p>
+            <p> Please use the verification code below to complete your reset password process.</p>
             <div class="verification-code ">${code}</div>
             <p>If you did not request this code, please ignore this email or contact our support team for assistance.</p>
         </div>

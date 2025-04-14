@@ -1,5 +1,5 @@
 import React from "react";
-
+import { Link } from "react-router-dom";
 export const AboutSection = () => {
   return (
     <>
@@ -48,7 +48,10 @@ export const AboutSection = () => {
                       class="masking-src"
                       data-mask-src="assetsLanding/img/shape/about_shape1_1.png"
                     ></div>
-                    <img src="assetsLanding/img/shape/about_shape1_1.png" alt="img" />
+                    <img
+                      src="assetsLanding/img/shape/about_shape1_1.png"
+                      alt="img"
+                    />
                   </div>
                 </div>
                 <div class="year-counter movingX">
@@ -56,9 +59,9 @@ export const AboutSection = () => {
                     <span class="counter-number">266300</span>+ Students Need
                     Books They Can’t Afford
                   </div>
-                  <a class="link-btn style2" href="contact.html">
+                  <Link class="link-btn style2" to="/become-volunteer">
                     Become a Volunteer
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -81,12 +84,11 @@ export const AboutSection = () => {
               </div>
               <div class="about-wrap3">
                 <p class="mb-30">
-                  Discover the inspiring stories of individuals and communities
-                  transformed by Ehsas Hub's book exchange programs. Our success
-                  stories highlight the real-life impact of your donations and
-                  the educational growth of those we support. These narratives
-                  showcase the power of shared knowledge, compassion, and
-                  generosity.
+                  Our volunteers play a vital role by collecting book donations
+                  directly from generous donors and helping distribute them to
+                  those in need. Through their efforts, not only do they foster
+                  educational growth, but they also earn a commission as a
+                  reward for their hard work.
                 </p>
                 {/* <div class="about-feature-grid mx-3">
                   <div class="box-icon">

@@ -20,7 +20,7 @@ export const Footer = () => {
                 <div class="widget footer-widget">
                   <div class="th-widget-about">
                     <div class="about-logo">
-                      <a href="index.html">
+                      <a href="/">
                         <img
                           src="assetsLanding/img/logo.png"
                           alt="Donat"

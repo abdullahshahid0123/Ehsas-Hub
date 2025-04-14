@@ -6,3 +6,10 @@
     justify-items: start;
     display: flex;
 }
+.req-btn{
+    margin-left: 10px !important;
+    
+}
+.book-card:hover{
+  box-shadow: 5px 5px 5px 5px gainsboro !important;
+}

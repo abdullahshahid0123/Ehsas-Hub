@@ -8,12 +8,12 @@ const Register = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [value, setValue] = useState({
     name: "",
-    email: " ",
-    phone: " ",
+    email: "",
+    phone: "",
     password: "",
-    address: " ",
-    gender: " ",
-    image: " ",
+    address: "",
+    gender: "",
+    image: "",
   });
 
   const handlInput = (e) => {
@@ -40,10 +40,12 @@ const Register = () => {
         postData
       );
 
-      alert(res.data. msg);
-      navigate("/login");
+      // alert(res.data.msg);
+      console.log(res.data);
+      setErrorMessage(res.data.msg)
+      // navigate("/login");
     } catch (error) {
-      setErrorMessage("User Already exist. Please try again!");
+      setErrorMessage(res.data.msg);
       console.log("register failed", error.message);
     }
     // console.log(value);
@@ -111,7 +113,7 @@ const Register = () => {
                   Phone Number
                 </label>
                 <input
-                  type="text"
+                  type="number"
                   className="form-control rounded-pill home-input"
                   id="phone"
                   required

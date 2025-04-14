@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 // import "./Navbar.css";
 import axios from "axios";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -13,6 +13,8 @@ const Profile = () => {
     }
   };
   const userId = sessionStorage.getItem("id");
+ 
+
   const [value, setvalue] = useState({
     id: parseInt(userId),
     book_name: "",
@@ -48,69 +50,101 @@ const Profile = () => {
       setvalue({ ...value, book_image: reader.result });
     });
   };
+  const [image,setimage]=useState(" ")
+
+    useEffect(() => {
+      const getProfileImage=async()=>{
+      try{
+        const res = await axios.get(`http://localhost:8000/get-user-image/${userId}`);
+        // console.log(res.data)
+      setimage(res.data)
+    }catch(error){
+      console.log(error)
+
+    }
+    }
+    if(userId){
+      getProfileImage();
+    }
+     
+    },[userId])
+
+  
+
+
+
 
   return (
     <>
-      <nav className="navbar-user">
-        <div className="navbar-logo">
-          <a href="/">EHSAS-HUB</a>
-        </div>
-        <div className="navbar-search ">
-          <input
-            type="text"
-            className="search-input "
-            placeholder="Search..."
+      <nav className="navbar-user" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 20px" }}>
+  {/* Left: Logo */}
+  <div className="navbar-logo">
+    <a href="/home">EHSAS-HUB</a>
+  </div>
+
+  {/* Right: Heart, Donate Button, Profile */}
+  <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+    {/* Heart Icon */}
+   
+
+    {/* Switch to Donate Button */}
+    <div className="switch-to-donor">
+      <button
+        className="donor-button"
+        data-bs-toggle="modal"
+        data-bs-target="#staticBackdrop"
+      >
+        Switch to Donate
+      </button>
+    </div>
+
+    {/* Profile Dropdown */}
+    <div className="navbar-profile dropdown">
+      <NavLink
+        className="nav-link"
+        to="#"
+        id="navbarDropdown"
+        role="button"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+      >
+        {image ? (
+          <img
+            src={image}
+            alt="Profile"
+            className="img-fluid rounded-circle"
+            style={{ width: "40px", height: "40px", objectFit: "cover" }}
           />
-          <button className="search-button">
-            <i className="fa-solid fa-magnifying-glass"></i>
-          </button>
-        </div>
-        <div className="bell">
-          <i class="fa-regular fa-bell"></i>
-        </div>
-        <div className="mail">
-          <i class="fa-regular fa-envelope"></i>
-        </div>
-        <div className="heart">
-          <i class="fa-regular fa-heart"></i>
-        </div>
+        ) : (
+          <i className="fa-solid fa-user" style={{ fontSize: "24px" }}></i>
+        )}
+      </NavLink>
 
-        <div className="switch-to-donor">
-          <button
-            className="donor-button"
-            data-bs-toggle="modal"
-            data-bs-target="#staticBackdrop"
-          >
-            Switch to Donate
-          </button>
-        </div>
-        <div className="navbar-profile dropdown">
-          <NavLink
-            className="nav-link"
-            to="#"
-            id="navbarDropdown"
-            role="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            <img src="" alt="" className=" img-fluid rounded-circle" />
-            <i className="fa-solid fa-user"></i>
-          </NavLink>
+     <ul
+  className="dropdown-menu dropdown-menu-start"
+  style={{ textAlign: "left" }}
+  aria-labelledby="navbarDropdown"
+>
+  <li>
+    <NavLink className="dropdown-item" to="/Profileview">
+      Profile
+    </NavLink>
+  </li>
+  <li>
+    <NavLink className="dropdown-item" to="/Profileview">
+      Favourites
+    </NavLink>
+  </li>
+  <li>
+    <button className="dropdown-item" onClick={LogOut}>
+      Logout
+    </button>
+  </li>
+</ul>
+    </div>
+  </div>
+</nav>
 
-          <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li>
-              <NavLink className="dropdown-item" to="/Profileview">
-                Profile
-              </NavLink>
-            </li>
-            <li>
-              <button className="dropdown-item" onClick={LogOut}>
-                Logout
-              </button>
-            </li>
-          </ul>
-        </div>
-      </nav>
 
       <>
         <div

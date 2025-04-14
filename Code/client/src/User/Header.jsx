@@ -11,7 +11,7 @@ export const Header = () => {
           <div class="container">
             <div class="menu-area">
               <div class="header-logo">
-                <a href="index.html">
+                <a href="/">
                   {/* <h3>Ehsas Hub</h3> */}
                   <img
                     src="assetsLanding/img/logo.png"
@@ -44,7 +44,7 @@ export const Header = () => {
                     </li>
 
                     <li>
-                      <Link to="/become-volunteer">Become a Volunteer</Link>
+                      <Link to="/become-volunteer">Become Volunteer</Link>
                     </li>
 
                     <li>

@@ -16,13 +16,12 @@ const Profileview = () => {
   const [isEditing, setIsEditing] = useState(true);
   const [editData, setEditData] = useState({});
   const [profile, setprofile] = useState([]);
-  const [showcode, setshowcode] = useState(false);
+  
   const [verification, setverification] = useState("");
 
   const userId = sessionStorage.getItem("id");
-  const id = sessionStorage.getItem("id");
-
-  console.log(id);
+  
+ 
 
   const email = sessionStorage.getItem("email");
   console.log(email);
@@ -30,7 +29,7 @@ const Profileview = () => {
   const Fetch = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/fetchuser-byid/${id}`
+        `http://localhost:8000/fetchuser-byid/${userId}`
       );
 
       setprofile([response.data]); // Correct usage
@@ -50,51 +49,53 @@ const Profileview = () => {
     setEditData((prev) => ({ ...prev, [name]: value }));
     console.log(editData);
   };
+  const [showcode, setshowcode] = useState(false);
+  const toggleCode= async()=>{
+
+    try{
+      const res = await axios.post(
+        "http://localhost:8000/user-profile-verify", {editData}
+      );
+      alert(res.data.msg);
+      setshowcode(true);
+    }catch(err){
+      console.log(err)
+    }
+
+  }
   const Update = async () => {
     try {
-      const res = await axios.put(
-        `http://localhost:8000/update-profile/${userId}`,
-        editData
-      );
-      const { token, msg, email } = res.data;
-      sessionStorage.setItem("token", token);
-      sessionStorage.setItem("email", email);
-      if (res.data.msg === "code send to your email") {
-        setshowcode(true);
-      }
-
-      alert(msg);
-      Fetch();
+      
+      const res = await axios.put(`http://localhost:8000/update-profile/${userId}`, editData);
+      alert(res.data.msg)
+     window.location.reload();
+     
     } catch (error) {
       console.log("eror in updating", error);
     }
   };
 
-  const UpdateVerify = async () => {
-    try {
-      // console.log("this is email", email);
-      const res = await axios.post(
-        `http://localhost:8000/user-profile-verify/${email}`,
-        { code: verification }
-      );
-      alert(res.data.msg);
-      // setIsEditing(true);
-    } catch (error) {
-      console.log("error in code matching", error);
-    }
-  };
+
+
+  
   const handleEditImage = (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.addEventListener("load", () => {
-      setEditData({ ...value, image: reader.result });
+      setEditData((prev) => ({
+        ...prev,
+        // image: res.data.image || prev.image,
+        image: reader.result,
+       
+      }));
     });
   };
 
   const ClickToEdit = () => {
     setIsEditing(false);
     setopen(true);
+   
   };
   const [getvalue, setgetvalue] = useState([]);
   const FetchState = async (id) => {
@@ -120,10 +121,12 @@ const Profileview = () => {
     }
   };
   useEffect(() => {
-    FetchState(id);
-    FetchReqState(id);
-  }, [id]);
+    FetchState(userId);
+    FetchReqState(userId);
+  }, [userId]);
   const [open, setopen] = useState(false);
+
+
 
   return (
     <>
@@ -131,11 +134,23 @@ const Profileview = () => {
         <Profile />
         <div class="container profile-container bg-gray">
           <div className="col-6">
-            <div>
-              <img src={editData.image} alt="" width={100} height={100} />
+            <div className="text-center" >
+              <img
+              style={{
+    width: "100px",
+    height: "100px",
+    borderRadius: "50%",
+    objectFit: "cover",
+  }}
+                src={editData.image}
+                name="image"
+                alt=""
+              
+              />
               <input
                 type="file"
                 hidden={isEditing}
+                name="image"
                 onChange={handleEditImage}
               />
             </div>
@@ -154,30 +169,32 @@ const Profileview = () => {
               value={editData.email}
               readOnly={isEditing}
               onChange={handleEdit}
+
             />
+             <input type="button" value="Verify Email" className="my-4" onClick={toggleCode} hidden={isEditing}/>
+                  
+                  
             <div>
               {showcode && (
                 <>
                   <strong className="my-4 text-black">verfication code</strong>
                   <input
+                  name="verification"
                     className="text-center"
                     maxlength="4"
-                    type="text"
+                    type="number"
                     placeholder="xxxx"
-                    value={verification}
-                    onChange={(e) => {
-                      setverification(e.target.value);
-                    }}
+                    name="code"
+                    // value={verification}
+                    onChange={handleEdit}
                   />
-                  <button className="my-4" onClick={UpdateVerify}>
-                    verify
-                  </button>
+                 
                 </>
               )}
             </div>
             <strong className="text-black">Phone</strong>
             <input
-              type="text"
+              type="number"
               name="phone"
               value={editData.phone}
               readOnly={isEditing}
@@ -195,9 +212,16 @@ const Profileview = () => {
             <div className="mb-5">
               {open ? (
                 <>
-                  <button className="mr-10" onClick={Update}>
+                {
+                  showcode && (
+                    <>
+ <button className="mr-10" onClick={Update}>
                     Save
                   </button>
+                    </>
+                    )
+                }
+                 
 
                   <button
                     onClick={() => {
@@ -205,11 +229,14 @@ const Profileview = () => {
                       setopen(false);
                     }}
                   >
-                    cancle
+                    cancel
                   </button>
                 </>
               ) : (
                 <button className="mr-10" onClick={ClickToEdit}>
+
+                  
+               
                   Edit profile
                 </button>
               )}
@@ -237,7 +264,6 @@ const Profileview = () => {
             </div>
 
             <div class="mt-4">
-              
               <div className="row">
                 <div class="col-sm-6">
                   <div class="card flex-fill border-0 shadow">

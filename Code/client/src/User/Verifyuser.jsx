@@ -55,6 +55,7 @@ const Verifyuser = () => {
                 )}
                 <form onSubmit={Submit}>
                   <div>
+                  <label htmlFor="code">Code</label>
                     <input
                       type="text"
                       class="form-control code-input mb-4"
@@ -105,7 +106,7 @@ const Verifyuser = () => {
                       id="resendCode"
                       disabled
                     >
-                      <span>Click To verify</span>
+                      <span></span>
                     </button>
                     <button type="submit" className="btn btn-primary ml-">
                       Reset Password

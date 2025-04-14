@@ -15,6 +15,7 @@ const {
   UserProfileVerify,
   CountDonateBooks,
   CountReqBook,
+  GetProfileImage,
 } = require("../Controller/auth-controller");
 const {
   CreateVolunteer,
@@ -28,6 +29,7 @@ const {
   FetachVolProcessReq,
   FetchVolunteerProcessAll,
   FetchVolunteerCompleteAll,
+
 } = require("../Controller/Volunteer");
 const {
   CreateDonor,
@@ -91,7 +93,8 @@ router.put("/update-interest/:id", UpdateInterest);
 router.post("/user-forgot-pass", UserForgotPassword);
 router.post("/user-reset-pass/:email", userResetPass);
 router.put("/update-profile/:userId", UpdateProfile);
-router.post("/user-profile-verify/:email", UserProfileVerify);
+router.post("/user-profile-verify", UserProfileVerify);
+router.get("/get-user-image/:userId", GetProfileImage);
 // user state
 router.get("/count-donate-books/:id", CountDonateBooks);
 router.get("/count-req-books/:id", CountReqBook);
