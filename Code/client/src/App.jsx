@@ -20,6 +20,7 @@ import Ncompleterequest from "./admin/pages/Ncompleterequest";
 import Napproverequest from "./admin/pages/Napproverequest";
 import Vcompleterequest from "./admin/pages/Vcompleterequest";
 import Vapproverequest from "./admin/pages/Vapproverequest";
+import VolunteerProfile from "./volunteer/pages/VolunteerProfile";
 import UserInterest from "./User/UserInterest";
 import Main from "./User/Main";
 import { VolunteerDashboard } from "./volunteer/pages/VolunteerDashboard";
@@ -104,6 +105,8 @@ function AppWrapper() {
         <Route path="/volunteer-dashboard" element={<VolunteerDashboard />} />
         <Route path="/volunteer-new-req" element={<VolunteerNewReq />} />
         <Route path="/volunteer-comp-req" element={<VolunteerCompReq />} />
+        <Route path="/volunteer-profile" element={<VolunteerProfile/>} />
+
         <Route
           path="/volunteer-process-req"
           element={<VolunteerProcessReq />}

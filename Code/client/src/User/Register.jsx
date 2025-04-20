@@ -39,11 +39,12 @@ const Register = () => {
         "http://localhost:8000/create-user",
         postData
       );
+       setErrorMessage(res.data.msg)
 
-      // alert(res.data.msg);
-      console.log(res.data);
-      setErrorMessage(res.data.msg)
-      // navigate("/login");
+       if (res.data.msg === "User Created successfully") {
+     
+      navigate("/login");
+    }
     } catch (error) {
       setErrorMessage(res.data.msg);
       console.log("register failed", error.message);

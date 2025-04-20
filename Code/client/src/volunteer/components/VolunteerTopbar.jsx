@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate ,Link} from "react-router-dom";
 
 export const VolunteerTopbar = () => {
   const navigate = useNavigate();
@@ -49,9 +49,9 @@ export const VolunteerTopbar = () => {
               <div className="dropdown-menu dropdown-menu-end">
                 <ul>
                   <li>
-                    <a href="profile.html" className="dropdown-item">
+                    <Link to="/volunteer-profile" className="dropdown-item">
                       Profile
-                    </a>
+                    </Link>
                   </li>
                   <li>
                     <a

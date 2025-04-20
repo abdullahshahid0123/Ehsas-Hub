@@ -132,16 +132,16 @@ const ManageuserAccount = () => {
                             )}
                           </td>
                           <td>
-                            <div className="dropdown">
+                            <div className="dropdown"  >
                               <button
-                                className="btn btn-warning dropdown-toggle"
+                                className="btn btn-warning dropdown-toggle "
                                 type="button"
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false"
                               >
                                 Action
                               </button>
-                              <ul className="dropdown-menu">
+                              <ul className="dropdown-menu overflow-y-auto absolute max-h-60 z-50 bottom-full mb-2" style={{overflow:"visible"}}>
                                 <li>
                                   <a
                                     className="dropdown-item"

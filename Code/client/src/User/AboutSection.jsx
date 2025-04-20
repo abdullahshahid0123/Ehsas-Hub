@@ -104,7 +104,7 @@ export const AboutSection = () => {
                   </div>
                 </div> */}
                 <div class="btn-wrap mt-40 mx-5">
-                  <a href="about.html" class="th-btn style3 style-radius">
+                  <a href="/become-volunteer" class="th-btn style3 style-radius">
                     Become a Volunteer{" "}
                     <i class="fa-solid fa-arrow-up-right ms-2"></i>
                   </a>

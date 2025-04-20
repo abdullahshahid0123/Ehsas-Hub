@@ -1,6 +1,33 @@
-import React from "react";
-
+import React,{useState,useEffect} from "react";
+import axios from "axios";
 export const CallToAction = () => {
+
+const Save=async(e)=>{
+  e.preventDefault()
+  const postData={...data}
+  try{
+    const res=await axios.post("http://localhost:8000/feed-back",postData)
+alert(res.data.msg)
+window.location.reload()
+  }catch(error){
+    console.log(error)
+  }
+  
+
+  }
+  const [data,setdata]=useState({
+    name:"",
+    email:"",
+    message:""
+  })
+  const handleInput=(e)=>{
+    setdata({...data,[e.target.name]:e.target.value})
+  }
+  useEffect(()=>{
+Save()
+  },[])
+  
+
   return (
     <>
       <section class="" id="contact-sec">
@@ -27,6 +54,7 @@ export const CallToAction = () => {
                         type="text"
                         class="form-control"
                         name="name"
+                        onChange={handleInput}
                         id="name"
                         placeholder="Your name"
                       />
@@ -36,31 +64,19 @@ export const CallToAction = () => {
                         type="email"
                         class="form-control"
                         name="email"
+                        onChange={handleInput}
                         id="email"
                         placeholder="Your Email Address..."
                       />
                     </div>
-                    <div class="form-group col-xxl-4 col-md-6 style-dark">
-                      <input
-                        type="number"
-                        class="form-control"
-                        name="number"
-                        id="number"
-                        placeholder="Phone Number..."
-                      />
-                    </div>
-                    <div class="form-group col-xxl-4 col-md-6 style-dark">
-                      <input
-                        type="number"
-                        class="form-control"
-                        name="zip"
-                        id="zip"
-                        placeholder="Zip Code..."
-                      />
-                    </div>
+                   <div class=" form-group mb-3 style-dark">
+  
+  <textarea class="form-control " id="exampleTextarea" rows="4" name="message" onChange={handleInput} placeholder="Type your message..."></textarea>
+</div>
+                   
                     <div class="form-group col-xxl-4 col-xl-12">
-                      <button class="th-btn style3 w-100">
-                        Get Involved Today
+                      <button class="th-btn style3 w-100" onClick={Save}>
+                        Submit
                       </button>
                     </div>
                   </div>

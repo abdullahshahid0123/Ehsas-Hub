@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 
 const CreateVolunteer = () => {
+  const [errorMessage, setErrorMessage] = useState("");
   const [value, setValue] = useState({
     name: "",
     email: "",
@@ -33,10 +34,18 @@ const CreateVolunteer = () => {
         "http://localhost:8000/create-volunteer",
         postData
       );
-      alert(res.data.msg);
-      window.location.reload();
+
+      setErrorMessage(res.data.msg);
+
+      if (res.data.msg === "Request submitted successfuly ") {
+        
+        window.location.reload();
+        navigate("/volunteer-login");
+      }
+
       setForm((state) => !state);
     } catch (error) {
+      setErrorMessage(res.data.msg);
       console.log(error);
     }
   };
@@ -54,6 +63,11 @@ const CreateVolunteer = () => {
                 <h3 className="text-primary">Become a Volunteer</h3>
                 <p className="text-secondary">Join us as a Volunteer</p>
               </div>
+              {errorMessage && (
+                <div className="text-center mb-4">
+                  <span className="text-danger ">{errorMessage}</span>
+                </div>
+              )}
               <form onSubmit={CreateVolunteer}>
                 <div className="mb-3">
                   <label className="form-label">Full Name</label>
@@ -139,7 +153,10 @@ const CreateVolunteer = () => {
                   <button type="submit" className="btn btn-primary">
                     Submit
                   </button>
-                  <p>Alreay Have account <NavLink to="/volunteer-login">Login here</NavLink></p>
+                  <p>
+                    Alreay Have account{" "}
+                    <NavLink to="/volunteer-login">Login here</NavLink>
+                  </p>
                 </div>
               </form>
             </div>

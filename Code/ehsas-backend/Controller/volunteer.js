@@ -1,6 +1,6 @@
 const { con } = require("../config/db");
 const jwt = require("jsonwebtoken");
-const { SendMailRequest } = require("../mail/app-mailer");
+const { SendMailRequest,SendMailVerifyEmail } = require("../mail/app-mailer");
 
 const LoginVolunteer = async (req, res) => {
   console.log("Rout hit");
@@ -30,12 +30,36 @@ const LoginVolunteer = async (req, res) => {
 const CreateVolunteer = (req, res) => {
   // req body from the user
   const { name, email, phone, password, address, image } = req.body;
+  const validName = /^([A-Z][a-z]+)(\s[A-Z][a-z]+)+$/;
+
+
+  const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const ValidPassword = (password) => {
+    if (password.length < 8) return "password must be 8 character ";
+    if (!/[A-Z]/.test(password)) return "password must have uppercase ";
+    if (!/[a-z]/.test(password)) return "password must have lowercase ";
+    if (!/[0-9]/.test(password)) return "password must have Numbers";
+    if (!/[@#$%^&*(),.?":{}|<>]/.test(password))
+      return "passsword must have special character";
+    return null;
+  };
+
+  if (!name || !email || !phone || !password || !image) {
+    return res.json({ msg: "Fields are required" });
+  }
+  if (!validName.test(name)) {
+    return res.json({ msg: "Name must only contain letters and spaces" });
+  }
+  if (!validEmail.test(email)) {
+    return res.json({ msg: "Invalid email format" });
+  }
+  const passwordError = ValidPassword(password);
+  if (passwordError) {
+    return res.json({ msg: passwordError });
+  }
 
   const user = [name, email, phone, password, address, image];
   //   check all fields from the user
-  if (!name || !email || !phone || !password || !address || !image) {
-    return res.status(500).json({ msg: "Fields are required" });
-  }
 
   // sql  query for the database to create data
   const sql =
@@ -171,6 +195,72 @@ const CompleteVolunteer = (req, res) => {
     }
   });
 };
+const GetVolunteer=(req,res)=>{
+  const userId = req.params.userId;
+  const qry = "SELECT * FROM `volunteer` WHERE id = ?";
+  con.query(qry, [userId], (error, data) => {
+    if (error) {
+      return res.json({ msg: "error in fetching", error });
+    }
+    if (data.length > 0) {
+      return res.json(data[0]);
+    } else {
+      return res.json({ msg: "volunteer not found" });
+    }
+  });
+
+}
+const UpdateProfileVolunteer=(req,res)=>{
+
+  const { userId } = req.params;
+  const { name, email, phone, gender, image, code} = req.body;
+  let checkCode = parseInt(code)
+
+  console.log(req.body)
+  
+  const sql1 = "SELECT * FROM `verify` WHERE `email` = ?";
+  con.query(sql1, [email, code], (err, data) => {
+    if(err){
+      return res.json(err);
+    }else{
+      console.log(data[0].code)
+      if(data[0].code !== checkCode){
+        return res.json({msg: "Invalid Verifcation Code!!!"})
+      }else{
+        const sql2 = "UPDATE `volunteer` SET name= ?, email= ?, phone= ?, profile= ? WHERE id = ?";
+        con.query(sql2, [name, email, phone, gender, image, userId], (err, result) => {
+          if(err){
+            return res.json(err);
+          }else{
+            const token = jwt.sign({ userId, email }, process.env.JWT_SECRET);
+            return res.json({msg: "Profile Updated Successfuly", token})
+          }
+        })
+      }
+    }
+  })
+
+}
+const SendCode=async(req,res)=>{
+
+ const {email}=req.body.editData;
+  // console.log(req.body)
+  const code = await SendMailVerifyEmail(email);
+      console.log(code);
+      if (code < 0) {
+        return res.json({ msg: "cannot generate code" });
+      }else{
+      const sql = "INSERT INTO `verify`(email ,code) VALUES(? , ?)";
+      con.query(sql, [email, code], (err, data) => {
+        console.log(email, "email ha ye");
+        if (err) throw err;
+        return res.json({ msg: "code send to your email"});
+
+        
+      });
+}
+
+}
 
 module.exports = {
   CreateVolunteer,
@@ -183,4 +273,7 @@ module.exports = {
   FetachVolProcessReq,
   FetchVolunteerProcessAll,
   FetchVolunteerCompleteAll,
+  GetVolunteer,
+  UpdateProfileVolunteer,
+   SendCode,
 };

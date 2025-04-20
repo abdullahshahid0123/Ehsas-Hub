@@ -16,6 +16,7 @@ const {
   CountDonateBooks,
   CountReqBook,
   GetProfileImage,
+  FeedBack,
 } = require("../Controller/auth-controller");
 const {
   CreateVolunteer,
@@ -29,7 +30,9 @@ const {
   FetachVolProcessReq,
   FetchVolunteerProcessAll,
   FetchVolunteerCompleteAll,
-
+GetVolunteer,
+UpdateProfileVolunteer,
+SendCode,
 } = require("../Controller/Volunteer");
 const {
   CreateDonor,
@@ -81,6 +84,8 @@ const {
   LoginAdmin,
   ForgotPassword,
   FetchAdminById,
+  SendCodeAdmin,
+  verifyUpdateProfile,
 } = require("../Controller/admin-login");
 
 const router = express.Router();
@@ -113,6 +118,10 @@ router.post("/create-admin", CreateAdmin);
 router.post("/login-admin", LoginAdmin);
 router.post("/forgot-password", ForgotPassword);
 router.get("/fetchadmin-byid/:userId", FetchAdminById);
+router.post("/send-code-admin", SendCodeAdmin);
+router.put("/verify-Update-Profile/:userId", verifyUpdateProfile);
+
+
 
 // admin donor routes
 router.post("/create-donor", CreateDonor);
@@ -138,6 +147,13 @@ router.put("/vol-req-accept/:id", VolunteerAcceptRequest);
 router.get("/fetch-vol-process/:id", FetachVolProcessReq);
 router.get("/fetch-vol-process-all/:id", FetchVolunteerProcessAll);
 router.get("/fetch-vol-complete-all/:id", FetchVolunteerCompleteAll);
+router.get("/get-volunteer/:userId", GetVolunteer);
+
+router.post("/send-code", SendCode);
+
+router.put("/update-profile-volunteer/:userId", UpdateProfileVolunteer);
+
+
 
 // admin needy routes
 router.put("/needy-request/:id", NeedyRequest);
@@ -171,5 +187,7 @@ router.get("/count-complete-needy", CountCompletedNeedy);
 router.get("/vol-new-count/:id", CountVolNew);
 router.get("/vol-process-count/:id", CountVolProcess);
 router.get("/vol-completed-count/:id", CountVolCompleted);
+// feedback routes
+router.post("/feed-back", FeedBack);
 
 module.exports = router;

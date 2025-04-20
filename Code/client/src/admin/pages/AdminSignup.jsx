@@ -38,11 +38,14 @@ const AdminSignup = () => {
         "http://localhost:8000/create-admin",
         postData
       );
+      setErrorMessage(res.data.msg)
 
-      alert(res.data.msg);
-      navigate("/adminlogin");
+       if (res.data.msg === "User Created successfully") {
+         navigate("/adminlogin");
+       }
+     
     } catch (error) {
-      setErrorMessage("User Already exist. Please try again!");
+      setErrorMessage(res.data.msg);
       console.log("register failed", error.message);
     }
     // console.log(value);

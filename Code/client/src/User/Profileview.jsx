@@ -20,9 +20,6 @@ const Profileview = () => {
   const [verification, setverification] = useState("");
 
   const userId = sessionStorage.getItem("id");
-  
- 
-
   const email = sessionStorage.getItem("email");
   console.log(email);
 
@@ -85,7 +82,6 @@ const Profileview = () => {
     reader.addEventListener("load", () => {
       setEditData((prev) => ({
         ...prev,
-        // image: res.data.image || prev.image,
         image: reader.result,
        
       }));
@@ -182,10 +178,10 @@ const Profileview = () => {
                   name="verification"
                     className="text-center"
                     maxlength="4"
-                    type="number"
+                    type="text"
                     placeholder="xxxx"
                     name="code"
-                    // value={verification}
+                    // // value={verification}
                     onChange={handleEdit}
                   />
                  
@@ -200,22 +196,48 @@ const Profileview = () => {
               readOnly={isEditing}
               onChange={handleEdit}
             />
-            <strong className="text-black">gender</strong>{" "}
+
+            {isEditing ? (
+              <>
+            <strong className="text-black">gender</strong>
             <input
               className="mb-5"
               type="text"
               name="gender"
               value={editData.gender}
               readOnly={isEditing}
-              onChange={handleEdit}
-            />
+              onChange={handleEdit}/>
+          </>
+              
+                  ):( 
+                  <>
+             <strong className="text-dark">Gender:</strong>
+                 
+                    <select
+                      name="gender"
+                      id=""
+                      className="form-control home-input"
+                       value={editData.gender}
+              readOnly={isEditing}
+                      onChange={handleEdit}
+                    >
+                      <option disabled selected>
+                        --Select--
+                      </option>       
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                    </select>
+                   </>
+
+           )} 
+            
             <div className="mb-5">
               {open ? (
                 <>
                 {
                   showcode && (
                     <>
- <button className="mr-10" onClick={Update}>
+                   <button className="mr-10" onClick={Update}>
                     Save
                   </button>
                     </>

@@ -16,6 +16,7 @@ const CreateUser = async (req, res) => {
 
   const validName = /^([A-Z][a-z]+)(\s[A-Z][a-z]+)+$/;
 
+
   const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const ValidPassword = (password) => {
     if (password.length < 8) return "password must be 8 character ";
@@ -58,18 +59,22 @@ const CreateUser = async (req, res) => {
       "INSERT INTO users(name, email, phone, password, address, gender,image) VALUES (?)";
 
     con.query(sql, [user], (err, data) => {
-      if (err) throw err;
-      SendMailRequest(name, email);
-      return res.json({ msg: "User Created successfully" });
+      if (err){
+         return res.json({ msg: " Error in User Creating"});
+      }else{
+         SendMailRequest(name, email);
+      return res.json({ msg: "User Created successfully"});
+      }
+     
     });
-    console.log(sql);
+   
   });
 };
 
 const LoginUser = async (req, res) => {
-  console.log("Rout hit");
+ 
   const { email, password } = req.body;
-
+ console.log(req.body);
   const sql = "SELECT * FROM users WHERE email=? AND status=1";
 
   con.query(sql, [email], async (err, data) => {
@@ -78,7 +83,7 @@ const LoginUser = async (req, res) => {
       return res.json({ msg: "user not found!!!", data });
     }
     const user = data[0];
-    // console.log(user)
+    console.log(user)
 
     if (password) {
       bcrypt.compare(password, user.password, function (err, result) {
@@ -265,87 +270,35 @@ const UpdateProfile = (req, res) => {
     }
   })
 
-  // if (!name && !email && !phone && !gender && !image) {
-  //   return res.json({ msg: "atleast one field required" });
-  // }
-
   
-  // const check = "SELECT email  FROM `users` WHERE id=?";
-  // con.query(check, [userId], async (err, result) => {
-  //   if (err) throw err;
-  //   currentemail = result[0]?.email;
-  //   if (email && email !== currentemail) {
-  //     const token = jwt.sign({ userId, email }, process.env.JWT_SECRET);
-  //     const code = await SendMailVerifyEmail(email);
-  //     console.log(code);
-  //     if (!code) {
-  //       return res.json({ msg: "cannot generate code" });
-  //     }
-  //     const sql = "INSERT INTO `verify`(email ,code) VALUES(? , ?)";
-  //     con.query(sql, [email, code], (err) => {
-  //       console.log(email, "email ha ye");
-  //       if (err) {
-  //         return res.json({ msg: "error in the code " });
-  //       }
-  //       return res.json({ msg: "code send to your email", token, email });
-  //     });
-  //   } else {
-  //     const qry =
-  //       "UPDATE `users` SET name= ?, email= ?, phone= ?, gender= ? , image= ? WHERE id = ?";
-  //     con.query(
-  //       qry,
-  //       [name, email, phone, gender, image, userId],
-  //       (error, data) => {
-  //         console.log(data);
-  //         if (error) {
-  //           return res.status(404).json({ msg: "error in updating", error });
-  //         }
-  //         if (data.affectedRows === 0) {
-  //           return res.json({ msg: "updating error" });
-  //         }
-  //         return res.json({ msg: "update successfull" });
-  //       }
-  //     );
-  //   }
-  // });
+  
 };
 
-const UserProfileVerify = async (req, res) => {
-  const {email}=req.body.editData;
-  // console.log(req.body)
-  const code = await SendMailVerifyEmail(email);
-      console.log(code);
-      if (code < 0) {
-        return res.json({ msg: "cannot generate code" });
-      }else{
-      const sql = "INSERT INTO `verify`(email ,code) VALUES(? , ?)";
-      con.query(sql, [email, code], (err, data) => {
-        console.log(email, "email ha ye");
-        if (err) throw err;
-        return res.json({ msg: "code send to your email"});
+  const UserProfileVerify = async (req, res) => {
+    const {email}=req.body.editData;
+     const deleteSql = "DELETE FROM `verify` WHERE email = ?";
+  con.query(deleteSql, [email], async (err) => {
+    if (err) {
+      return res.json({ msg: "Error clearing old code", error: err });
+    }
 
-        
-      });
+    // Now generate and send new code
+    const code = await SendMailVerifyEmail(email);
+    if (code < 0) {
+      return res.json({ msg: "Cannot generate code" });
+    }
+
+    const now = new Date();
+    const insertSql = "INSERT INTO `verify` (email, code, created_at) VALUES (?, ?, ?)";
+    con.query(insertSql, [email, code, now], (err) => {
+      if (err) {
+        return res.json({ msg: "Error saving code", error: err });
       }
-      
-  // const { email } = req.params;
-  // const { code } = req.body;
-  // console.log(req.params);
-  // console.log(req.body);
-  // if (!email || !code) {
-  //   return res.json({ message: "fields are required" });
-  // }
-  // const sql = "SELECT * FROM `verify` WHERE email = ? AND code = ? ";
-  // con.query(sql, [email, code], async (err, result) => {
-  //   if (err) res.json({ message: "field not match" });
-  //   if (result.length === 0) {
-  //     return res.json({ message: "data not found" });
-  //   }
-  //   const del = "DELETE FROM `verify` WHERE email = ?";
-  //   con.query(del, [email]);
-  //   return res.json({ msg: "verify successfuly" });
-  // });
-};
+      return res.json({ msg: "Code sent to your email" });
+    });
+  });
+
+  };
 
 const UpdateInterest = (req, res) => {
   const { id } = req.params;
@@ -403,6 +356,22 @@ console.log(data)
   });
 
 }
+const FeedBack=(req,res)=>{
+
+  const {name,email,message}=req.body
+   if(!name|| !email||! message){
+     return res.json({msg:"fields are required"})
+   }
+  const user=[name,email,message]
+  const sql="INSERT INTO feedback( name, email, message) VALUES (?, ?, ?)"
+  con.query(sql, user,(err,data)=>{
+    if(err) {
+      return res.json({msg:"error in saving",err})
+    }
+    
+      return res.json({msg:"save successfuly"})
+  })
+}
 
 module.exports = {
   CreateUser,
@@ -419,5 +388,6 @@ module.exports = {
   UserProfileVerify,
   CountDonateBooks,
   CountReqBook,
-  GetProfileImage
+  GetProfileImage,
+  FeedBack
 };

@@ -10,7 +10,7 @@ export const VolunteerDashboard = () => {
   // const check = sessionStorage.getItem("isLoggedIn");
 
   // useEffect(() => {
-  //   if (!check) {
+  //   if (!token) {
   //     navigate("/volunteer-login");
   //   }
   // });
