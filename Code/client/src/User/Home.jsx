@@ -114,6 +114,7 @@ const Home = () => {
               <div className="col-6 p-2 d-flex flex-column justify-content-between">
                 <div>
                   <p><b>{book_name}</b></p>
+                 
                   <p>By: <i>{auther_name}</i></p>
                   <p>Edition: <i>{book_edition}</i></p>
                 </div>

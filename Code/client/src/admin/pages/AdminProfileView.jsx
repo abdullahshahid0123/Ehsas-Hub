@@ -34,18 +34,6 @@ const userId = sessionStorage.getItem("id");
   useEffect(() => {
     Fetch();
   }, []);
-  //  const SendCode = async () => {
-  //   const userId = sessionStorage.getItem("id");
-  //   try {
-  //     const response = await axios.post(
-  //       "http://localhost:8000/send-code-admin"
-  //     );
-  //     console.log("API Response:", response.data);
-      
-  //  } catch (error) {
-  //     console.error("Error fetching admin data:", error);
-  //   }
-  // };
   const handleEdit = (e) => {
     const { name, value } = e.target;
     setEditData((prev) => ({ ...prev, [name]: value }));
@@ -95,13 +83,14 @@ const userId = sessionStorage.getItem("id");
     setopen(true);
    
   };
+
   return (
     <>
       <div className="wrapper">
         <Sidebar />
         <div className="main">
           <Topbar />
-          <div class="container profile-container  bg-gray">
+          <div class="container profile-container " >
           <div className=" ">
             <div className="text-center" >
               <img

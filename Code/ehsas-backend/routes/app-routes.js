@@ -33,6 +33,7 @@ const {
 GetVolunteer,
 UpdateProfileVolunteer,
 SendCode,
+GetVolunteerImage,
 } = require("../Controller/Volunteer");
 const {
   CreateDonor,
@@ -86,6 +87,7 @@ const {
   FetchAdminById,
   SendCodeAdmin,
   verifyUpdateProfile,
+  GetAdminProfile,
 } = require("../Controller/admin-login");
 
 const router = express.Router();
@@ -120,7 +122,7 @@ router.post("/forgot-password", ForgotPassword);
 router.get("/fetchadmin-byid/:userId", FetchAdminById);
 router.post("/send-code-admin", SendCodeAdmin);
 router.put("/verify-Update-Profile/:userId", verifyUpdateProfile);
-
+router.get("/get-admin-profile/:userId", GetAdminProfile)
 
 
 // admin donor routes
@@ -187,6 +189,9 @@ router.get("/count-complete-needy", CountCompletedNeedy);
 router.get("/vol-new-count/:id", CountVolNew);
 router.get("/vol-process-count/:id", CountVolProcess);
 router.get("/vol-completed-count/:id", CountVolCompleted);
+router.get("/get-volunteer-image/:userId", GetVolunteerImage);
+
+
 // feedback routes
 router.post("/feed-back", FeedBack);
 

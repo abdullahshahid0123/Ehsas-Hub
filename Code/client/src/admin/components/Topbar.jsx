@@ -1,5 +1,6 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import axios from 'axios';
 
 export const Topbar = () => {
 const navigate=useNavigate()
@@ -12,6 +13,25 @@ const navigate=useNavigate()
     navigate("/adminlogin")
   }
 }
+const userId=sessionStorage.getItem("id")
+const [image, setimage]=useState("")
+
+  useEffect(() => {
+      const getProfileImage=async()=>{
+      try{
+        const res = await axios.get(`http://localhost:8000/get-admin-profile/${userId}`);
+        
+      setimage(res.data)
+    }catch(error){
+      console.log(error)
+
+    }
+    }
+    if(userId){
+      getProfileImage();
+    }
+     
+    },[userId])
   return (
     <>
       <nav className="navbar navbar-expand px-3 border-bottom">
@@ -42,11 +62,19 @@ const navigate=useNavigate()
                 data-bs-toggle="dropdown"
                 className="nav-icon pe-md-0"
               >
+              {image ? (
+                <img
+                  src={image}
+                  className="avatar img-fluid rounded-circle"
+                  alt=""
+                />
+                ):(
                 <img
                   src="assets/images/Profile.jpg"
                   className="avatar img-fluid rounded-circle"
                   alt=""
                 />
+                )}
               </a>
               <div className="dropdown-menu dropdown-menu-end">
                 <ul>

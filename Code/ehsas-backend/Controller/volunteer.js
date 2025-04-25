@@ -261,6 +261,21 @@ const SendCode=async(req,res)=>{
 }
 
 }
+const GetVolunteerImage=(req,res)=>{
+   const { userId } = req.params;
+  console.log(req.params)
+  
+   const sql = "SELECT profile FROM `volunteer`  WHERE  id = ?  ";
+
+  con.query(sql, [userId], (err, data) => {
+    if (err) throw err;
+    console.log(err)
+
+    return res.json(data[0].profile);
+  });
+
+
+}
 
 module.exports = {
   CreateVolunteer,
@@ -276,4 +291,5 @@ module.exports = {
   GetVolunteer,
   UpdateProfileVolunteer,
    SendCode,
+   GetVolunteerImage,
 };

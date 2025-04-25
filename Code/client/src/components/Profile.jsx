@@ -18,6 +18,7 @@ const Profile = () => {
   const [value, setvalue] = useState({
     id: parseInt(userId),
     book_name: "",
+    generes:"",
     book_edition: "",
     auther_name: "",
     book_image:"",
@@ -34,9 +35,7 @@ const Profile = () => {
         postData
       );
       alert(res.data.msg);
-      // console.log("donation successful", res);
-      // setForm((state) => !state);
-      // setvalue({ book_imag: " " });
+      
       window.location.reload();
     } catch (error) {
       console.log("donation not create", error);
@@ -194,6 +193,24 @@ const Profile = () => {
                             onChange={handleInput}
                           />
                         </div>
+                        <div className="col-md- mb-3">
+                          <label
+                            htmlFor="book"
+                            className="text-dark home-label"
+                          >
+                            Generes
+                          </label>
+                          <input
+                            type="text"
+                            className="form-control rounded-pill home-input"
+                            id="book"
+                            placeholder=" generes name"
+                            required
+                            name="generes"
+                            onChange={handleInput}
+                          />
+                        </div>
+
 
                         <div className="row">
                           <div className="col-md-6 mb-3">

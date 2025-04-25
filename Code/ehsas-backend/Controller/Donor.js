@@ -2,19 +2,19 @@ const { con } = require("../config/db");
 
 const CreateDonor = (req, res) => {
   // req from the user
-  const { id, book_name, book_edition, auther_name, book_image } = req.body;
+  const { id, book_name, generes, book_edition, auther_name, book_image } = req.body;
   // console.log(req.body)
 
-  if (!id || !book_name || !book_edition || !auther_name || !book_image) {
+  if (!id || !book_name ||!generes || !book_edition || !auther_name || !book_image) {
     return res.status(404).json({ msg: "Fields are required" });
   }
-  const user = [id, book_name, book_edition, auther_name, book_image];
+  const user = [id, book_name,generes, book_edition, auther_name, book_image];
 
   // console.log(req.body)
 
   // sql  query for the database to create data
   const sql =
-    "INSERT INTO  donor(user_id, book_name, book_edition, auther_name, book_image) VALUES(?)";
+    "INSERT INTO  donor(user_id, book_name, generes, book_edition, auther_name, book_image) VALUES(?)";
   con.query(sql, [user], (err, data) => {
     if (err) {
       console.log("error in create donor", err);

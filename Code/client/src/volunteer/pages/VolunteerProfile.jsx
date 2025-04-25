@@ -102,7 +102,7 @@
 	        <VolunteerSidebar />
 	        <div className="main">
 	          <VolunteerTopbar />
-	          <div class="container profile-container bg-gray">
+	          <div class="container profile-container ">
 	          <div className=" ">
 	            <div className="text-center" >
 	              <img

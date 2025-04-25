@@ -1,8 +1,9 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
-
+import  {useNavigate}  from 'react-router-dom';
 const CreateVolunteer = () => {
+  const navigate=useNavigate()
   const [errorMessage, setErrorMessage] = useState("");
   const [value, setValue] = useState({
     name: "",
@@ -39,7 +40,7 @@ const CreateVolunteer = () => {
 
       if (res.data.msg === "Request submitted successfuly ") {
         
-        window.location.reload();
+   
         navigate("/volunteer-login");
       }
 

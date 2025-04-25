@@ -196,6 +196,20 @@ const verifyUpdateProfile=(req,res)=>{
 
    // return res.json({ msg: "Invalid Verifcation Code!!!" });
 }
+const GetAdminProfile=async(req,res)=>{
+   const { userId } = req.params;
+  
+   const sql = "SELECT image FROM `admin`  WHERE  id = ?  ";
+
+  con.query(sql, [userId], (err, data) => {
+    if (err) throw err;
+    console.log(err)
+
+    return res.json(data[0].image);
+  });
+
+
+}
 
 module.exports = {
   CreateAdmin,
@@ -204,4 +218,5 @@ module.exports = {
   FetchAdminById,
   SendCodeAdmin,
   verifyUpdateProfile,
+  GetAdminProfile,
 }
