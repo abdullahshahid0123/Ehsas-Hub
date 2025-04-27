@@ -1,9 +1,10 @@
 const { con } = require("../config/db");
 const jwt = require("jsonwebtoken");
-const { SendMailRequest,SendMailVerifyEmail } = require("../mail/app-mailer");
+const nodemailer = require("nodemailer");
+const { SendMailRequest,SendMailVerifyEmail ,SendMailApproveUser,SendMailFreeze} = require("../mail/app-mailer");
 
 const LoginVolunteer = async (req, res) => {
-  console.log("Rout hit");
+ 
   const { email, password } = req.body;
 
   const sql =
@@ -128,6 +129,7 @@ const ApproveVolunteer = (req, res) => {
       console.log(err);
       return res.json({ msg: "error in approve volunteer", err });
     } else {
+      
       return res.json({ msg: "volunteer Approve request  successfuly" });
     }
   });
@@ -173,6 +175,7 @@ const Freezvolunteer = (req, res) => {
       console.log(err);
       return res.json({ msg: "error in freeze volunteer", err });
     } else {
+     
       return res.json({ msg: "volunteer Approve request  successfuly" });
     }
   });

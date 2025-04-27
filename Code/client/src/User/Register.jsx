@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
@@ -14,6 +14,7 @@ const Register = () => {
     address: "",
     gender: "",
     image: "",
+    code:"",
   });
 
   const handlInput = (e) => {
@@ -51,6 +52,25 @@ const Register = () => {
     }
     // console.log(value);
   };
+  const [showcode,setshowcode]=useState(false)
+
+  const toggleCode= async()=>{
+
+    try{
+      const res = await axios.post(
+        `http://localhost:8000/email-send-code/${value.email}`
+      );
+      alert(res.data.msg);
+      setshowcode(true);
+    }catch(err){
+      console.log(err)
+    }
+
+  }
+  useEffect(()=>{
+    
+  },[value.name,value.email])
+
 
   return (
     <>
@@ -107,6 +127,25 @@ const Register = () => {
                   onChange={handlInput}
                 />
               </div>
+
+            </div>
+             <input type="button" value="Verify Email" className="my-4" onClick={toggleCode}/>
+            <div>
+              {showcode && (
+                <>
+                  <strong className="my-4 text-black">verfication code</strong>
+                  <input
+                  name="verification"
+                    className="text-center"
+                    maxlength="4"
+                    type="text"
+                    placeholder="xxxx"
+                    name="code"
+                    onChange={handlInput}
+                  />
+                 
+                </>
+              )}
             </div>
             <div className="row">
               <div className="col-md-6 mb-3">
@@ -195,6 +234,8 @@ const Register = () => {
               />
             </div>
             <div className="d-flex justify-content-center">
+
+            {showcode && (
               <button
                 type="submit"
                 className="btn btn-primary mx-auto rounded-pill custom-btn"
@@ -206,6 +247,7 @@ const Register = () => {
               >
                 Sign Up
               </button>
+              )}
             </div>
             <p className="d-flex justify-content-center mt-4">
               Already Have account? <NavLink to="/login">Login here</NavLink>

@@ -66,12 +66,7 @@ const Profile = () => {
       getProfileImage();
     }
      
-    },[userId])
-
-  
-
-
-
+    },[userId]) 
 
   return (
     <>

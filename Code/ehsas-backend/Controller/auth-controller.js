@@ -12,7 +12,7 @@ const {
 } = require("../mail/app-mailer");
 
 const CreateUser = async (req, res) => {
-  const { name, email, phone, password, address, gender, image } = req.body;
+  const { name, email, phone, password, address, gender, image ,code} = req.body;
 
   const validName = /^([A-Z][a-z]+)(\s[A-Z][a-z]+)+$/;
 
@@ -28,7 +28,7 @@ const CreateUser = async (req, res) => {
     return null;
   };
 
-  if (!name || !email || !phone || !password || !address || !gender || !image) {
+  if (!name || !email || !phone || !password || !address || !gender || !image||! code) {
     return res.json({ msg: "Fields are required" });
   }
   if (!validName.test(name)) {
@@ -50,8 +50,17 @@ const CreateUser = async (req, res) => {
     if (data.length > 0) {
       return res.json({ msg: "user already exist", data });
     }
+    const sql1 = "SELECT * FROM `verify` WHERE `email` = ?";
+  con.query(sql1, [email, code], async (err, verifydata) => {
+    if(err){
+      return res.json(err);
+    }
+      console.log(verifydata[0].code)
+      if(verifydata[0].code.toString() !== code ){
+        return res.json({msg: "Invalid Verifcation Code!!!"})
+      }
 
-    const salt = await bcrypt.genSalt(10);
+    const salt =await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(password, salt);
     const user = [name, email, phone, hashPassword, address, gender, image];
 
@@ -67,6 +76,7 @@ const CreateUser = async (req, res) => {
       }
      
     });
+  })
    
   });
 };
@@ -299,6 +309,67 @@ const UpdateProfile = (req, res) => {
   });
 
   };
+  const EmailSendCode=async(req,res)=>{
+     const {email}=req.params;
+     const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!validEmail.test(email)) {
+    return res.json({ msg: "Invalid email format" });
+  }
+    
+     const deleteSql = "DELETE FROM `verify` WHERE email = ?";
+  con.query(deleteSql, [email], async (err) => {
+    if (err) {
+      return res.json({ msg: "Error clearing old code", error: err });
+    }
+
+    // Now generate and send new code
+    const code = await SendMailVerifyEmail(email);
+    if (code < 0) {
+      return res.json({ msg: "Cannot generate code" });
+    }
+    console.log(code)
+
+    const now = new Date();
+    const insertSql = "INSERT INTO `verify` (email, code, created_at) VALUES (?, ?, ?)";
+    con.query(insertSql, [email, code, now], (err) => {
+      if (err) {
+        return res.json({ msg: "Error saving code", error: err });
+      }
+      return res.json({ msg: "Code sent to your email" });
+    });
+  });
+
+  }
+  // const VerifyEmailCode=async(req,res)=>{
+  //   const { userId } = req.params;
+  // const { name, email, phone, gender, image, code} = req.body;
+  // let checkCode = parseInt(code)
+
+  // console.log(req.body)
+  
+  // const sql1 = "SELECT * FROM `verify` WHERE `email` = ?";
+  // con.query(sql1, [email, code], (err, data) => {
+  //   if(err){
+  //     return res.json(err);
+  //   }else{
+  //     console.log(data[0].code)
+  //     if(data[0].code !== checkCode){
+  //       return res.json({msg: "Invalid Verifcation Code!!!"})
+  //     }else{
+  //       const sql2 = "UPDATE `users` SET name= ?, email= ?, phone= ?, gender= ? , image= ? WHERE id = ?";
+  //       con.query(sql2, [name, email, phone, gender, image, userId], (err, result) => {
+  //         if(err){
+  //           return res.json(err);
+  //         }else{
+  //           const token = jwt.sign({ userId, email }, process.env.JWT_SECRET);
+  //           return res.json({msg: "Profile Updated Successfuly", token})
+  //         }
+  //       })
+  //     }
+  //   } 
+  // })
+
+  // }
 
 const UpdateInterest = (req, res) => {
   const { id } = req.params;
@@ -372,7 +443,29 @@ const FeedBack=(req,res)=>{
       return res.json({msg:"save successfuly"})
   })
 }
+const ShowDonateBooks=async(req,res)=>{
+  const { id } = req.params;
+  const sql = "SELECT * FROM   `donor`  WHERE  user_id = ?  ";
 
+  con.query(sql, [id], (err, data) => {
+    if (err) throw err;
+
+
+    return res.json(data[0]);
+  });
+
+}
+const ShowRequestBooks=async(req,res)=>{
+const { id } = req.params;
+
+  const sql = "SELECT * FROM `needy` WHERE  user_id = ?  ";
+
+  con.query(sql, [id], (err, data) => {
+    if (err) throw err;
+console.log(data)
+    return res.json(data[0]);
+  });
+}
 module.exports = {
   CreateUser,
   LoginUser,
@@ -389,5 +482,8 @@ module.exports = {
   CountDonateBooks,
   CountReqBook,
   GetProfileImage,
-  FeedBack
+  FeedBack,
+  EmailSendCode,
+  ShowDonateBooks,
+  ShowRequestBooks,
 };

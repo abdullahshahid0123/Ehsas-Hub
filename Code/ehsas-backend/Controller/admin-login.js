@@ -203,9 +203,12 @@ const GetAdminProfile=async(req,res)=>{
 
   con.query(sql, [userId], (err, data) => {
     if (err) throw err;
-    console.log(err)
-
-    return res.json(data[0].image);
+if(data.length > 0){
+  return res.json(data[0].image);
+}else{
+   return res.json({msg:"admin not found"});
+}
+    
   });
 
 

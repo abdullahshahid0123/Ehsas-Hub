@@ -17,6 +17,9 @@ const {
   CountReqBook,
   GetProfileImage,
   FeedBack,
+  EmailSendCode,
+  ShowDonateBooks,
+  ShowRequestBooks,
 } = require("../Controller/auth-controller");
 const {
   CreateVolunteer,
@@ -102,9 +105,12 @@ router.post("/user-reset-pass/:email", userResetPass);
 router.put("/update-profile/:userId", UpdateProfile);
 router.post("/user-profile-verify", UserProfileVerify);
 router.get("/get-user-image/:userId", GetProfileImage);
+router.post("/email-send-code/:email",EmailSendCode);
 // user state
 router.get("/count-donate-books/:id", CountDonateBooks);
 router.get("/count-req-books/:id", CountReqBook);
+router.get("/show-donate-books/:id", ShowDonateBooks);
+router.get("/show-request-books/:id",ShowRequestBooks);
 
 
 // admin routes
