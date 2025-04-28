@@ -5,17 +5,21 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Dnewrequest = () => {
-   const navigate = useNavigate();
-    useEffect(() => {
-      const token = sessionStorage.getItem("token");
-      if (!token) {
-        navigate("/adminlogin");
-      }
-    }, []);
-  
-  const Approvedonor = async (id) => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+      navigate("/adminlogin");
+    }
+  }, []);
+
+  const Approvedonor = async (id, name, email, bookName) => {
     await axios
-      .put(`http://localhost:8000/approve-donor/${id}`)
+      .put(`http://localhost:8000/approve-donor/${id}`, {
+        name,
+        email,
+        bookName,
+      })
       .then((res) => {
         alert(res.data.msg);
         window.location.reload();
@@ -24,9 +28,13 @@ const Dnewrequest = () => {
         console.log(" error approving", err);
       });
   };
-  const Rejectdonor = async (id) => {
+  const Rejectdonor = async (id, name, email, bookName) => {
     await axios
-      .delete(`http://localhost:8000/reject-donor/${id}`)
+      .delete(`http://localhost:8000/reject-donor/${id}`, {
+        name,
+        email,
+        bookName,
+      })
       .then((res) => {
         alert(res.data.msg);
         window.location.reload();
@@ -182,7 +190,6 @@ const Dnewrequest = () => {
                       <h1 class="modal-title fs-5" id="exampleModalLabel">
                         Donor New Request
                       </h1>
-                     
                     </div>
                     <div class="modal-body">
                       <form>
@@ -312,14 +319,28 @@ const Dnewrequest = () => {
                       <button
                         type="submit"
                         className="btn btn-success"
-                        onClick={() => Approvedonor(user.id)}
+                        onClick={() =>
+                          Approvedonor(
+                            user.id,
+                            user.name,
+                            user.email,
+                            user.book_name
+                          )
+                        }
                       >
                         Approve
                       </button>
                       <button
                         type="button"
                         className="btn btn-danger"
-                        onClick={() => Rejectdonor(user.id)}
+                        onClick={() =>
+                          Rejectdonor(
+                            user.id,
+                            user.name,
+                            user.email,
+                            ser.book_name
+                          )
+                        }
                       >
                         Reject
                       </button>

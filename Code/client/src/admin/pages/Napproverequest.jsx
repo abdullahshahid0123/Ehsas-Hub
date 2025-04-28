@@ -5,7 +5,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Napproverequest = () => {
- const navigate = useNavigate();
+  const navigate = useNavigate();
   useEffect(() => {
     const token = sessionStorage.getItem("token");
     if (!token) {
@@ -24,8 +24,6 @@ const Napproverequest = () => {
         console.log(" error approving", err);
       });
   };
-
-
 
   const [needy, setneedy] = useState({});
   const fetchNeedy = async () => {
@@ -69,7 +67,7 @@ const Napproverequest = () => {
               <tbody>
                 {Array.isArray(needy) && needy.length > 0 ? (
                   needy.map((rs) => {
-                    const { id, name, email, phone, req_status } = rs;
+                    const { needyId, id, name, email, phone, req_status } = rs;
                     console.log(rs);
                     return (
                       <tr key={id}>
@@ -93,7 +91,11 @@ const Napproverequest = () => {
                             </button>
                             <ul class="dropdown-menu">
                               <li>
-                                <a class="dropdown-item" href="#" onClick={()=>Processneedy(id)}>
+                                <a
+                                  class="dropdown-item"
+                                  href="#"
+                                  onClick={() => Processneedy(needyId)}
+                                >
                                   In Process
                                 </a>
                               </li>

@@ -1,9 +1,13 @@
 const { con } = require("../config/db");
+const {
+  SendMailBookRequest,
+  SendMailBookRequestApproved,
+} = require("../mail/app-mailer");
 
 const NeedyRequest = (req, res) => {
   const id = req.params.id;
 
-  const { reqId } = req.body;
+  const { reqId, name, email, bookName } = req.body;
 
   console.log(req.body);
 
@@ -26,6 +30,7 @@ const NeedyRequest = (req, res) => {
             return res.json(err);
           } else {
             IncreaseReq(id, limitCount);
+            SendMailBookRequest(name, email, bookName);
             return res.json({ msg: "Request submitted" });
           }
         });
@@ -54,8 +59,9 @@ const ApproveNeedy = (req, res) => {
       return res
         .status(400)
         .json({ msg: "error in approve needy request ", err });
+    } else {
+      return res.json({ msg: "successfuly approve request", data });
     }
-    return res.json({ msg: "successfuly approve request", data });
   });
 };
 
@@ -77,7 +83,7 @@ const FetchNeedyPending = (req, res) => {
   // "SELECT n.* u.id, u.name, u.email, u.phone, u.gender, u.address, d.book_name, d.book_edition, d.auther_name, d.book_image, n.req_status FROM needy n JOIN users u ON u.id = n.req_id JOIN donor d ON d.id = n.user_id WHERE n.req_status = 'Pending'";
 
   const sql =
-    "SELECT n.*, u.name, u.email, u.phone, u.address, u.gender FROM needy n JOIN users u ON u.id=n.user_id  WHERE n.req_status = 'Pending'";
+    "SELECT n.*, n.id as needyId, u.name, u.email, u.phone, u.gender, u.address, d.* FROM needy n JOIN users u ON n.user_id = u.id JOIN donor d ON n.req_id = d.id WHERE n.req_status = 'Pending'";
   con.query(sql, (err, data) => {
     console.log(data);
     if (err) {
@@ -90,16 +96,19 @@ const FetchNeedyPending = (req, res) => {
 
 const UpdateNeedyApproved = (req, res) => {
   const { id } = req.params;
+  console.log(id);
+  const { name, email, bookName } = req.body;
   if (!id) {
     return res.status(400).json({ msg: "needy id is required" });
   }
   //   update query for status
-  const sql = "UPDATE `needy` SET req_status='Approved'  WHERE id=?";
+  const sql = "UPDATE `needy` SET req_status='Approved' WHERE id=?";
   con.query(sql, [id], (err, data) => {
     if (err) {
       console.log(err);
       return res.json({ msg: "error in approving needy", err });
     } else {
+      SendMailBookRequestApproved(name, email, bookName);
       return res.json({ msg: " Needy Approve Successfuly" });
     }
   });
@@ -138,7 +147,7 @@ const RejectNeedy = (req, res) => {
 
 const FetchNeedyApproved = (req, res) => {
   const sql =
-    " SELECT n.*, u.name, u.email, u.phone FROM needy n JOIN users u ON u.id=n.user_id  WHERE n.req_status = 'Approved'";
+    " SELECT n.*, n.id as needyId, u.name, u.email, u.phone FROM needy n JOIN users u ON u.id=n.user_id  WHERE n.req_status = 'Approved'";
   con.query(sql, (err, data) => {
     if (err) {
       console.log("error in fetch Approved", err);
@@ -149,7 +158,7 @@ const FetchNeedyApproved = (req, res) => {
 };
 const FetchNeedyProcess = (req, res) => {
   const sql =
-    " SELECT n.*, u.name, u.email, u.phone FROM needy n JOIN users u ON u.id=n.user_id  WHERE n.req_status = 'Process'";
+    " SELECT n.*, n.id as needyId, u.name, u.email, u.phone FROM needy n JOIN users u ON u.id=n.user_id  WHERE n.req_status = 'Process'";
   con.query(sql, (err, data) => {
     if (err) {
       console.log("error in fetch Approved", err);

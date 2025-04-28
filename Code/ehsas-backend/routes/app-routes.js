@@ -33,10 +33,13 @@ const {
   FetachVolProcessReq,
   FetchVolunteerProcessAll,
   FetchVolunteerCompleteAll,
-GetVolunteer,
-UpdateProfileVolunteer,
-SendCode,
-GetVolunteerImage,
+  GetVolunteer,
+  UpdateProfileVolunteer,
+  SendCode,
+  GetVolunteerImage,
+  RejectVolunteer,
+  AdminFetchVolunteerProcessAll,
+  AdminFetchVolunteerCompleteAll,
 } = require("../Controller/Volunteer");
 const {
   CreateDonor,
@@ -105,18 +108,17 @@ router.post("/user-reset-pass/:email", userResetPass);
 router.put("/update-profile/:userId", UpdateProfile);
 router.post("/user-profile-verify", UserProfileVerify);
 router.get("/get-user-image/:userId", GetProfileImage);
-router.post("/email-send-code/:email",EmailSendCode);
+router.post("/email-send-code/:email", EmailSendCode);
 // user state
 router.get("/count-donate-books/:id", CountDonateBooks);
 router.get("/count-req-books/:id", CountReqBook);
 router.get("/show-donate-books/:id", ShowDonateBooks);
-router.get("/show-request-books/:id",ShowRequestBooks);
-
+router.get("/show-request-books/:id", ShowRequestBooks);
 
 // admin routes
 router.put("/approve-user/:id", ApproveUser);
 router.put("/freeze-user/:id", FreezeUser);
-router.delete("/reject-user/:id", RejectUser);
+router.put("/reject-user/:id", RejectUser);
 router.get("/fetch-user", FetchUser);
 router.get("/fetchuser-byid/:userId", FetchUserById);
 router.post("/create-volunteer", CreateVolunteer);
@@ -128,8 +130,7 @@ router.post("/forgot-password", ForgotPassword);
 router.get("/fetchadmin-byid/:userId", FetchAdminById);
 router.post("/send-code-admin", SendCodeAdmin);
 router.put("/verify-Update-Profile/:userId", verifyUpdateProfile);
-router.get("/get-admin-profile/:userId", GetAdminProfile)
-
+router.get("/get-admin-profile/:userId", GetAdminProfile);
 
 // admin donor routes
 router.post("/create-donor", CreateDonor);
@@ -149,6 +150,8 @@ router.put("/Update-deactivate/:id", UpdateDeactivate);
 //admin volunteer routes
 router.post("/vol-login", LoginVolunteer);
 router.put("/approve-volunteer/:id", ApproveVolunteer);
+router.put("/reject-volunteer/:id", RejectVolunteer);
+
 router.put("/complete-volunteer/:id", CompleteVolunteer);
 router.put("/freeze-volunteer/:id", Freezvolunteer);
 router.put("/vol-req-accept/:id", VolunteerAcceptRequest);
@@ -157,11 +160,13 @@ router.get("/fetch-vol-process-all/:id", FetchVolunteerProcessAll);
 router.get("/fetch-vol-complete-all/:id", FetchVolunteerCompleteAll);
 router.get("/get-volunteer/:userId", GetVolunteer);
 
+// Admin Volunteer req
+router.get("/admin-v-process", AdminFetchVolunteerProcessAll);
+router.get("/admin-v-completed", AdminFetchVolunteerCompleteAll);
+
 router.post("/send-code", SendCode);
 
 router.put("/update-profile-volunteer/:userId", UpdateProfileVolunteer);
-
-
 
 // admin needy routes
 router.put("/needy-request/:id", NeedyRequest);
@@ -192,11 +197,10 @@ router.get("/count-approve-needy", CountApprovedNeedy);
 router.get("/count-process-needy", CountProcessNeedy);
 router.get("/count-complete-needy", CountCompletedNeedy);
 
-router.get("/vol-new-count/:id", CountVolNew);
+router.get("/vol-new-count", CountVolNew);
 router.get("/vol-process-count/:id", CountVolProcess);
 router.get("/vol-completed-count/:id", CountVolCompleted);
 router.get("/get-volunteer-image/:userId", GetVolunteerImage);
-
 
 // feedback routes
 router.post("/feed-back", FeedBack);

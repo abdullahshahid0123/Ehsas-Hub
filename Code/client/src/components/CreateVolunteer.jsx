@@ -1,9 +1,9 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
-import  {useNavigate}  from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 const CreateVolunteer = () => {
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
   const [value, setValue] = useState({
     name: "",
@@ -13,6 +13,24 @@ const CreateVolunteer = () => {
     address: "",
     image: "",
   });
+
+  const handlInput = (e) => {
+    setValue({ ...value, [e.target.name]: e.target.value });
+  };
+
+  const [showcode, setshowcode] = useState(false);
+
+  const toggleCode = async () => {
+    try {
+      const res = await axios.post(
+        `http://localhost:8000/email-send-code/${value.email}`
+      );
+      alert(res.data.msg);
+      setshowcode(true);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const handleImage = (e) => {
     const file = e.target.files[0];
@@ -39,8 +57,6 @@ const CreateVolunteer = () => {
       setErrorMessage(res.data.msg);
 
       if (res.data.msg === "Request submitted successfuly ") {
-        
-   
         navigate("/volunteer-login");
       }
 
@@ -81,7 +97,7 @@ const CreateVolunteer = () => {
                   />
                 </div>
                 <div className="row ">
-                  <div className="mb-3 col-md-6">
+                  <div className="mb-3 col-md-12">
                     <label className="form-label">Email</label>
                     <input
                       className="form-control"
@@ -90,7 +106,33 @@ const CreateVolunteer = () => {
                       name="email"
                       onChange={handleInput}
                     />
+                    <input
+                      type="button"
+                      value="Verify Email"
+                      className="my-4"
+                      onClick={toggleCode}
+                    />
+                    <div>
+                      {showcode && (
+                        <>
+                          <strong className="my-4 text-black">
+                            verfication code
+                          </strong>
+                          <input
+                            // name="verification"
+                            className="text-center"
+                            maxlength="4"
+                            type="text"
+                            placeholder="xxxx"
+                            name="code"
+                            onChange={handlInput}
+                          />
+                        </>
+                      )}
+                    </div>
                   </div>
+                </div>
+                <div className="row">
                   <div className="mb-3 col-md-6">
                     <label className="form-label">Password</label>
                     <input
@@ -101,17 +143,19 @@ const CreateVolunteer = () => {
                       onChange={handleInput}
                     />
                   </div>
+
+                  <div className="mb-3 col-md-6">
+                    <label className="form-label">Phone Number</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      required
+                      name="phone"
+                      onChange={handleInput}
+                    />
+                  </div>
                 </div>
-                <div className="mb-3">
-                  <label className="form-label">Phone Number</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    required
-                    name="phone"
-                    onChange={handleInput}
-                  />
-                </div>
+
                 <div className="mb-3">
                   <label className="form-label">Address</label>
                   <input

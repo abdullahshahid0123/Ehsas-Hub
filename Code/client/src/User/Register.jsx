@@ -135,7 +135,7 @@ const Register = () => {
                 <>
                   <strong className="my-4 text-black">verfication code</strong>
                   <input
-                  name="verification"
+                  // name="verification"
                     className="text-center"
                     maxlength="4"
                     type="text"
@@ -188,6 +188,28 @@ const Register = () => {
                 name="address"
                 onChange={handlInput}
               />
+            </div>
+            <div className="row">
+              <div className="col-12">
+                <div className="form-group mb-3">
+                  <label className="text-dark">Favorite Genres:</label>
+                  <div className="d-flex">
+                    <select
+                      name="genres"
+                      id=""
+                      className="form-control home-input"
+                      required
+                      onChange={handlInput}
+                    >
+                      <option disabled selected>
+                        --Select--
+                      </option>
+                      <option value="Fiction">Fiction</option>
+                      <option value="Programming">Programming</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
             </div>
             <div className="row">
               <div className="col-12">

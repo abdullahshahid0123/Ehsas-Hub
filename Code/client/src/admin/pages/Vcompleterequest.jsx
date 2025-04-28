@@ -16,7 +16,7 @@ const Vcompleterequest = () => {
   const [needy, setneedy] = useState([]);
   const fetchNeedy = async () => {
     await axios
-      .get("http://localhost:8000/fetch-vol-complete-all")
+      .get("http://localhost:8000/admin-v-completed")
       .then((res) => {
         setneedy(res.data);
       })

@@ -1,38 +1,50 @@
 const { con } = require("../config/db");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
-const { SendMailRequest,SendMailVerifyEmail ,SendMailApproveUser,SendMailFreeze} = require("../mail/app-mailer");
+const {
+  SendMailRequest,
+  SendMailVerifyEmail,
+  SendMailApproveUser,
+  SendMailFreeze,
+  SendMailRejectUser,
+  SendMailVolunteerAccepted,
+} = require("../mail/app-mailer");
+const bcrypt = require("bcryptjs/dist/bcrypt");
 
 const LoginVolunteer = async (req, res) => {
- 
   const { email, password } = req.body;
 
-  const sql =
-    "SELECT * FROM volunteer WHERE email=? AND password=? AND status=1";
+  const sql = "SELECT * FROM volunteer WHERE email=? AND status=1";
 
-  con.query(sql, [email, password], (err, data) => {
+  con.query(sql, [email], (err, data) => {
     if (err) throw err;
 
     if (data.length > 0) {
       let vol = data[0];
 
-      const token = jwt.sign(
-        { id: vol.id, email: vol.email },
-        process.env.JWT_SECRET,
-        { expiresIn: "1h" }
-      );
-      return res.json({ msg: "Login successfuly", vol, token });
-    } else {
-      return res.json({ msg: "user not found!!!" });
+      if (password) {
+        bcrypt.compare(password, vol.password, function (err, result) {
+          if (err) throw err;
+          if (result) {
+            const token = jwt.sign(
+              { id: vol.id, email: vol.email },
+              process.env.JWT_SECRET,
+              { expiresIn: "1h" }
+            );
+            return res.json({ msg: "Login successfuly", vol, token });
+          } else {
+            return res.json({ msg: "user not found!!!" });
+          }
+        });
+      }
     }
   });
 };
 
 const CreateVolunteer = (req, res) => {
   // req body from the user
-  const { name, email, phone, password, address, image } = req.body;
+  const { name, email, phone, password, address, image, code } = req.body;
   const validName = /^([A-Z][a-z]+)(\s[A-Z][a-z]+)+$/;
-
 
   const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const ValidPassword = (password) => {
@@ -45,7 +57,7 @@ const CreateVolunteer = (req, res) => {
     return null;
   };
 
-  if (!name || !email || !phone || !password || !image) {
+  if (!name || !email || !phone || !password || !image || !code) {
     return res.json({ msg: "Fields are required" });
   }
   if (!validName.test(name)) {
@@ -59,19 +71,37 @@ const CreateVolunteer = (req, res) => {
     return res.json({ msg: passwordError });
   }
 
-  const user = [name, email, phone, password, address, image];
-  //   check all fields from the user
-
-  // sql  query for the database to create data
-  const sql =
-    "INSERT INTO  volunteer( name, email, phone, password, address, profile) VALUES(?)";
-  con.query(sql, [user], (err, data) => {
-    if (err) {
-      console.log("error in create volunteer", err);
-    } else {
-      SendMailRequest(name, email);
-      return res.json({ msg: "Request submitted successfuly " });
+  const check = "SELECT * FROM `volunteer` WHERE `email` = ?";
+  con.query(check, [email], (err, result) => {
+    if (err) throw err;
+    if (result.length > 0) {
+      return res.json({ msg: "Already Register" });
     }
+
+    const verify = "SELECT * FROM `verify` WHERE `email` = ?";
+    con.query(verify, [email], async (err, verifyData) => {
+      if (err) throw err;
+      if (verifyData[0].code.toString() !== code) {
+        return res.json({ msg: "Invaid Code" });
+      } else {
+        const salt = await bcrypt.genSalt(10);
+        const hashPassword = await bcrypt.hash(password, salt);
+        const user = [name, email, phone, hashPassword, address, image];
+        //   check all fields from the user
+
+        // sql  query for the database to create data
+        const sql =
+          "INSERT INTO  volunteer( name, email, phone, password, address, profile) VALUES(?)";
+        con.query(sql, [user], (err, data) => {
+          if (err) {
+            console.log("error in create volunteer", err);
+          } else {
+            SendMailRequest(name, email);
+            return res.json({ msg: "Request submitted successfuly " });
+          }
+        });
+      }
+    });
   });
 };
 
@@ -95,11 +125,31 @@ const FetchVolunteerProcessAll = (req, res) => {
     return res.json(data);
   });
 };
+
+const AdminFetchVolunteerProcessAll = (req, res) => {
+  const sql =
+    "SELECT d.*, v.name as vname ,v.phone as vphone, v.email as vemail FROM donor d JOIN volunteer v ON v.id = d.volunteer_id WHERE d.status = 'Process'";
+  con.query(sql, (err, data) => {
+    if (err) throw err;
+
+    return res.json(data);
+  });
+};
+
 const FetchVolunteerCompleteAll = (req, res) => {
   const { id } = req.params;
   const sql =
-    "SELECT d.*, v.name as vname ,v.phone as vphone, v.email as vemail FROM donor d JOIN volunteer v ON v.id = d.volunteer_id WHERE d.status = 'complete' OR d.status = 'Active' AND d.volunteer_id = ?";
+    "SELECT d.*, v.name as vname ,v.phone as vphone, v.email as vemail FROM donor d JOIN volunteer v ON v.id = d.volunteer_id WHERE d.status = 'Delivered' OR d.status = 'Active' AND d.volunteer_id = ?";
   con.query(sql, [id], (err, data) => {
+    if (err) throw err;
+    return res.json(data);
+  });
+};
+
+const AdminFetchVolunteerCompleteAll = (req, res) => {
+  const sql =
+    "SELECT d.*, v.name as vname ,v.phone as vphone, v.email as vemail FROM donor d JOIN volunteer v ON v.id = d.volunteer_id WHERE d.status = 'complete' OR d.status = 'Delivered' OR d.status = 'Active'";
+  con.query(sql, (err, data) => {
     if (err) throw err;
     return res.json(data);
   });
@@ -119,18 +169,46 @@ const FetchVolunteer = (req, res) => {
 const ApproveVolunteer = (req, res) => {
   // function for the change status
   const { id } = req.params;
+  const { name, email } = req.body;
+  console.log(req.body);
   if (!id) {
     return res.status(400).json({ msg: "volunteer id is required" });
   }
-  //   update query for status change
+  // update query for status change
   const sql = "UPDATE `volunteer` SET status=1 WHERE id=?";
   con.query(sql, [id], (err, data) => {
     if (err) {
       console.log(err);
       return res.json({ msg: "error in approve volunteer", err });
     } else {
-      
+      SendMailApproveUser(name, email);
       return res.json({ msg: "volunteer Approve request  successfuly" });
+    }
+  });
+};
+
+const RejectVolunteer = (req, res) => {
+  // function for the change status
+  const { id } = req.params;
+  const { name, email, comment } = req.body;
+  console.log(req.body);
+  if (!id) {
+    return res.status(400).json({ msg: "volunteer id is required" });
+  }
+
+  if (!comment) {
+    return res.status(400).json({ msg: "Must add reason!" });
+  }
+
+  // update query for status change
+  const sql = "DELETE FROM `volunteer` WHERE `id` = ?";
+  con.query(sql, [id], (err, data) => {
+    if (err) {
+      console.log(err);
+      return res.json({ msg: "error in approve volunteer", err });
+    } else {
+      SendMailRejectUser(name, email, comment);
+      return res.json({ msg: "volunteer  request Rejected successfuly" });
     }
   });
 };
@@ -147,10 +225,12 @@ const ApproveVolunteer = (req, res) => {
 
 const VolunteerAcceptRequest = (req, res) => {
   const { id } = req.params;
-  const { vid } = req.body;
+  const { vid, name, email, bookName } = req.body;
   if (!id) {
     return res.status(400).json({ msg: "invalid id" });
   }
+
+  console.log(req.body);
 
   const qry =
     "UPDATE `donor` SET `status`='Process', `volunteer_id` = ? WHERE `id` = ?";
@@ -158,6 +238,7 @@ const VolunteerAcceptRequest = (req, res) => {
     if (err) {
       console.log("error in update request", err);
     } else {
+      SendMailVolunteerAccepted(name, email, bookName);
       return res.json({ msg: "Volunteer Accept Request successfuly " });
     }
   });
@@ -165,6 +246,7 @@ const VolunteerAcceptRequest = (req, res) => {
 
 const Freezvolunteer = (req, res) => {
   const { id } = req.params;
+  const { name, email } = req.body;
   if (!id) {
     return res.status(400).json({ msg: "invalid credential" });
   }
@@ -175,7 +257,7 @@ const Freezvolunteer = (req, res) => {
       console.log(err);
       return res.json({ msg: "error in freeze volunteer", err });
     } else {
-     
+      SendMailFreeze(name, email);
       return res.json({ msg: "volunteer Approve request  successfuly" });
     }
   });
@@ -198,7 +280,7 @@ const CompleteVolunteer = (req, res) => {
     }
   });
 };
-const GetVolunteer=(req,res)=>{
+const GetVolunteer = (req, res) => {
   const userId = req.params.userId;
   const qry = "SELECT * FROM `volunteer` WHERE id = ?";
   con.query(qry, [userId], (error, data) => {
@@ -211,80 +293,77 @@ const GetVolunteer=(req,res)=>{
       return res.json({ msg: "volunteer not found" });
     }
   });
-
-}
-const UpdateProfileVolunteer=(req,res)=>{
-
+};
+const UpdateProfileVolunteer = (req, res) => {
   const { userId } = req.params;
-  const { name, email, phone, gender, image, code} = req.body;
-  let checkCode = parseInt(code)
+  const { name, email, phone, gender, image, code } = req.body;
+  let checkCode = parseInt(code);
 
-  console.log(req.body)
-  
+  console.log(req.body);
+
   const sql1 = "SELECT * FROM `verify` WHERE `email` = ?";
   con.query(sql1, [email, code], (err, data) => {
-    if(err){
+    if (err) {
       return res.json(err);
-    }else{
-      console.log(data[0].code)
-      if(data[0].code !== checkCode){
-        return res.json({msg: "Invalid Verifcation Code!!!"})
-      }else{
-        const sql2 = "UPDATE `volunteer` SET name= ?, email= ?, phone= ?, profile= ? WHERE id = ?";
-        con.query(sql2, [name, email, phone, gender, image, userId], (err, result) => {
-          if(err){
-            return res.json(err);
-          }else{
-            const token = jwt.sign({ userId, email }, process.env.JWT_SECRET);
-            return res.json({msg: "Profile Updated Successfuly", token})
+    } else {
+      console.log(data[0].code);
+      if (data[0].code !== checkCode) {
+        return res.json({ msg: "Invalid Verifcation Code!!!" });
+      } else {
+        const sql2 =
+          "UPDATE `volunteer` SET name= ?, email= ?, phone= ?, profile= ? WHERE id = ?";
+        con.query(
+          sql2,
+          [name, email, phone, gender, image, userId],
+          (err, result) => {
+            if (err) {
+              return res.json(err);
+            } else {
+              const token = jwt.sign({ userId, email }, process.env.JWT_SECRET);
+              return res.json({ msg: "Profile Updated Successfuly", token });
+            }
           }
-        })
+        );
       }
     }
-  })
-
-}
-const SendCode=async(req,res)=>{
-
- const {email}=req.body.editData;
+  });
+};
+const SendCode = async (req, res) => {
+  const { email } = req.body.editData;
   // console.log(req.body)
   const code = await SendMailVerifyEmail(email);
-      console.log(code);
-      if (code < 0) {
-        return res.json({ msg: "cannot generate code" });
-      }else{
-      const sql = "INSERT INTO `verify`(email ,code) VALUES(? , ?)";
-      con.query(sql, [email, code], (err, data) => {
-        console.log(email, "email ha ye");
-        if (err) throw err;
-        return res.json({ msg: "code send to your email"});
+  console.log(code);
+  if (code < 0) {
+    return res.json({ msg: "cannot generate code" });
+  } else {
+    const sql = "INSERT INTO `verify`(email ,code) VALUES(? , ?)";
+    con.query(sql, [email, code], (err, data) => {
+      console.log(email, "email ha ye");
+      if (err) throw err;
+      return res.json({ msg: "code send to your email" });
+    });
+  }
+};
+const GetVolunteerImage = (req, res) => {
+  const { userId } = req.params;
+  console.log(req.params);
 
-        
-      });
-}
-
-}
-const GetVolunteerImage=(req,res)=>{
-   const { userId } = req.params;
-  console.log(req.params)
-  
-   const sql = "SELECT profile FROM `volunteer`  WHERE  id = ?  ";
+  const sql = "SELECT profile FROM `volunteer`  WHERE  id = ?  ";
 
   con.query(sql, [userId], (err, data) => {
     if (err) throw err;
-    console.log(err)
+    console.log(err);
 
     return res.json(data[0].profile);
   });
-
-
-}
+};
 
 module.exports = {
   CreateVolunteer,
   FetchVolunteer,
   Freezvolunteer,
   ApproveVolunteer,
+  RejectVolunteer,
   CompleteVolunteer,
   LoginVolunteer,
   VolunteerAcceptRequest,
@@ -293,6 +372,8 @@ module.exports = {
   FetchVolunteerCompleteAll,
   GetVolunteer,
   UpdateProfileVolunteer,
-   SendCode,
-   GetVolunteerImage,
+  SendCode,
+  GetVolunteerImage,
+  AdminFetchVolunteerProcessAll,
+  AdminFetchVolunteerCompleteAll,
 };

@@ -5,14 +5,14 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Ncompleterequest = () => {
-   const navigate = useNavigate();
-    useEffect(() => {
-      const token = sessionStorage.getItem("token");
-      if (!token) {
-        navigate("/adminlogin");
-      }
-    }, []);
-  
+  const navigate = useNavigate();
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+      navigate("/adminlogin");
+    }
+  }, []);
+
   const [needy, setneedy] = useState({});
   const fetchNeedy = async () => {
     await axios
@@ -48,13 +48,12 @@ const Ncompleterequest = () => {
                   <th scope="col">Email</th>
                   <th scope="col">Phone Number</th>
                   <th scope="col">Status</th>
-                  
                 </tr>
               </thead>
               <tbody>
                 {Array.isArray(needy) && needy.length > 0 ? (
                   needy.map((rs) => {
-                    const { id, name, email, phone, req_status } = rs;
+                    const { needyId, id, name, email, phone, req_status } = rs;
                     console.log(rs);
                     return (
                       <tr key={id}>
@@ -66,7 +65,6 @@ const Ncompleterequest = () => {
                         <td>
                           <span className="btn btn-success">{req_status}</span>
                         </td>
-                        
                       </tr>
                     );
                   })

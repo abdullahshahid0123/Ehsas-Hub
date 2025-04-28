@@ -22,7 +22,7 @@ export const VolunteerDashboard = () => {
   useEffect(() => {
     const CountNew = async () => {
       await axios
-        .get(`http://localhost:8000/vol-new-count/${id}`)
+        .get(`http://localhost:8000/vol-new-count`)
         .then((res) => {
           setApprove(res.data);
         })

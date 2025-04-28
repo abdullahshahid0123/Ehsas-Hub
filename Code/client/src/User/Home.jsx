@@ -16,14 +16,16 @@ const Home = () => {
   }, []);
 
   const userId = sessionStorage.getItem("id");
+  const username = sessionStorage.getItem("username");
+  const email = sessionStorage.getItem("email");
   // console.log(id)
   // req book
 
-  const ReqSubmit = async (id) => {
+  const ReqSubmit = async (id, username, email, bookName) => {
     try {
       const res = await axios.put(
         `http://localhost:8000/needy-request/${userId}`,
-        { reqId: id }
+        { reqId: id, name: username, email: email, bookName: bookName }
       );
       console.log(res.data);
       alert(res.data.msg);
@@ -57,87 +59,117 @@ const Home = () => {
       <div className="container py-5">
         <h3 className="mb-5">Recomended Books</h3>
         {/*<div className="text-cente">*/}
-          <div className="row">
-  {Array.isArray(list) && list.length > 0 ? (
-    list.map((rs) => {
-      const { id, book_name, auther_name, book_edition, book_image } = rs;
+        <div className="row">
+          {Array.isArray(list) && list.length > 0 ? (
+            list.map((rs) => {
+              const { id, book_name, auther_name, book_edition, book_image } =
+                rs;
 
-      return (
-        <div className="col-sm-4 mb-4 " key={id}>
-          <div className="card h-100 shadow book-card" >
-            <div className="row g-0">
-              <div className="col-6">
-                <img src={book_image} alt="" className="w-100 h-100" style={{ objectFit: "cover" }} />
-              </div>
-              <div className="col-6 p-2 d-flex flex-column justify-content-between">
-                <div>
-                  <p><b>{book_name}</b></p>
-                  <p>By: <i>{auther_name}</i></p>
-                  <p>Edition: <i>{book_edition}</i></p>
+              return (
+                <div className="col-sm-4 mb-4 " key={id}>
+                  <div className="card h-100 shadow book-card">
+                    <div className="row g-0">
+                      <div className="col-6">
+                        <img
+                          src={book_image}
+                          alt=""
+                          className="w-100 h-100"
+                          style={{ objectFit: "cover" }}
+                        />
+                      </div>
+                      <div className="col-6 p-2 d-flex flex-column justify-content-between">
+                        <div>
+                          <p>
+                            <b>{book_name}</b>
+                          </p>
+                          <p>
+                            By: <i>{auther_name}</i>
+                          </p>
+                          <p>
+                            Edition: <i>{book_edition}</i>
+                          </p>
+                        </div>
+                        <div className="d-flex justify-content-between align-items-center mt-2">
+                          <button
+                            className="btn btn-primary btn-sm"
+                            onClick={() =>
+                              ReqSubmit(id, username, email, book_name)
+                            }
+                          >
+                            Request
+                          </button>
+                          <i
+                            className="fa-regular fa-heart fa-lg text-danger req-btn"
+                            style={{ cursor: "pointer" }}
+                          ></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="d-flex justify-content-between align-items-center mt-2">
-                  <button
-                    className="btn btn-primary btn-sm"
-                    onClick={() => ReqSubmit(id)}
-                  >
-                    Request
-                  </button>
-                  <i className="fa-regular fa-heart fa-lg text-danger req-btn" style={{ cursor: "pointer" }}></i>
-                </div>
-              </div>
-            </div>
-          </div>
+              );
+            })
+          ) : (
+            <p className="text-center">No post found</p>
+          )}
         </div>
-      );
-    })
-  ) : (
-    <p className="text-center">No post found</p>
-  )}
-</div>
-
       </div>
-       <div className="container py-5">
+      <div className="container py-5">
         <h3 className="mb-5">All Books</h3>
         {/*<div className="text-cente">*/}
-          <div className="row">
-  {Array.isArray(list) && list.length > 0 ? (
-    list.map((rs) => {
-      const { id, book_name, auther_name, book_edition, book_image } = rs;
+        <div className="row">
+          {Array.isArray(list) && list.length > 0 ? (
+            list.map((rs) => {
+              const { id, book_name, auther_name, book_edition, book_image } =
+                rs;
 
-      return (
-        <div className="col-sm-4 mb-4 " key={id}>
-          <div className="card h-100 shadow book-card" >
-            <div className="row g-0">
-              <div className="col-6">
-                <img src={book_image} alt="" className="w-100 h-100" style={{ objectFit: "cover" }} />
-              </div>
-              <div className="col-6 p-2 d-flex flex-column justify-content-between">
-                <div>
-                  <p><b>{book_name}</b></p>
-                 
-                  <p>By: <i>{auther_name}</i></p>
-                  <p>Edition: <i>{book_edition}</i></p>
+              return (
+                <div className="col-sm-4 mb-4 " key={id}>
+                  <div className="card h-100 shadow book-card">
+                    <div className="row g-0">
+                      <div className="col-6">
+                        <img
+                          src={book_image}
+                          alt=""
+                          className="w-100 h-100"
+                          style={{ objectFit: "cover" }}
+                        />
+                      </div>
+                      <div className="col-6 p-2 d-flex flex-column justify-content-between">
+                        <div>
+                          <p>
+                            <b>{book_name}</b>
+                          </p>
+
+                          <p>
+                            By: <i>{auther_name}</i>
+                          </p>
+                          <p>
+                            Edition: <i>{book_edition}</i>
+                          </p>
+                        </div>
+                        <div className="d-flex justify-content-between align-items-center mt-2">
+                          <button
+                            className="btn btn-primary btn-sm"
+                            onClick={() => ReqSubmit(id)}
+                          >
+                            Request
+                          </button>
+                          <i
+                            className="fa-regular fa-heart fa-lg text-danger req-btn"
+                            style={{ cursor: "pointer" }}
+                          ></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="d-flex justify-content-between align-items-center mt-2">
-                  <button
-                    className="btn btn-primary btn-sm"
-                    onClick={() => ReqSubmit(id)}
-                  >
-                    Request
-                  </button>
-                  <i className="fa-regular fa-heart fa-lg text-danger req-btn" style={{ cursor: "pointer" }}></i>
-                </div>
-              </div>
-            </div>
-          </div>
+              );
+            })
+          ) : (
+            <p className="text-center">No post found</p>
+          )}
         </div>
-      );
-    })
-  ) : (
-    <p className="text-center">No post found</p>
-  )}
-</div>
-
       </div>
     </>
   );

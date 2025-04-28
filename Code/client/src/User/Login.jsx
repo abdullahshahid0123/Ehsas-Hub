@@ -23,6 +23,9 @@ const login = () => {
       const token = res.data.token;
       sessionStorage.setItem("token", token);
       sessionStorage.setItem("id", res.data.user.id);
+      sessionStorage.setItem("email",res.data.user.email)
+      sessionStorage.setItem("username",res.data.user.name)
+
 
       alert("Login Successfully");
       setErrorMessage("");

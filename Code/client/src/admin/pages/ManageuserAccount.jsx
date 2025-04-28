@@ -6,16 +6,17 @@ import "./volunteer.css";
 import { useNavigate } from "react-router-dom";
 
 const ManageuserAccount = () => {
-   const navigate = useNavigate();
-    useEffect(() => {
-      const token = sessionStorage.getItem("token");
-      if (!token) {
-        navigate("/adminlogin");
-      }
-    }, []);
-  
+  const navigate = useNavigate();
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+      navigate("/adminlogin");
+    }
+  }, []);
+
   // const [User, setUser] = useState([]);
   const [userr, setUserr] = useState({});
+  const [comment, setComment] = useState(" ");
 
   const Approveusers = async (id, name, email) => {
     await axios
@@ -33,7 +34,11 @@ const ManageuserAccount = () => {
   };
   const Rejectusers = async (id, name, email) => {
     await axios
-      .delete(`http://localhost:8000/reject-user/${id}`, { name, email })
+      .put(`http://localhost:8000/reject-user/${id}`, {
+        name,
+        email,
+        comment,
+      })
       .then((res) => {
         alert(res.data.msg);
         window.location.reload();
@@ -45,7 +50,7 @@ const ManageuserAccount = () => {
 
   const Freezeusers = async (id, name, email) => {
     await axios
-      .put(`http://localhost:8000/freeze-user/${id}`, {name, email})
+      .put(`http://localhost:8000/freeze-user/${id}`, { name, email })
       .then((res) => {
         alert(res.data.msg);
         window.location.reload();
@@ -132,7 +137,7 @@ const ManageuserAccount = () => {
                             )}
                           </td>
                           <td>
-                            <div className="dropdown"  >
+                            <div className="dropdown">
                               <button
                                 className="btn btn-warning dropdown-toggle "
                                 type="button"
@@ -141,7 +146,10 @@ const ManageuserAccount = () => {
                               >
                                 Action
                               </button>
-                              <ul className="dropdown-menu overflow-y-auto absolute max-h-60 z-50 bottom-full mb-2" style={{overflow:"visible"}}>
+                              <ul
+                                className="dropdown-menu overflow-y-auto absolute max-h-60 z-50 bottom-full mb-2"
+                                style={{ overflow: "visible" }}
+                              >
                                 <li>
                                   <a
                                     className="dropdown-item"
@@ -316,6 +324,7 @@ const ManageuserAccount = () => {
                     <div className="mb-3">
                       <label className="form-label home-label">Comments</label>
                       <textarea
+                        onChange={(e) => setComment(e.target.value)}
                         className="form-control textarea-user-account"
                         name="comments"
                         rows="1"

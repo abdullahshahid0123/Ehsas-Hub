@@ -30,10 +30,13 @@ export const VolunteerNewReq = () => {
     fetchApprovedRequest();
   }, []);
 
-  const ProcessReq = async (rid, vid) => {
+  const ProcessReq = async (rid, vid, name, email, bookName) => {
     await axios
       .put(`http://localhost:8000/vol-req-accept/${rid}`, {
         vid,
+        name,
+        email,
+        bookName,
       })
       .then((res) => {
         alert(res.data.msg);
@@ -72,6 +75,8 @@ export const VolunteerNewReq = () => {
                   request.map((rs) => {
                     const {
                       id,
+                      email,
+                      book_name,
                       name,
                       address,
                       phone,
@@ -93,7 +98,9 @@ export const VolunteerNewReq = () => {
                             <button
                               class="btn btn-warning dropdown-toggle"
                               type="button"
-                              onClick={() => ProcessReq(id, v_id)}
+                              onClick={() =>
+                                ProcessReq(id, v_id, name, email, book_name)
+                              }
                             >
                               Accept
                             </button>

@@ -1,14 +1,33 @@
 const { con } = require("../config/db");
+const {
+  SendMailApproveBookDonation,
+  SendMailBookReceived,
+} = require("../mail/app-mailer");
 
 const CreateDonor = (req, res) => {
   // req from the user
-  const { id, book_name, generes, book_edition, auther_name, book_image } = req.body;
+  const {
+    id,
+    book_name,
+    generes,
+    book_edition,
+    auther_name,
+    book_image,
+    userEmail,
+  } = req.body;
   // console.log(req.body)
 
-  if (!id || !book_name ||!generes || !book_edition || !auther_name || !book_image) {
+  if (
+    !id ||
+    !book_name ||
+    !generes ||
+    !book_edition ||
+    !auther_name ||
+    !book_image
+  ) {
     return res.status(404).json({ msg: "Fields are required" });
   }
-  const user = [id, book_name,generes, book_edition, auther_name, book_image];
+  const user = [id, book_name, generes, book_edition, auther_name, book_image];
 
   // console.log(req.body)
 
@@ -29,7 +48,7 @@ const FetchDonProcessReq = (req, res) => {
     "SELECT d.*, u.name, u.email, u.phone, u.address, v.name as vname FROM donor d JOIN users u ON u.id = d.user_id JOIN volunteer v ON v.id = d.volunteer_id WHERE d.status = 'Process'";
   con.query(sql, (err, data) => {
     if (err) throw err;
-    console.log(data)
+    console.log(data);
     return res.json(data);
   });
 };
@@ -86,6 +105,7 @@ const RejectDonor = (req, res) => {
 };
 const UpdateDelivere = (req, res) => {
   const { id } = req.params;
+  const { name, email, bookName } = req.body;
   if (!id) {
     return res.status(400).json({ msg: " id is required" });
   }
@@ -96,6 +116,7 @@ const UpdateDelivere = (req, res) => {
       console.log(err);
       return res.status(500).json({ msg: "error in updating donor", err });
     } else {
+      SendMailBookReceived(name, email, bookName);
       return res.json({ msg: " deliver successfuly", data });
     }
   });
@@ -126,7 +147,7 @@ const FetchActive = (req, res) => {
     }
   });
 };
-const UpdateDeactivate=(req,res)=>{
+const UpdateDeactivate = (req, res) => {
   const { id } = req.params;
   if (!id) {
     return res.status(400).json({ msg: " id is required" });
@@ -140,11 +161,12 @@ const UpdateDeactivate=(req,res)=>{
       return res.json({ msg: " Deactive Successfuly" });
     }
   });
-}
+};
 
 const ApproveDonor = (req, res) => {
   // function fort the change status
   const { id } = req.params;
+  const { name, email, bookName } = req.body;
   if (!id) {
     return res.status(400).json({ msg: "Donor id is required" });
   }
@@ -155,6 +177,7 @@ const ApproveDonor = (req, res) => {
       console.log(err);
       return res.status(500).json({ msg: "error in approving donor", err });
     } else {
+      SendMailApproveBookDonation(name, email, bookName);
       return res.json({ msg: " donor approve successfuly", data });
     }
   });
@@ -192,5 +215,5 @@ module.exports = {
   FetchDonProcessReq,
   UpdateActive,
   FetchActive,
-  UpdateDeactivate
+  UpdateDeactivate,
 };

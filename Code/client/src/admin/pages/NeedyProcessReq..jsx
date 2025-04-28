@@ -5,14 +5,14 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const NeedyProcessReq = () => {
-   const navigate = useNavigate();
-    useEffect(() => {
-      const token = sessionStorage.getItem("token");
-      if (!token) {
-        navigate("/adminlogin");
-      }
-    }, []);
-  
+  const navigate = useNavigate();
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+      navigate("/adminlogin");
+    }
+  }, []);
+
   const Deliverneedy = async (id) => {
     await axios
       .put(`http://localhost:8000/update-needy-delivered/${id}`)
@@ -64,49 +64,53 @@ const NeedyProcessReq = () => {
                 </tr>
               </thead>
               <tbody>
-              {Array.isArray(needy) && needy.length > 0 ? (
-                needy.map((rs) => {
-                  const { id, name, email, phone, req_status } = rs;
-                  console.log(rs);
-                  return (
-                <tr key={id}>
-                  <td>
-                    <strong>{name}</strong>
-                  </td>
-                  <td>{email}</td>
-                  <td>{phone}</td>
-                  <td>
-                    <span className="btn btn-primary">{req_status}</span>
-                  </td>
-                  <td>
-                    <div class="dropdown">
-                      <button
-                        class="btn btn-warning dropdown-toggle"
-                        type="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                      >
-                        Action
-                      </button>
-                      <ul class="dropdown-menu">
-                        <li>
-                          <a class="dropdown-item" href="#" onClick={()=>Deliverneedy(id)}>
-                         Delivered
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </td>
-                </tr>
-              );
-            })
-          ) : (
-            <tr>
-              <td colSpan="5" className="text-center">
-                No data available.
-              </td>
-            </tr>
-          )}
+                {Array.isArray(needy) && needy.length > 0 ? (
+                  needy.map((rs) => {
+                    const { needyId, id, name, email, phone, req_status } = rs;
+                    console.log(rs);
+                    return (
+                      <tr key={id}>
+                        <td>
+                          <strong>{name}</strong>
+                        </td>
+                        <td>{email}</td>
+                        <td>{phone}</td>
+                        <td>
+                          <span className="btn btn-primary">{req_status}</span>
+                        </td>
+                        <td>
+                          <div class="dropdown">
+                            <button
+                              class="btn btn-warning dropdown-toggle"
+                              type="button"
+                              data-bs-toggle="dropdown"
+                              aria-expanded="false"
+                            >
+                              Action
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li>
+                                <a
+                                  class="dropdown-item"
+                                  href="#"
+                                  onClick={() => Deliverneedy(needyId)}
+                                >
+                                  Delivered
+                                </a>
+                              </li>
+                            </ul>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
+                ) : (
+                  <tr>
+                    <td colSpan="5" className="text-center">
+                      No data available.
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>

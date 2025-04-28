@@ -14,9 +14,13 @@ const Nnewrequest = () => {
     }
   }, []);
 
-  const Approveneedy = async (id) => {
+  const Approveneedy = async (id, name, email, bookName) => {
     await axios
-      .put(`http://localhost:8000/update-needy-approved/${id}`)
+      .put(`http://localhost:8000/update-needy-approved/${id}`, {
+        name,
+        email,
+        bookName,
+      })
       .then((res) => {
         alert(res.data.msg);
         window.location.reload();
@@ -25,9 +29,13 @@ const Nnewrequest = () => {
         console.log(" error approving", err);
       });
   };
-  const Rejectneedy = async (id) => {
+  const Rejectneedy = async (id, name, email, bookName) => {
     await axios
-      .delete(`http://localhost:8000/Reject-needy/${id}`)
+      .delete(`http://localhost:8000/Reject-needy/${id}`, {
+        name,
+        email,
+        bookName,
+      })
       .then((res) => {
         alert(res.data.msg);
         window.location.reload();
@@ -81,6 +89,7 @@ const Nnewrequest = () => {
                 {Array.isArray(needy) && needy.length > 0 ? (
                   needy.map((rs) => {
                     const {
+                      needyId,
                       id,
                       name,
                       email,
@@ -93,7 +102,7 @@ const Nnewrequest = () => {
                       book_image,
                       req_status,
                     } = rs;
-                    
+
                     return (
                       <tr key={id}>
                         <td>
@@ -123,6 +132,7 @@ const Nnewrequest = () => {
                                   data-bs-target="#exampleModal"
                                   onClick={() =>
                                     setuser({
+                                      nId: needyId,
                                       id: id,
                                       name: name,
                                       email: email,
@@ -240,7 +250,7 @@ const Nnewrequest = () => {
                           <div>
                             <>
                               <img
-                                src={user.image}
+                                src={user.book_image}
                                 alt="Student Card"
                                 style={{
                                   width: "100%",
@@ -277,14 +287,28 @@ const Nnewrequest = () => {
                       <button
                         type="submit"
                         className="btn btn-success"
-                        onClick={() => Approveneedy(user.id)}
+                        onClick={() =>
+                          Approveneedy(
+                            user.nId,
+                            user.name,
+                            user.email,
+                            user.book_name
+                          )
+                        }
                       >
                         Approve
                       </button>
                       <button
                         type="button"
                         className="btn btn-danger"
-                        onClick={() => Rejectneedy(user.id)}
+                        onClick={() =>
+                          Rejectneedy(
+                            user.nId,
+                            user.name,
+                            user.email,
+                            user.book_name
+                          )
+                        }
                       >
                         Reject
                       </button>

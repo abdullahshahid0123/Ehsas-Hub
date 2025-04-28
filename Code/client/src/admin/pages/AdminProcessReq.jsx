@@ -5,18 +5,22 @@ import { Topbar } from "../components/Topbar";
 import { useNavigate } from "react-router-dom";
 
 export const AdminProcessReq = () => {
-   const navigate = useNavigate();
-    useEffect(() => {
-      const token = sessionStorage.getItem("token");
-      if (!token) {
-        navigate("/adminlogin");
-      }
-    }, []);
-  
+  const navigate = useNavigate();
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+      navigate("/adminlogin");
+    }
+  }, []);
+
   const id = sessionStorage.getItem("id");
-  const DeliveredReq = async (id) => {
+  const DeliveredReq = async (id, name, email, bookName) => {
     await axios
-      .put(`http://localhost:8000/update-deliver/${id}`)
+      .put(`http://localhost:8000/update-deliver/${id}`, {
+        name,
+        email,
+        bookName,
+      })
       .then((res) => {
         alert(res.data.msg);
         window.location.reload();
@@ -59,7 +63,7 @@ export const AdminProcessReq = () => {
               <thead>
                 <tr>
                   <th scope="col">Name</th>
-                 
+
                   <th scope="col">Address</th>
                   <th scope="col">Volunteer Name</th>
                   <th scope="col">Status</th>
@@ -69,13 +73,21 @@ export const AdminProcessReq = () => {
               <tbody>
                 {Array.isArray(request) && request.length > 0 ? (
                   request.map((rs) => {
-                    const { id, name, address, vname, status } = rs;
+                    const {
+                      id,
+                      name,
+                      email,
+                      book_name,
+                      address,
+                      vname,
+                      status,
+                    } = rs;
                     return (
                       <tr key={id}>
                         <td>
                           <strong>{name}</strong>
                         </td>
-                       
+
                         <td>{address}</td>
                         <td>{vname}</td>
                         <td>
@@ -96,7 +108,9 @@ export const AdminProcessReq = () => {
                                 <a
                                   class="dropdown-item"
                                   href="#"
-                                  onClick={() =>DeliveredReq(id)}
+                                  onClick={() =>
+                                    DeliveredReq(id, name, email, book_name)
+                                  }
                                 >
                                   Delivered
                                 </a>

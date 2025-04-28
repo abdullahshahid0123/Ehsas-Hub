@@ -6,15 +6,14 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const ManagevolunteerAccount = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+      navigate("/adminlogin");
+    }
+  }, []);
 
-   const navigate = useNavigate();
-    useEffect(() => {
-      const token = sessionStorage.getItem("token");
-      if (!token) {
-        navigate("/adminlogin");
-      }
-    }, []);
-  
   // here we create volunteer
 
   // here we fetch volunteer
@@ -36,10 +35,11 @@ const ManagevolunteerAccount = () => {
 
   // status manage
   const [userr, setUserr] = useState({});
+  const [comment, setComment] = useState(" ");
 
-  const Approveusers = async (id) => {
+  const Approveusers = async (id, name, email) => {
     await axios
-      .put(`http://localhost:8000/approve-volunteer/${id}`)
+      .put(`http://localhost:8000/approve-volunteer/${id}`, { name, email })
       .then((res) => {
         alert(res.data.msg);
         window.location.reload();
@@ -48,9 +48,26 @@ const ManagevolunteerAccount = () => {
         console.log(" error approving", err);
       });
   };
-  const Freezeusers = async (id) => {
+
+  const Rejectusers = async (id, name, email) => {
     await axios
-      .put(`http://localhost:8000/freeze-volunteer/${id}`)
+      .put(`http://localhost:8000/reject-volunteer/${id}`, {
+        name,
+        email,
+        comment,
+      })
+      .then((res) => {
+        alert(res.data.msg);
+        window.location.reload();
+      })
+      .catch((err) => {
+        console.log(" error approving", err);
+      });
+  };
+
+  const Freezeusers = async (id, name, email) => {
+    await axios
+      .put(`http://localhost:8000/freeze-volunteer/${id}`, { name, email })
       .then((res) => {
         alert(res.data.msg);
         window.location.reload();
@@ -152,7 +169,9 @@ const ManagevolunteerAccount = () => {
                                       <a
                                         class="dropdown-item"
                                         href="#"
-                                        onClick={() => Freezeusers(id)}
+                                        onClick={() =>
+                                          Freezeusers(id, name, email)
+                                        }
                                       >
                                         Freeze
                                       </a>
@@ -162,7 +181,9 @@ const ManagevolunteerAccount = () => {
                                       <a
                                         class="dropdown-item"
                                         href="#"
-                                        onClick={() => Approveusers(id)}
+                                        onClick={() =>
+                                          Approveusers(id, name, email)
+                                        }
                                       >
                                         Active
                                       </a>
@@ -293,6 +314,7 @@ const ManagevolunteerAccount = () => {
                         <div className="mb-3">
                           <label className="form-label">Comments</label>
                           <textarea
+                            onChange={(e) => setComment(e.target.value)}
                             className="form-control home-input"
                             name="comments"
                             rows="2"
@@ -314,9 +336,21 @@ const ManagevolunteerAccount = () => {
                       <button
                         type="submit"
                         className="btn btn-success"
-                        onClick={() => Approveusers(userr.id)}
+                        onClick={() =>
+                          Approveusers(userr.id, userr.name, userr.email)
+                        }
                       >
                         Approve
+                      </button>
+
+                      <button
+                        type="submit"
+                        className="btn btn-danger"
+                        onClick={() =>
+                          Rejectusers(userr.id, userr.name, userr.email)
+                        }
+                      >
+                        Reject
                       </button>
                     </div>
                   </div>

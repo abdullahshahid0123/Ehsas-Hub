@@ -110,11 +110,10 @@ const CountCompletedNeedy = (req, res) => {
 
 // volunteer
 const CountVolNew = (req, res) => {
-  const { id } = req.params;
 
   const sql =
-    "SELECT COUNT(volunteer_id) as volNewCount FROM `donor` WHERE `status` = 'Approved' AND `volunteer_id` = ?";
-  con.query(sql, [id], (err, data) => {
+    "SELECT COUNT(*) as volNewCount FROM `donor` WHERE `status` = 'Approved'";
+  con.query(sql, (err, data) => {
     if (err) throw err;
     return res.json(data[0].volNewCount);
   });
