@@ -55,7 +55,7 @@ const FetchDonProcessReq = (req, res) => {
 
 const FetchDonor = (req, res) => {
   const sql =
-    "SELECT d.*, u.name, u.email, u.phone, u.address FROM donor d JOIN users u ON u.id = d.user_id WHERE d.status = 'Pending'";
+    "SELECT d.*, u.name, u.email, u.phone, u.address FROM donor d JOIN users u ON u.user_id = d.user_id WHERE d.status = 'Pending'";
   con.query(sql, (err, data) => {
     if (err) {
       console.log("error in fetch donor", err);
@@ -66,7 +66,7 @@ const FetchDonor = (req, res) => {
 
 const FetchDonorApproved = (req, res) => {
   const sql =
-    "SELECT d.*, u.name, u.email, u.phone, u.address FROM donor d JOIN users u ON u.id = d.user_id WHERE d.status = 'Approved'";
+    "SELECT d.*, u.name, u.email, u.phone, u.address FROM donor d JOIN users u ON u.user_id = d.user_id WHERE d.status = 'Approved'";
   con.query(sql, (err, data) => {
     if (err) {
       console.log("error in deliver donor", err);
@@ -79,7 +79,7 @@ const FetchDonorApproved = (req, res) => {
 // For Volunteer SELECT d.*, u.name, u.email, u.phone, u.address, v.name as vname FROM donor d JOIN users u ON u.id = d.user_id JOIN volunteer v ON v.id = d.volunteer_id WHERE d.status = 'Process' AND d.volunteer_id = 2;
 const FetchDonorDelivered = (req, res) => {
   const sql =
-    "SELECT d.*, u.name, u.email, u.phone, u.address FROM donor d JOIN users u ON u.id = d.user_id WHERE d.status = 'Delivered'";
+    "SELECT d.*, u.name, u.email, u.phone, u.address FROM donor d JOIN users u ON u.user_id = d.user_id WHERE d.status = 'Delivered'";
   con.query(sql, (err, data) => {
     if (err) {
       console.log("error in deliver donor", err);

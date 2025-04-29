@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
@@ -14,7 +14,7 @@ const Register = () => {
     address: "",
     gender: "",
     image: "",
-    code:"",
+    code: "",
   });
 
   const handlInput = (e) => {
@@ -40,37 +40,46 @@ const Register = () => {
         "http://localhost:8000/create-user",
         postData
       );
-       setErrorMessage(res.data.msg)
+      setErrorMessage(res.data.msg);
 
-       if (res.data.msg === "User Created successfully") {
-     
-      navigate("/login");
-    }
+      if (res.data.msg === "User Created successfully") {
+        navigate("/login");
+      }
     } catch (error) {
       setErrorMessage(res.data.msg);
       console.log("register failed", error.message);
     }
     // console.log(value);
   };
-  const [showcode,setshowcode]=useState(false)
+  const [showcode, setshowcode] = useState(false);
 
-  const toggleCode= async()=>{
-
-    try{
+  const toggleCode = async () => {
+    try {
       const res = await axios.post(
         `http://localhost:8000/email-send-code/${value.email}`
       );
       alert(res.data.msg);
       setshowcode(true);
-    }catch(err){
-      console.log(err)
+    } catch (err) {
+      console.log(err);
     }
+  };
+  useEffect(() => {}, [value.name, value.email]);
 
-  }
-  useEffect(()=>{
-    
-  },[value.name,value.email])
+  const [getGen, setGen] = useState([]);
 
+  const GetGenres = async () => {
+    try {
+      const res = await axios.get("http://localhost:8000/get-gen");
+      setGen(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    GetGenres();
+  }, []);
 
   return (
     <>
@@ -127,15 +136,19 @@ const Register = () => {
                   onChange={handlInput}
                 />
               </div>
-
             </div>
-             <input type="button" value="Verify Email" className="my-4" onClick={toggleCode}/>
+            <input
+              type="button"
+              value="Verify Email"
+              className="my-4"
+              onClick={toggleCode}
+            />
             <div>
               {showcode && (
                 <>
                   <strong className="my-4 text-black">verfication code</strong>
                   <input
-                  // name="verification"
+                    // name="verification"
                     className="text-center"
                     maxlength="4"
                     type="text"
@@ -143,7 +156,6 @@ const Register = () => {
                     name="code"
                     onChange={handlInput}
                   />
-                 
                 </>
               )}
             </div>
@@ -204,8 +216,11 @@ const Register = () => {
                       <option disabled selected>
                         --Select--
                       </option>
-                      <option value="Fiction">Fiction</option>
-                      <option value="Programming">Programming</option>
+                      {getGen.map((rs) => (
+                        <>
+                          <option value={rs}>{rs}</option>
+                        </>
+                      ))}
                     </select>
                   </div>
                 </div>
@@ -256,19 +271,18 @@ const Register = () => {
               />
             </div>
             <div className="d-flex justify-content-center">
-
-            {showcode && (
-              <button
-                type="submit"
-                className="btn btn-primary mx-auto rounded-pill custom-btn"
-                style={{
-                  backgroundColor: "#007bff",
-                  borderColor: "#007bff",
-                  width: "60%",
-                }}
-              >
-                Sign Up
-              </button>
+              {showcode && (
+                <button
+                  type="submit"
+                  className="btn btn-primary mx-auto rounded-pill custom-btn"
+                  style={{
+                    backgroundColor: "#007bff",
+                    borderColor: "#007bff",
+                    width: "60%",
+                  }}
+                >
+                  Sign Up
+                </button>
               )}
             </div>
             <p className="d-flex justify-content-center mt-4">

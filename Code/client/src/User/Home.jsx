@@ -35,6 +35,20 @@ const Home = () => {
     }
   };
 
+  const [recommend, setRecommend] = useState([]);
+
+  const FetchRecommend = async () => {
+    try {
+      const res = await axios.get(
+        `http://127.0.0.1:5000/recommend/user/?user_id=${userId}`
+      );
+      console.log(res);
+      setRecommend(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const [list, setlist] = useState([]);
   const fetchaAtive = async () => {
     await axios
@@ -48,6 +62,7 @@ const Home = () => {
   };
   useEffect(() => {
     fetchaAtive();
+    FetchRecommend();
   }, []);
 
   // for token ckecking
@@ -61,9 +76,8 @@ const Home = () => {
         {/*<div className="text-cente">*/}
         <div className="row">
           {Array.isArray(list) && list.length > 0 ? (
-            list.map((rs) => {
-              const { id, book_name, auther_name, book_edition, book_image } =
-                rs;
+            recommend.map((rs) => {
+              const { id, title, author, coverImg } = rs;
 
               return (
                 <div className="col-sm-4 mb-4 " key={id}>
@@ -71,7 +85,7 @@ const Home = () => {
                     <div className="row g-0">
                       <div className="col-6">
                         <img
-                          src={book_image}
+                          src={coverImg}
                           alt=""
                           className="w-100 h-100"
                           style={{ objectFit: "cover" }}
@@ -80,14 +94,14 @@ const Home = () => {
                       <div className="col-6 p-2 d-flex flex-column justify-content-between">
                         <div>
                           <p>
-                            <b>{book_name}</b>
+                            <b>{title}</b>
                           </p>
                           <p>
-                            By: <i>{auther_name}</i>
+                            By: <i>{author}</i>
                           </p>
-                          <p>
+                          {/* <p>
                             Edition: <i>{book_edition}</i>
-                          </p>
+                          </p> */}
                         </div>
                         <div className="d-flex justify-content-between align-items-center mt-2">
                           <button

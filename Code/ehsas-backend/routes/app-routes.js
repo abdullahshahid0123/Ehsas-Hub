@@ -20,6 +20,7 @@ const {
   EmailSendCode,
   ShowDonateBooks,
   ShowRequestBooks,
+  GetUniqueGen,
 } = require("../Controller/auth-controller");
 const {
   CreateVolunteer,
@@ -118,6 +119,7 @@ router.get("/show-request-books/:id", ShowRequestBooks);
 
 // Feedback
 router.get("/get-feedback", GetFeedback);
+router.get("/get-gen", GetUniqueGen)
 
 // admin routes
 router.put("/approve-user/:id", ApproveUser);

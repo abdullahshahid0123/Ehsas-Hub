@@ -109,7 +109,7 @@ const FetachVolProcessReq = (req, res) => {
   const { id } = req.params;
 
   const sql =
-    "SELECT d.*, u.name, u.email, u.phone, u.address, v.name as vname FROM donor d JOIN users u ON u.id = d.user_id JOIN volunteer v ON v.id = d.volunteer_id WHERE d.status = 'Process' AND d.volunteer_id = ?";
+    "SELECT d.*, u.name, u.email, u.phone, u.address, v.name as vname FROM donor d JOIN users u ON u.user_id = d.user_id JOIN volunteer v ON v.id = d.volunteer_id WHERE d.status = 'Process' AND d.volunteer_id = ?";
   con.query(sql, [id], (err, data) => {
     if (err) throw err;
     return res.json(data);

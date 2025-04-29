@@ -11,7 +11,7 @@ const NeedyRequest = (req, res) => {
 
   console.log(req.body);
 
-  const sql = "SELECT `request` AS requestCount FROM `users` WHERE id=?";
+  const sql = "SELECT `request` AS requestCount FROM `users` WHERE user_id=?";
 
   con.query(sql, [id], (err, result) => {
     if (err) {
@@ -43,7 +43,7 @@ const NeedyRequest = (req, res) => {
 async function IncreaseReq(uid, limit) {
   const newLimint = limit + 1;
 
-  const sql = "UPDATE `users` SET `request`= ? WHERE `id` = ?";
+  const sql = "UPDATE `users` SET `request`= ? WHERE `user_id` = ?";
   con.query(sql, [newLimint, uid], (err, data) => {
     if (err) throw err;
     console.log("Request Updated");
@@ -52,7 +52,7 @@ async function IncreaseReq(uid, limit) {
 
 const ApproveNeedy = (req, res) => {
   const { id } = req.params;
-  const sql = "UPDATE `users` SET status='approved' WHERE id=? ";
+  const sql = "UPDATE `users` SET status='approved' WHERE user_id=? ";
   con.query(sql, [id], (err, data) => {
     if (err) {
       console.log(err);
@@ -67,7 +67,7 @@ const ApproveNeedy = (req, res) => {
 
 const CompleteNeedy = (req, res) => {
   const { id } = req.params;
-  const sql = "UPDATE `users` SET status='Delivered' WHERE id=? ";
+  const sql = "UPDATE `users` SET status='Delivered' WHERE user_id=? ";
   con.query(sql, [id], (err, data) => {
     if (err) {
       console.log(err);
@@ -83,7 +83,7 @@ const FetchNeedyPending = (req, res) => {
   // "SELECT n.* u.id, u.name, u.email, u.phone, u.gender, u.address, d.book_name, d.book_edition, d.auther_name, d.book_image, n.req_status FROM needy n JOIN users u ON u.id = n.req_id JOIN donor d ON d.id = n.user_id WHERE n.req_status = 'Pending'";
 
   const sql =
-    "SELECT n.*, n.id as needyId, u.name, u.email, u.phone, u.gender, u.address, d.* FROM needy n JOIN users u ON n.user_id = u.id JOIN donor d ON n.req_id = d.id WHERE n.req_status = 'Pending'";
+    "SELECT n.*, n.id as needyId, u.name, u.email, u.phone, u.gender, u.address, d.* FROM needy n JOIN users u ON n.user_id = u.user_id JOIN donor d ON n.req_id = d.id WHERE n.req_status = 'Pending'";
   con.query(sql, (err, data) => {
     console.log(data);
     if (err) {
@@ -147,7 +147,7 @@ const RejectNeedy = (req, res) => {
 
 const FetchNeedyApproved = (req, res) => {
   const sql =
-    " SELECT n.*, n.id as needyId, u.name, u.email, u.phone FROM needy n JOIN users u ON u.id=n.user_id  WHERE n.req_status = 'Approved'";
+    " SELECT n.*, n.id as needyId, u.name, u.email, u.phone FROM needy n JOIN users u ON u.user_id=n.user_id  WHERE n.req_status = 'Approved'";
   con.query(sql, (err, data) => {
     if (err) {
       console.log("error in fetch Approved", err);
@@ -158,7 +158,7 @@ const FetchNeedyApproved = (req, res) => {
 };
 const FetchNeedyProcess = (req, res) => {
   const sql =
-    " SELECT n.*, n.id as needyId, u.name, u.email, u.phone FROM needy n JOIN users u ON u.id=n.user_id  WHERE n.req_status = 'Process'";
+    " SELECT n.*, n.id as needyId, u.name, u.email, u.phone FROM needy n JOIN users u ON u.user_id=n.user_id  WHERE n.req_status = 'Process'";
   con.query(sql, (err, data) => {
     if (err) {
       console.log("error in fetch Approved", err);
@@ -185,7 +185,7 @@ const UpdateNeedyDelivered = (req, res) => {
 };
 const FetchNeedyDelivered = (req, res) => {
   const sql =
-    "SELECT n.*, u.name, u.email, u.phone FROM needy n JOIN users u ON u.id=n.user_id  WHERE n.req_status = 'Delivered'";
+    "SELECT n.*, u.name, u.email, u.phone FROM needy n JOIN users u ON u.user_id=n.user_id  WHERE n.req_status = 'Delivered'";
   con.query(sql, (err, data) => {
     if (err) {
       console.log("error in fetch Delivered", err);

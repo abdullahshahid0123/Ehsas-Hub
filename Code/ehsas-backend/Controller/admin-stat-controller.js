@@ -74,7 +74,7 @@ const CountCompletedDonor = (req, res) => {
 // Needy
 const CountPendingNeedy = (req, res) => {
   const sql =
-    "SELECT COUNT(id) as pendingNeedy FROM `needy` WHERE `req_status` = 'Pending'";
+    "SELECT COUNT(user_id) as pendingNeedy FROM `needy` WHERE `req_status` = 'Pending'";
   con.query(sql, (err, data) => {
     if (err) throw err;
     return res.json(data[0].pendingNeedy);

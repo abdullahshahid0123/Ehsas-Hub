@@ -198,7 +198,7 @@ const FreezeUser = (req, res) => {
     return res.status(400).json({ msg: "Invalid" });
   }
   //   update query for status
-  const sql = "UPDATE `users` SET status=0 WHERE id=?";
+  const sql = "UPDATE `users` SET status=0 WHERE user_id=?";
   con.query(sql, [id], (err, data) => {
     if (err) {
       console.log(err);
@@ -217,7 +217,7 @@ const ApproveUser = (req, res) => {
     return res.status(400).json({ msg: "Invalid" });
   }
   //   update query for status
-  const sql = "UPDATE `users` SET status=1 WHERE id=?";
+  const sql = "UPDATE `users` SET status=1 WHERE user_id=?";
   con.query(sql, [id], (err, data) => {
     if (err) {
       console.log(err);
@@ -239,7 +239,7 @@ const RejectUser = (req, res) => {
   if (!comment) {
     return res.status(400).json({ msg: "Must add reason!!" });
   }
-  const qry = "DELETE FROM `users` WHERE id=?";
+  const qry = "DELETE FROM `users` WHERE user_id=?";
   con.query(qry, [id], (err, data) => {
     if (err) {
       console.log(err);
@@ -264,7 +264,7 @@ const FetchUser = async (req, res) => {
 
 const FetchUserById = (req, res) => {
   const userId = req.params.userId;
-  const qry = "SELECT * FROM `users` WHERE id = ?";
+  const qry = "SELECT * FROM `users` WHERE user_id = ?";
   con.query(qry, [userId], (error, data) => {
     if (error) {
       return res.status(404).json({ msg: "error in fetching", error });
@@ -293,7 +293,7 @@ const UpdateProfile = (req, res) => {
         return res.json({ msg: "Invalid Verifcation Code!!!" });
       } else {
         const sql2 =
-          "UPDATE `users` SET name= ?, email= ?, phone= ?, gender= ? , image= ? WHERE id = ?";
+          "UPDATE `users` SET name= ?, email= ?, phone= ?, gender= ? , image= ? WHERE user_id = ?";
         con.query(
           sql2,
           [name, email, phone, gender, image, userId],
@@ -406,7 +406,7 @@ const UpdateInterest = (req, res) => {
     return res.status(400).json({ msg: "id and interest required" });
   }
 
-  const sql = "UPDATE users SET interest = ?  WHERE id = ?";
+  const sql = "UPDATE users SET preferred_genre = ?  WHERE user_id = ?";
   con.query(sql, [interest, id], (err, result) => {
     if (err) {
       console.log(err);
@@ -444,7 +444,7 @@ const CountReqBook = (req, res) => {
 const GetProfileImage = (req, res) => {
   const { userId } = req.params;
   console.log(req.params);
-  const sql = "SELECT image FROM `users`  WHERE  id = ?  ";
+  const sql = "SELECT image FROM `users` WHERE user_id = ?  ";
 
   con.query(sql, [userId], (err, data) => {
     if (err) throw err;
@@ -490,6 +490,38 @@ const ShowRequestBooks = async (req, res) => {
     return res.json(data);
   });
 };
+
+const GetUniqueGen = (req, res) => {
+  const query = "SELECT genres FROM books";
+
+con.query(query, (err, result) => {
+  if (err) {
+    console.log(err);
+    return res.status(500).send("Error fetching genres");
+  }
+
+  // Create a Set to hold unique genres
+  let genresSet = new Set();
+
+  result.forEach((row) => {
+    // Assuming genres are stored as a string representation of an array like "['fiction', 'mystery', 'thriller']"
+    const cleanedGenres = row.genres
+      .replace(/[\[\]']+/g, '')  // Remove square brackets and single quotes
+      .split(',')                 // Split by commas
+      .map(genre => genre.trim()); // Trim any leading or trailing spaces
+    
+    // Add each cleaned genre to the Set to ensure uniqueness
+    cleanedGenres.forEach(genre => genresSet.add(genre));
+  });
+
+  // Convert the Set back to an array (to make it easier to work with)
+  const uniqueGenres = Array.from(genresSet);
+
+  console.log(uniqueGenres);
+  res.json(uniqueGenres); // Send back the unique genres
+});
+
+};
 module.exports = {
   CreateUser,
   LoginUser,
@@ -510,4 +542,5 @@ module.exports = {
   EmailSendCode,
   ShowDonateBooks,
   ShowRequestBooks,
+  GetUniqueGen,
 };
