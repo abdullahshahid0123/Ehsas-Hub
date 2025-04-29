@@ -40,6 +40,7 @@ import CreateVolunteer from "./components/CreateVolunteer";
 import Preloader from "./components/Preloader";
 import { useEffect, useState } from "react";
 import Profile from "./components/Profile";
+import { Feedbacks } from "./admin/pages/Feedbacks";
 
 function AppWrapper() {
   const location = useLocation();
@@ -70,8 +71,7 @@ function AppWrapper() {
 
         <Route path="/register" element={<Register />} />
         <Route path="/userinterest" element={<UserInterest />} />
-        <Route path="/profile" element={<Profile/>} />
-
+        <Route path="/profile" element={<Profile />} />
 
         {/*admin Routes*/}
         <Route path="/adminprofileview" element={<AdminProfileView />} />
@@ -105,12 +105,16 @@ function AppWrapper() {
         <Route path="/volunteer-dashboard" element={<VolunteerDashboard />} />
         <Route path="/volunteer-new-req" element={<VolunteerNewReq />} />
         <Route path="/volunteer-comp-req" element={<VolunteerCompReq />} />
-        <Route path="/volunteer-profile" element={<VolunteerProfile/>} />
+        <Route path="/volunteer-profile" element={<VolunteerProfile />} />
 
         <Route
           path="/volunteer-process-req"
           element={<VolunteerProcessReq />}
         />
+
+        {/* Feedbak */}
+
+        <Route path="/feedback" element={<Feedbacks />} />
       </Routes>
     </>
   );

@@ -181,7 +181,7 @@ const Profileview = () => {
               type="text"
               value={editData.name}
               name="name"
-              readOnly={isEditing}
+              readOnly={true}
               onChange={handleEdit}
             />
             <strong className="text-black">Email</strong>
@@ -264,23 +264,24 @@ const Profileview = () => {
                 <>
                   {showcode && (
                     <>
-                      <button className="mr-10" onClick={Update}>
+                      <button className="mt-5 btn btn-primary" onClick={Update}>
                         Save
                       </button>
                     </>
                   )}
 
                   <button
+                  className="mt-5 ml-5 btn btn-danger"
                     onClick={() => {
                       setIsEditing(true);
                       setopen(false);
                     }}
                   >
-                    cancel
+                    Cancel
                   </button>
                 </>
               ) : (
-                <button className="mr-10" onClick={ClickToEdit}>
+                <button className="mr-10 btn btn-primary" onClick={ClickToEdit}>
                   Edit profile
                 </button>
               )}

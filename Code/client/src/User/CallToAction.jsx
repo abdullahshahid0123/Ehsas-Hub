@@ -1,32 +1,28 @@
-import React,{useState,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 export const CallToAction = () => {
-
-const Save=async(e)=>{
-  e.preventDefault()
-  const postData={...data}
-  try{
-    const res=await axios.post("http://localhost:8000/feed-back",postData)
-alert(res.data.msg)
-window.location.reload()
-  }catch(error){
-    console.log(error)
-  }
-  
-
-  }
-  const [data,setdata]=useState({
-    name:"",
-    email:"",
-    message:""
-  })
-  const handleInput=(e)=>{
-    setdata({...data,[e.target.name]:e.target.value})
-  }
-  useEffect(()=>{
-Save()
-  },[])
-  
+  const Save = async (e) => {
+    e.preventDefault();
+    const postData = { ...data };
+    try {
+      const res = await axios.post("http://localhost:8000/feed-back", postData);
+      alert(res.data.msg);
+      window.location.reload();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const [data, setdata] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+  const handleInput = (e) => {
+    setdata({ ...data, [e.target.name]: e.target.value });
+  };
+  useEffect(() => {
+    Save();
+  }, []);
 
   return (
     <>
@@ -37,7 +33,7 @@ Save()
               <div class="cta-content-wrap">
                 <div class="title-area text-xl-start text-center mb-40">
                   <span class="sub-title after-none before-none justify-content-xl-start justify-content-center">
-                    Call To Action
+                    Feedback
                   </span>
                   <h2 class="sec-title text-white">
                     Give Your Big Hand Forever
@@ -69,11 +65,17 @@ Save()
                         placeholder="Your Email Address..."
                       />
                     </div>
-                   <div class=" form-group mb-3 style-dark">
-  
-  <textarea class="form-control " id="exampleTextarea" rows="4" name="message" onChange={handleInput} placeholder="Type your message..."></textarea>
-</div>
-                   
+                    <div class=" form-group mb-3 style-dark">
+                      <textarea
+                        class="form-control "
+                        id="exampleTextarea"
+                        rows="4"
+                        name="message"
+                        onChange={handleInput}
+                        placeholder="Type your message..."
+                      ></textarea>
+                    </div>
+
                     <div class="form-group col-xxl-4 col-xl-12">
                       <button class="th-btn style3 w-100" onClick={Save}>
                         Submit

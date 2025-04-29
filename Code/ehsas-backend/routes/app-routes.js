@@ -85,6 +85,7 @@ const {
   CountVolNew,
   CountVolProcess,
   CountVolCompleted,
+  GetFeedback,
 } = require("../Controller/admin-stat-controller");
 const {
   CreateAdmin,
@@ -114,6 +115,9 @@ router.get("/count-donate-books/:id", CountDonateBooks);
 router.get("/count-req-books/:id", CountReqBook);
 router.get("/show-donate-books/:id", ShowDonateBooks);
 router.get("/show-request-books/:id", ShowRequestBooks);
+
+// Feedback
+router.get("/get-feedback", GetFeedback);
 
 // admin routes
 router.put("/approve-user/:id", ApproveUser);

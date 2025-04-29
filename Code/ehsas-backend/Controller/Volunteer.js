@@ -296,17 +296,14 @@ const GetVolunteer = (req, res) => {
 };
 const UpdateProfileVolunteer = (req, res) => {
   const { userId } = req.params;
-  const { name, email, phone, gender, image, code } = req.body;
+  const { name, email, phone, profile, code } = req.body;
   let checkCode = parseInt(code);
 
-  console.log(req.body);
-
   const sql1 = "SELECT * FROM `verify` WHERE `email` = ?";
-  con.query(sql1, [email, code], (err, data) => {
+  con.query(sql1, [email], (err, data) => {
     if (err) {
       return res.json(err);
     } else {
-      console.log(data[0].code);
       if (data[0].code !== checkCode) {
         return res.json({ msg: "Invalid Verifcation Code!!!" });
       } else {
@@ -314,7 +311,7 @@ const UpdateProfileVolunteer = (req, res) => {
           "UPDATE `volunteer` SET name= ?, email= ?, phone= ?, profile= ? WHERE id = ?";
         con.query(
           sql2,
-          [name, email, phone, gender, image, userId],
+          [name, email, phone, profile, userId],
           (err, result) => {
             if (err) {
               return res.json(err);

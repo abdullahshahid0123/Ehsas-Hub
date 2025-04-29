@@ -110,7 +110,6 @@ const CountCompletedNeedy = (req, res) => {
 
 // volunteer
 const CountVolNew = (req, res) => {
-
   const sql =
     "SELECT COUNT(*) as volNewCount FROM `donor` WHERE `status` = 'Approved'";
   con.query(sql, (err, data) => {
@@ -141,6 +140,14 @@ const CountVolCompleted = (req, res) => {
   });
 };
 
+const GetFeedback = (req, res) => {
+  const sql = "SELECT * FROM `feedback`";
+  con.query(sql, (err, data) => {
+    if (err) throw err;
+    return res.status(200).json(data);
+  });
+};
+
 module.exports = {
   CountPendingUsers,
   CountActiveUsers,
@@ -157,4 +164,5 @@ module.exports = {
   CountVolNew,
   CountVolProcess,
   CountVolCompleted,
+  GetFeedback,
 };

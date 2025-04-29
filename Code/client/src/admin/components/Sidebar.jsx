@@ -2,7 +2,6 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 // import "../../../public/assets/css/style2.css"
 export const Sidebar = () => {
-  
   return (
     <>
       <div
@@ -22,7 +21,7 @@ export const Sidebar = () => {
             </li>
             <li className="sidebar-item">
               <NavLink to="/activelist" className="sidebar-link">
-              <i class="fa-solid fa-ellipsis pe-2"></i>Active list
+                <i class="fa-solid fa-ellipsis pe-2"></i>Active list
               </NavLink>
             </li>
             <li className="sidebar-item">
@@ -84,7 +83,7 @@ export const Sidebar = () => {
                 </li>
                 <li className="sidebar-item">
                   <NavLink to="/Dprocessrequest" className="sidebar-link">
-                  <i class="fa-solid fa-spinner px-2"></i>In Process
+                    <i class="fa-solid fa-spinner px-2"></i>In Process
                   </NavLink>
                 </li>
                 <li className="sidebar-item">
@@ -122,7 +121,7 @@ export const Sidebar = () => {
                 </li>
                 <li className="sidebar-item">
                   <NavLink to="/needyprocess" className="sidebar-link">
-                  <i class="fa-solid fa-spinner px-2"></i>Process Request
+                    <i class="fa-solid fa-spinner px-2"></i>Process Request
                   </NavLink>
                 </li>
                 <li className="sidebar-item">
@@ -158,6 +157,11 @@ export const Sidebar = () => {
                   </NavLink>
                 </li>
               </ul>
+            </li>
+            <li className="sidebar-item">
+              <NavLink to="/feedback" className="sidebar-link">
+                <i class="fa-solid fa-message pe-2"></i>Feedbacks
+              </NavLink>
             </li>
           </ul>
         </div>
