@@ -3,7 +3,7 @@ const { con } = require("../config/db");
 // users
 const CountPendingUsers = (req, res) => {
   const sql =
-    "SELECT COUNT(id) as pendingUsers FROM `users` WHERE status is null";
+    "SELECT COUNT(user_id) as pendingUsers FROM `users` WHERE status is NULL";
   con.query(sql, (err, data) => {
     if (err) throw err;
     return res.json(data[0].pendingUsers);
@@ -11,7 +11,7 @@ const CountPendingUsers = (req, res) => {
 };
 
 const CountActiveUsers = (req, res) => {
-  const sql = "SELECT COUNT(id) as activeUsers FROM `users` WHERE status =  1";
+  const sql = "SELECT COUNT(user_id) as activeUsers FROM `users` WHERE status =  1";
   con.query(sql, (err, data) => {
     if (err) throw err;
     return res.json(data[0].activeUsers);
@@ -19,7 +19,7 @@ const CountActiveUsers = (req, res) => {
 };
 
 const CountFreezeUsers = (req, res) => {
-  const sql = "SELECT COUNT(id) as freezeUsers FROM `users` WHERE status =  0";
+  const sql = "SELECT COUNT(user_id) as freezeUsers FROM `users` WHERE status =  0";
   con.query(sql, (err, data) => {
     if (err) throw err;
     return res.json(data[0].freezeUsers);

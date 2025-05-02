@@ -45,7 +45,7 @@ const CreateDonor = (req, res) => {
 
 const FetchDonProcessReq = (req, res) => {
   const sql =
-    "SELECT d.*, u.name, u.email, u.phone, u.address, v.name as vname FROM donor d JOIN users u ON u.id = d.user_id JOIN volunteer v ON v.id = d.volunteer_id WHERE d.status = 'Process'";
+    "SELECT d.*, u.name, u.email, u.phone, u.address, v.name as vname FROM donor d JOIN users u ON u.user_id = d.user_id JOIN volunteer v ON v.id = d.volunteer_id WHERE d.status = 'Process'";
   con.query(sql, (err, data) => {
     if (err) throw err;
     console.log(data);

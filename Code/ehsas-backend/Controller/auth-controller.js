@@ -84,7 +84,7 @@ const CreateUser = async (req, res) => {
           console.log(user);
 
           const sql =
-            "INSERT INTO users(name, email, phone, password, address, genres, gender,image) VALUES (?)";
+            "INSERT INTO users(name, email, phone, password, address, preferred_genre, gender,image) VALUES (?)";
 
           con.query(sql, [user], (err, data) => {
             if (err) {

@@ -75,7 +75,7 @@ const Home = () => {
         <h3 className="mb-5">Recomended Books</h3>
         {/*<div className="text-cente">*/}
         <div className="row">
-          {Array.isArray(list) && list.length > 0 ? (
+          {Array.isArray(list) && recommend.length > 0 ? (
             recommend.map((rs) => {
               const { id, title, author, coverImg } = rs;
 

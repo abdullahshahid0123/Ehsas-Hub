@@ -108,7 +108,7 @@ const ManageuserAccount = () => {
                 {Array.isArray(post) && post.length > 0 ? (
                   post.map((rs) => {
                     const {
-                      id,
+                      user_id,
                       name,
                       email,
                       phone,
@@ -119,7 +119,7 @@ const ManageuserAccount = () => {
                     } = rs;
                     return (
                       <>
-                        <tr key={id}>
+                        <tr key={user_id}>
                           <td>
                             <strong>{name}</strong>
                           </td>
@@ -156,7 +156,7 @@ const ManageuserAccount = () => {
                                     href="#"
                                     onClick={() =>
                                       setUserr({
-                                        id: id,
+                                        id: user_id,
                                         name: name,
                                         email: email,
                                         gender: gender,
@@ -176,7 +176,7 @@ const ManageuserAccount = () => {
                                         class="dropdown-item"
                                         href="#"
                                         onClick={() =>
-                                          Freezeusers(id, name, email)
+                                          Freezeusers(user_id, name, email)
                                         }
                                       >
                                         Freeze
@@ -188,7 +188,7 @@ const ManageuserAccount = () => {
                                         class="dropdown-item"
                                         href="#"
                                         onClick={() =>
-                                          Approveusers(id, name, email)
+                                          Approveusers(user_id, name, email)
                                         }
                                       >
                                         Active
