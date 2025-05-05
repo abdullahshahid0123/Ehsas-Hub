@@ -1,9 +1,20 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 const CreateVolunteer = () => {
   const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   const token = sessionStorage.getItem("token");
+
+  //   if (!token) {
+  //     navigate("/");
+  //   } else {
+  //     navigate("/volunteer-dashboard");
+  //   }
+  // });
+
   const [errorMessage, setErrorMessage] = useState("");
   const [value, setValue] = useState({
     name: "",

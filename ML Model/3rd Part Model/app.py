@@ -5,7 +5,7 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 register_blueprints(app)
-CORS(app)  # This will enable CORS for all routes
+CORS(app)
 
 
 if __name__ == '__main__':

@@ -97,6 +97,7 @@ const {
   verifyUpdateProfile,
   GetAdminProfile,
 } = require("../Controller/admin-login");
+const { GetLogActivity } = require("../Controller/LogActivity");
 
 const router = express.Router();
 
@@ -119,7 +120,7 @@ router.get("/show-request-books/:id", ShowRequestBooks);
 
 // Feedback
 router.get("/get-feedback", GetFeedback);
-router.get("/get-gen", GetUniqueGen)
+router.get("/get-gen", GetUniqueGen);
 
 // admin routes
 router.put("/approve-user/:id", ApproveUser);
@@ -210,5 +211,6 @@ router.get("/get-volunteer-image/:userId", GetVolunteerImage);
 
 // feedback routes
 router.post("/feed-back", FeedBack);
+router.post("/log-activity", GetLogActivity);
 
 module.exports = router;
