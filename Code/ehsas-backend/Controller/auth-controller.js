@@ -168,6 +168,17 @@ const userResetPass = (req, res) => {
   if (!email || !code || !password) {
     res.json({ message: "fields are required" });
   }
+
+  const ValidPassword = (password) => {
+    if (password.length < 8) return "password must be 8 character ";
+    if (!/[A-Z]/.test(password)) return "password must have uppercase ";
+    if (!/[a-z]/.test(password)) return "password must have lowercase ";
+    if (!/[0-9]/.test(password)) return "password must have Numbers";
+    if (!/[@#$%^&*(),.?":{}|<>]/.test(password))
+      return "passsword must have special character";
+    return null;
+  };
+
   const sql = "SELECT * FROM `verify` WHERE email = ? AND code = ? ";
   con.query(sql, [email, code], async (err, result) => {
     if (err) res.json({ message: "field not match" });
