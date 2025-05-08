@@ -109,7 +109,7 @@ const ManagevolunteerAccount = () => {
                       name,
                       email,
                       phone,
-                      profile,
+                      cnic,
                       password,
                       status,
                       address,
@@ -153,7 +153,7 @@ const ManagevolunteerAccount = () => {
                                         name: name,
                                         email: email,
                                         password: password,
-                                        image: profile,
+                                        cnic: cnic,
                                         phone: phone,
                                         address: address,
                                       })
@@ -291,14 +291,12 @@ const ManagevolunteerAccount = () => {
                         </div>
 
                         <div className="mb-3">
-                          <label className="form-label">
-                            ID Card / Student Card Photo
-                          </label>
+                          <label className="form-label">ID Card</label>
 
                           <div>
                             <>
                               <img
-                                src={userr.image}
+                                src={userr.cnic}
                                 alt="Student Card"
                                 style={{
                                   width: "100%",

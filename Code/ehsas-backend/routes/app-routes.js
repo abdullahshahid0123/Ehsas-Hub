@@ -56,6 +56,7 @@ const {
   UpdateActive,
   FetchActive,
   UpdateDeactivate,
+  FetchActiveAll,
 } = require("../Controller/Donor");
 const {
   NeedyRequest,
@@ -220,5 +221,6 @@ router.post("/log-activity", GetLogActivity);
 router.get("/search-book/:search", SearchBook);
 router.get("/get-fav-books/:id", GetFavBooks);
 router.delete("/remove-fav/:id", RemoveFav);
+router.get("/fetch-active-all", FetchActiveAll);
 
 module.exports = router;

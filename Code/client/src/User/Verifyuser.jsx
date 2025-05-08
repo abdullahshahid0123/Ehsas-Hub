@@ -26,10 +26,8 @@ const Verifyuser = () => {
 
       console.log("response data", res.data);
 
-      
-      alert(res.data.msg);
-      setErrorMessage("");
-      navigate("/login");
+      // alert(res.data.msg);
+      setErrorMessage(res.data.msg);
     } catch (error) {
       setErrorMessage("Invalid Credential. Please try again!");
       console.log("login here", error.message);
@@ -48,14 +46,10 @@ const Verifyuser = () => {
                 <p className="text-center text-muted mb-4">
                   Please enter the 4-digit code sent to your email.
                 </p>
-                {errorMessage && (
-                  <div className="text-center mb-4">
-                    <span className="text-danger ">{errorMessage}</span>
-                  </div>
-                )}
+
                 <form onSubmit={Submit}>
                   <div>
-                  <label htmlFor="code">Code</label>
+                    <label htmlFor="code">Code</label>
                     <input
                       type="text"
                       class="form-control code-input mb-4"
@@ -96,6 +90,11 @@ const Verifyuser = () => {
                       }}
                     />
                   </div>
+                  {errorMessage && (
+                    <div className="text-center mb-4">
+                      <span className="text-danger ">{errorMessage}</span>
+                    </div>
+                  )}
                   <div
                     className="d-flex justify-content-center align-items-center mb-4 "
                     style={{ gap: "30%" }}

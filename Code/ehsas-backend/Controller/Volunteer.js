@@ -91,7 +91,7 @@ const CreateVolunteer = (req, res) => {
 
         // sql  query for the database to create data
         const sql =
-          "INSERT INTO  volunteer( name, email, phone, password, address, profile) VALUES(?)";
+          "INSERT INTO  volunteer( name, email, phone, password, address, cnic) VALUES(?)";
         con.query(sql, [user], (err, data) => {
           if (err) {
             console.log("error in create volunteer", err);
@@ -298,6 +298,8 @@ const UpdateProfileVolunteer = (req, res) => {
   const { userId } = req.params;
   const { name, email, phone, profile, code } = req.body;
   let checkCode = parseInt(code);
+
+  console.log(req.body);
 
   const sql1 = "SELECT * FROM `verify` WHERE `email` = ?";
   con.query(sql1, [email], (err, data) => {

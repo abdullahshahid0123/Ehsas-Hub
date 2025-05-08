@@ -417,7 +417,7 @@ const Profileview = () => {
                           >
                             Genres
                           </th>
-                       
+
                           <th
                             style={{
                               padding: "10px",
@@ -470,7 +470,7 @@ const Profileview = () => {
                               >
                                 {generes}
                               </td>
-                             
+
                               <td
                                 style={{
                                   padding: "10px",
@@ -518,7 +518,6 @@ const Profileview = () => {
                     overflowY: "auto",
                   }}
                 >
-
                   <div
                     style={{
                       textAlign: "center",
@@ -575,14 +574,14 @@ const Profileview = () => {
                           >
                             Genres
                           </th>
-                          <th
+                          {/* <th
                             style={{
                               padding: "10px",
                               border: "1px solid #ddd",
                             }}
                           >
                             Edition
-                          </th>
+                          </th> */}
                           <th
                             style={{
                               padding: "10px",
@@ -636,7 +635,7 @@ const Profileview = () => {
                               >
                                 {generes}
                               </td>
-                              <td
+                              {/* <td
                                 style={{
                                   padding: "10px",
                                   border: "1px solid #ddd",
@@ -644,7 +643,7 @@ const Profileview = () => {
                                 }}
                               >
                                 {book_edition}
-                              </td>
+                              </td> */}
                               <td
                                 style={{
                                   padding: "10px",

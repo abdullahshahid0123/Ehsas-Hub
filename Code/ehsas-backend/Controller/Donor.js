@@ -175,6 +175,24 @@ const FetchActive = (req, res) => {
     }
   });
 };
+
+const FetchActiveAll = (req, res) => {
+  // console.log(req.query);
+  // const page = parseInt(req.query.page) || 1;
+  // const limit = parseInt(req.query.limit) || 18;
+  // const offset = (page - 1) * limit;
+
+  const sql = "SELECT * FROM donor WHERE status = 'Active'";
+  con.query(sql, (err, data) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).json({ msg: "error in updating Active", err });
+    } else {
+      return res.json(data);
+    }
+  });
+};
+
 const UpdateDeactivate = (req, res) => {
   const { id } = req.params;
   if (!id) {
@@ -244,4 +262,5 @@ module.exports = {
   UpdateActive,
   FetchActive,
   UpdateDeactivate,
+  FetchActiveAll,
 };

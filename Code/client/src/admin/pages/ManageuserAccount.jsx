@@ -112,7 +112,7 @@ const ManageuserAccount = () => {
                       name,
                       email,
                       phone,
-                      image,
+                      cnic,
                       gender,
                       status,
                       address,
@@ -160,7 +160,7 @@ const ManageuserAccount = () => {
                                         name: name,
                                         email: email,
                                         gender: gender,
-                                        image: image,
+                                        cnic: cnic,
                                         phone: phone,
                                         address: address,
                                       })
@@ -308,7 +308,7 @@ const ManageuserAccount = () => {
                       <div>
                         <>
                           <img
-                            src={userr.image}
+                            src={userr.cnic}
                             alt="Student Card"
                             style={{
                               width: "100%",

@@ -245,7 +245,7 @@ const Nnewrequest = () => {
                         </div>
 
                         <div className="mb-3">
-                          <label className="form-label">Id card/image</label>
+                          <label className="form-label">Book Cover</label>
 
                           <div>
                             <>

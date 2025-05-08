@@ -84,7 +84,7 @@ const CreateUser = async (req, res) => {
           console.log(user);
 
           const sql =
-            "INSERT INTO users(name, email, phone, password, address, preferred_genre, gender,image) VALUES (?)";
+            "INSERT INTO users(name, email, phone, password, address, preferred_genre, gender,cnic) VALUES (?)";
 
           con.query(sql, [user], (err, data) => {
             if (err) {
@@ -175,9 +175,14 @@ const userResetPass = (req, res) => {
     if (!/[a-z]/.test(password)) return "password must have lowercase ";
     if (!/[0-9]/.test(password)) return "password must have Numbers";
     if (!/[@#$%^&*(),.?":{}|<>]/.test(password))
-      return "passsword must have special character";
+      return "Passsword must have special character";
     return null;
   };
+
+  const passwordError = ValidPassword(password);
+  if (passwordError) {
+    return res.json({ msg: "Passsword must have special character" });
+  }
 
   const sql = "SELECT * FROM `verify` WHERE email = ? AND code = ? ";
   con.query(sql, [email, code], async (err, result) => {

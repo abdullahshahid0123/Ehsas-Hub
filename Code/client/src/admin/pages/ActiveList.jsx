@@ -4,14 +4,14 @@ import { Topbar } from "../components/Topbar";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 const ActiveList = () => {
-   const navigate = useNavigate();
-    useEffect(() => {
-      const token = sessionStorage.getItem("token");
-      if (!token) {
-        navigate("/adminlogin");
-      }
-    }, []);
-  
+  const navigate = useNavigate();
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+      navigate("/adminlogin");
+    }
+  }, []);
+
   const Deactivate = async (id) => {
     await axios
       .put(`http://localhost:8000/Update-deactivate/${id}`)
@@ -27,7 +27,7 @@ const ActiveList = () => {
   const [request, setrequest] = useState([]);
   const fetchaAtive = async () => {
     await axios
-      .get("http://localhost:8000/fetch-active")
+      .get("http://localhost:8000/fetch-active-all")
       .then((res) => {
         setrequest(res.data);
       })
@@ -58,7 +58,7 @@ const ActiveList = () => {
                 <tr>
                   <th scope="col">book_name</th>
                   <th scope="col">auther_name</th>
-                  <th scope="col">book_edition</th>
+                  {/* <th scope="col">book_edition</th> */}
 
                   <th scope="col">Status</th>
                   <th scope="col">Action</th>
@@ -74,7 +74,7 @@ const ActiveList = () => {
                         <td>
                           <strong>{book_name}</strong>
                         </td>
-                        <td>{book_edition}</td>
+                        {/* <td>{book_edition}</td> */}
                         <td>{auther_name}</td>
 
                         <td>
