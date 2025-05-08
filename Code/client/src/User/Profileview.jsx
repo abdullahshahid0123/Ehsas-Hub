@@ -271,7 +271,7 @@ const Profileview = () => {
                   )}
 
                   <button
-                  className="mt-5 ml-5 btn btn-danger"
+                    className="mt-5 ml-5 btn btn-danger"
                     onClick={() => {
                       setIsEditing(true);
                       setopen(false);
@@ -363,7 +363,30 @@ const Profileview = () => {
                     overflowY: "auto",
                   }}
                 >
-                  <h4 className="text-center mb-4">Donated Books</h4>
+                  <div
+                    style={{
+                      textAlign: "center",
+                      marginTop: "20px",
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <h4 className="text-center mb-4">Donated Books</h4>
+
+                    <button
+                      onClick={() => setopenModal(false)}
+                      style={{
+                        padding: "10px 20px",
+                        backgroundColor: "#007bff",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "5px",
+                      }}
+                    >
+                      Close
+                    </button>
+                  </div>
+                  <br />
                   {Array.isArray(donatelist) && donatelist.length > 0 ? (
                     <table
                       style={{ width: "100%", borderCollapse: "collapse" }}
@@ -394,14 +417,7 @@ const Profileview = () => {
                           >
                             Genres
                           </th>
-                          <th
-                            style={{
-                              padding: "10px",
-                              border: "1px solid #ddd",
-                            }}
-                          >
-                            Edition
-                          </th>
+                       
                           <th
                             style={{
                               padding: "10px",
@@ -454,15 +470,7 @@ const Profileview = () => {
                               >
                                 {generes}
                               </td>
-                              <td
-                                style={{
-                                  padding: "10px",
-                                  border: "1px solid #ddd",
-                                  textAlign: "center",
-                                }}
-                              >
-                                {book_edition}
-                              </td>
+                             
                               <td
                                 style={{
                                   padding: "10px",
@@ -480,20 +488,6 @@ const Profileview = () => {
                   ) : (
                     <p>No donated books found</p>
                   )}
-                  <div style={{ textAlign: "center", marginTop: "20px" }}>
-                    <button
-                      onClick={() => setopenModal(false)}
-                      style={{
-                        padding: "10px 20px",
-                        backgroundColor: "#007bff",
-                        color: "white",
-                        border: "none",
-                        borderRadius: "5px",
-                      }}
-                    >
-                      Close
-                    </button>
-                  </div>
                 </div>
               </div>
             )}
@@ -524,7 +518,30 @@ const Profileview = () => {
                     overflowY: "auto",
                   }}
                 >
-                  <h4 className="text-center mb-4">Donated Books</h4>
+                  <div
+                    style={{
+                      textAlign: "center",
+                      marginTop: "20px",
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <h4 className="text-center mb-4">Requested Books</h4>
+
+                    <button
+                      onClick={() => setopenreqModal(false)}
+                      style={{
+                        padding: "10px 20px",
+                        backgroundColor: "#007bff",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "5px",
+                      }}
+                    >
+                      Close
+                    </button>
+                  </div>
+                  <br />
                   {Array.isArray(Reqlist) && Reqlist.length > 0 ? (
                     <table
                       style={{ width: "100%", borderCollapse: "collapse" }}
@@ -642,20 +659,6 @@ const Profileview = () => {
                   ) : (
                     <p>No donated books found</p>
                   )}
-                  <div style={{ textAlign: "center", marginTop: "20px" }}>
-                    <button
-                      onClick={() => setopenreqModal(false)}
-                      style={{
-                        padding: "10px 20px",
-                        backgroundColor: "#007bff",
-                        color: "white",
-                        border: "none",
-                        borderRadius: "5px",
-                      }}
-                    >
-                      Close
-                    </button>
-                  </div>
                 </div>
               </div>
             )}

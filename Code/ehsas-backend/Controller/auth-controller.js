@@ -91,7 +91,7 @@ const CreateUser = async (req, res) => {
               console.log(err);
               return res.json({ msg: " Error in User Creating" });
             } else {
-              console.log(data);
+              // console.log(data);
               SendMailRequest(name, email);
               return res.json({ msg: "User Created successfully" });
             }
@@ -104,7 +104,7 @@ const CreateUser = async (req, res) => {
 
 const LoginUser = async (req, res) => {
   const { email, password } = req.body;
-  console.log(req.body);
+  // console.log(req.body);
   const sql = "SELECT * FROM users WHERE email=? AND status=1";
 
   con.query(sql, [email], async (err, data) => {
@@ -113,7 +113,7 @@ const LoginUser = async (req, res) => {
       return res.json({ msg: "user not found!!!", data });
     }
     const user = data[0];
-    console.log(user);
+    // console.log(user);
 
     if (password) {
       bcrypt.compare(password, user.password, function (err, result) {
@@ -148,7 +148,7 @@ const UserForgotPassword = (req, res) => {
     }
     const code = await SendMailVerifyEmail(email);
     if (!code) {
-      console.log(code);
+      // console.log(code);
       return res.json({ message: "code verification failed" });
     }
     const sql = "INSERT INTO verify ( email, code) VALUES (? , ?)";
@@ -231,7 +231,7 @@ const ApproveUser = (req, res) => {
 const RejectUser = (req, res) => {
   const { id } = req.params;
   const { name, email, comment } = req.body;
-  console.log(req.body);
+  // console.log(req.body);
   if (!id) {
     return res.status(400).json({ msg: "user id is required" });
   }
@@ -281,14 +281,14 @@ const UpdateProfile = (req, res) => {
   const { name, email, phone, gender, image, code } = req.body;
   let checkCode = parseInt(code);
 
-  console.log(req.body);
+  // console.log(req.body);
 
   const sql1 = "SELECT * FROM `verify` WHERE `email` = ?";
   con.query(sql1, [email, code], (err, data) => {
     if (err) {
       return res.json(err);
     } else {
-      console.log(data[0].code);
+      // console.log(data[0].code);
       if (data[0].code !== checkCode) {
         return res.json({ msg: "Invalid Verifcation Code!!!" });
       } else {
@@ -354,7 +354,7 @@ const EmailSendCode = async (req, res) => {
     if (code < 0) {
       return res.json({ msg: "Cannot generate code" });
     }
-    console.log(code);
+    // console.log(code);
 
     const now = new Date();
     const insertSql =
@@ -401,7 +401,7 @@ const EmailSendCode = async (req, res) => {
 const UpdateInterest = (req, res) => {
   const { id } = req.params;
   const { interest } = req.body;
-  console.log("params", req.params);
+  // console.log("params", req.params);
   if (!id || !interest) {
     return res.status(400).json({ msg: "id and interest required" });
   }
@@ -443,13 +443,13 @@ const CountReqBook = (req, res) => {
 };
 const GetProfileImage = (req, res) => {
   const { userId } = req.params;
-  console.log(req.params);
+  // console.log(req.params);
   const sql = "SELECT image FROM `users` WHERE user_id = ?  ";
 
   con.query(sql, [userId], (err, data) => {
     if (err) throw err;
     console.log(err);
-    console.log(data);
+    // console.log(data);
     return res.json(data[0].image);
   });
 };
@@ -486,7 +486,7 @@ const ShowRequestBooks = async (req, res) => {
 
   con.query(sql, [id], (err, data) => {
     if (err) throw err;
-    console.log(data);
+    // console.log(data);
     return res.json(data);
   });
 };
@@ -494,33 +494,32 @@ const ShowRequestBooks = async (req, res) => {
 const GetUniqueGen = (req, res) => {
   const query = "SELECT genres FROM books";
 
-con.query(query, (err, result) => {
-  if (err) {
-    console.log(err);
-    return res.status(500).send("Error fetching genres");
-  }
+  con.query(query, (err, result) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).send("Error fetching genres");
+    }
 
-  // Create a Set to hold unique genres
-  let genresSet = new Set();
+    // Create a Set to hold unique genres
+    let genresSet = new Set();
 
-  result.forEach((row) => {
-    // Assuming genres are stored as a string representation of an array like "['fiction', 'mystery', 'thriller']"
-    const cleanedGenres = row.genres
-      .replace(/[\[\]']+/g, '')  // Remove square brackets and single quotes
-      .split(',')                 // Split by commas
-      .map(genre => genre.trim()); // Trim any leading or trailing spaces
-    
-    // Add each cleaned genre to the Set to ensure uniqueness
-    cleanedGenres.forEach(genre => genresSet.add(genre));
+    result.forEach((row) => {
+      // Assuming genres are stored as a string representation of an array like "['fiction', 'mystery', 'thriller']"
+      const cleanedGenres = row.genres
+        .replace(/[\[\]']+/g, "") // Remove square brackets and single quotes
+        .split(",") // Split by commas
+        .map((genre) => genre.trim()); // Trim any leading or trailing spaces
+
+      // Add each cleaned genre to the Set to ensure uniqueness
+      cleanedGenres.forEach((genre) => genresSet.add(genre));
+    });
+
+    // Convert the Set back to an array (to make it easier to work with)
+    const uniqueGenres = Array.from(genresSet);
+
+    // console.log(uniqueGenres);
+    res.json(uniqueGenres); // Send back the unique genres
   });
-
-  // Convert the Set back to an array (to make it easier to work with)
-  const uniqueGenres = Array.from(genresSet);
-
-  console.log(uniqueGenres);
-  res.json(uniqueGenres); // Send back the unique genres
-});
-
 };
 module.exports = {
   CreateUser,

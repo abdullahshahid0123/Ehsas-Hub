@@ -9,7 +9,7 @@ const NeedyRequest = (req, res) => {
 
   const { reqId, name, email, bookName } = req.body;
 
-  console.log(req.body);
+  // console.log(req.body);
 
   const sql = "SELECT `request` AS requestCount FROM `users` WHERE user_id=?";
 
@@ -19,7 +19,7 @@ const NeedyRequest = (req, res) => {
       return res.json({ msg: "error in the needy request request" });
     } else {
       const limitCount = result[0]?.requestCount;
-      console.log("limit of this month", limitCount);
+      // console.log("limit of this month", limitCount);
       if (limitCount > 2) {
         return res.json({ msg: "request limit complete of this month" });
       } else {
@@ -46,7 +46,7 @@ async function IncreaseReq(uid, limit) {
   const sql = "UPDATE `users` SET `request`= ? WHERE `user_id` = ?";
   con.query(sql, [newLimint, uid], (err, data) => {
     if (err) throw err;
-    console.log("Request Updated");
+    // console.log("Request Updated");
   });
 }
 
@@ -85,18 +85,18 @@ const FetchNeedyPending = (req, res) => {
   const sql =
     "SELECT n.*, n.id as needyId, u.name, u.email, u.phone, u.gender, u.address, d.* FROM needy n JOIN users u ON n.user_id = u.user_id JOIN donor d ON n.req_id = d.id WHERE n.req_status = 'Pending'";
   con.query(sql, (err, data) => {
-    console.log(data);
+    // console.log(data);
     if (err) {
       console.log("error in fetch Needy", err);
     }
-    console.log(data);
+    // console.log(data);
     return res.json({ msg: "Needy fetch successfuly ", data });
   });
 };
 
 const UpdateNeedyApproved = (req, res) => {
   const { id } = req.params;
-  console.log(id);
+  // console.log(id);
   const { name, email, bookName } = req.body;
   if (!id) {
     return res.status(400).json({ msg: "needy id is required" });

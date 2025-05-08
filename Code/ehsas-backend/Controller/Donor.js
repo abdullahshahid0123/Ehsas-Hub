@@ -1,8 +1,20 @@
+const { json } = require("body-parser");
 const { con } = require("../config/db");
 const {
   SendMailApproveBookDonation,
   SendMailBookReceived,
 } = require("../mail/app-mailer");
+
+async function AddBookDataSet(id, title, author, coverImg, genres) {
+  const genArray = JSON.stringify(genres);
+  const data = [id, title, author, coverImg, genArray];
+  const sql =
+    "INSERT INTO `books`(`bookId`, `title`, `author`, `coverImg`, `genres`) VALUES (?)";
+  con.query(sql, [data], (err, data) => {
+    if (err) throw err;
+    console.log("Book added to dataset");
+  });
+}
 
 const CreateDonor = (req, res) => {
   // req from the user
@@ -40,6 +52,14 @@ const CreateDonor = (req, res) => {
     if (err) {
       console.log("error in create donor", err);
     } else {
+      // console.log(data.insertId)
+      AddBookDataSet(
+        data.insertId,
+        book_name,
+        auther_name,
+        book_image,
+        generes
+      );
       return res.json({ msg: "donor created successfuly" });
     }
   });
@@ -50,7 +70,7 @@ const FetchDonProcessReq = (req, res) => {
     "SELECT d.*, u.name, u.email, u.phone, u.address, v.name as vname FROM donor d JOIN users u ON u.user_id = d.user_id JOIN volunteer v ON v.id = d.volunteer_id WHERE d.status = 'Process'";
   con.query(sql, (err, data) => {
     if (err) throw err;
-    console.log(data);
+    // console.log(data);
     return res.json(data);
   });
 };
@@ -138,9 +158,15 @@ const UpdateActive = (req, res) => {
     }
   });
 };
+
 const FetchActive = (req, res) => {
-  const sql = "SELECT * FROM donor WHERE status = 'Active' ";
-  con.query(sql, (err, data) => {
+  // console.log(req.query);
+  // const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 18;
+  // const offset = (page - 1) * limit;
+
+  const sql = "SELECT * FROM donor WHERE status = 'Active' ORDER BY id LIMIT ?";
+  con.query(sql, [limit], (err, data) => {
     if (err) {
       console.log(err);
       return res.status(500).json({ msg: "error in updating Active", err });

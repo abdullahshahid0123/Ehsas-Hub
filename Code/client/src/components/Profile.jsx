@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 // import "./Navbar.css";
 import axios from "axios";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const LogOut = () => {
@@ -81,7 +81,7 @@ const Profile = () => {
       >
         {/* Left: Logo */}
         <div className="navbar-logo">
-          <a href="/home">EHSAS-HUB</a>
+          <Link to="/home">EHSAS-HUB</Link>
         </div>
 
         {/* Right: Heart, Donate Button, Profile */}
@@ -135,7 +135,7 @@ const Profile = () => {
                 </NavLink>
               </li>
               <li>
-                <NavLink className="dropdown-item" to="/Profileview">
+                <NavLink className="dropdown-item" to="/fav-books">
                   Favourites
                 </NavLink>
               </li>
@@ -148,6 +148,7 @@ const Profile = () => {
           </div>
         </div>
       </nav>
+      {/* <br /> */}
 
       <>
         <div
@@ -191,10 +192,11 @@ const Profile = () => {
                             type="text"
                             className="form-control rounded-pill home-input"
                             id="book"
-                            placeholder="your book name"
+                            placeholder="Your book name"
                             required
                             name="book_name"
                             onChange={handleInput}
+                            min={3}
                           />
                         </div>
                         <div className="col-md- mb-3">
@@ -208,7 +210,7 @@ const Profile = () => {
                             type="text"
                             className="form-control rounded-pill home-input"
                             id="book"
-                            placeholder=" generes name"
+                            placeholder="Generes"
                             required
                             name="generes"
                             onChange={handleInput}
@@ -227,7 +229,7 @@ const Profile = () => {
                               type="text"
                               className="form-control rounded-pill home-input"
                               id="Edition"
-                              placeholder=" book edition"
+                              placeholder="Book Edition"
                               required
                               name="book_edition"
                               onChange={handleInput}
@@ -238,13 +240,13 @@ const Profile = () => {
                               htmlFor="auther"
                               className="text-dark home-label"
                             >
-                              Auther Name
+                              Author Name
                             </label>
                             <input
                               type="text"
                               className="form-control rounded-pill home-input"
                               id="password"
-                              placeholder="book auther name"
+                              placeholder="Author Name"
                               required
                               name="auther_name"
                               onChange={handleInput}
