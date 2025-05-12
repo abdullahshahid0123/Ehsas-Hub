@@ -29,6 +29,7 @@ const Dnewrequest = () => {
       });
   };
   const Rejectdonor = async (id, name, email, bookName) => {
+    // alert()
     await axios
       .delete(`http://localhost:8000/reject-donor/${id}`, {
         name,
@@ -338,7 +339,7 @@ const Dnewrequest = () => {
                             user.id,
                             user.name,
                             user.email,
-                            ser.book_name
+                            user.book_name
                           )
                         }
                       >

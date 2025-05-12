@@ -75,10 +75,10 @@ const CreateVolunteer = (req, res) => {
   con.query(check, [email], (err, result) => {
     if (err) throw err;
     if (result.length > 0) {
-      return res.json({ msg: "Already Register" });
+      return res.json({ msg: "Email Already Register" });
     }
 
-    const verify = "SELECT * FROM `verify` WHERE `email` = ?";
+    const verify = "SELECT * FROM `verify` WHERE `email` = ? ORDER BY id DESC LIMIT 1";
     con.query(verify, [email], async (err, verifyData) => {
       if (err) throw err;
       if (verifyData[0].code.toString() !== code) {
@@ -301,7 +301,7 @@ const UpdateProfileVolunteer = (req, res) => {
 
   console.log(req.body);
 
-  const sql1 = "SELECT * FROM `verify` WHERE `email` = ?";
+  const sql1 = "SELECT * FROM `verify` WHERE `email` = ? ORDER BY id DESC LIMIT 1";
   con.query(sql1, [email], (err, data) => {
     if (err) {
       return res.json(err);
@@ -318,6 +318,7 @@ const UpdateProfileVolunteer = (req, res) => {
             if (err) {
               return res.json(err);
             } else {
+              DeleteCode(email);
               const token = jwt.sign({ userId, email }, process.env.JWT_SECRET);
               return res.json({ msg: "Profile Updated Successfuly", token });
             }
@@ -327,6 +328,14 @@ const UpdateProfileVolunteer = (req, res) => {
     }
   });
 };
+
+async function DeleteCode(email) {
+  const sql = "DELETE FROM `verify` WHERE `email` = ?";
+  con.query(sql, [email], (err, data) => {
+    if (err) throw err;
+    console.log("Code Deleted!!!");
+  });
+}
 const SendCode = async (req, res) => {
   const { email } = req.body.editData;
   // console.log(req.body)

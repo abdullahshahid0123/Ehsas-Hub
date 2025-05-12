@@ -127,7 +127,7 @@ const Register = () => {
                   Email
                 </label>
                 <input
-                  type="text"
+                  type="email"
                   className="form-control rounded-pill home-input"
                   id="email"
                   placeholder="Enter your email"
@@ -169,9 +169,10 @@ const Register = () => {
                   className="form-control rounded-pill home-input"
                   id="phone"
                   required
-                  placeholder="Enter your phone number"
+                  placeholder="03xxxxxxxxx"
                   name="phone"
                   onChange={handlInput}
+                  min={11}
                 />
               </div>
               <div className="col-md-6 mb-3">

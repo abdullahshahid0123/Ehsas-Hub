@@ -14,7 +14,7 @@ const VolunteerProfile = () => {
   }, []);
 
   const [isEditing, setIsEditing] = useState(true);
-  const [editData, setEditData] = useState({});
+  const [editData, setEditData] = useState([]);
   const [profile, setprofile] = useState([]);
 
   const userId = sessionStorage.getItem("id");
@@ -25,12 +25,13 @@ const VolunteerProfile = () => {
         `http://localhost:8000/get-volunteer/${userId}`
       );
       console.log("API Response:", response.data);
-      setprofile([response.data]);
+      setprofile(response.data);
       setEditData(response.data); // Correct usage
     } catch (error) {
       console.error("Error fetching admin data:", error);
     }
   };
+
   useEffect(() => {
     Fetch();
   }, []);
@@ -58,7 +59,7 @@ const VolunteerProfile = () => {
     reader.addEventListener("load", () => {
       setEditData((prev) => ({
         ...prev,
-        image: reader.result,
+        profile: reader.result,
       }));
     });
   };
@@ -116,8 +117,9 @@ const VolunteerProfile = () => {
                 <input
                   type="file"
                   hidden={isEditing}
-                  name="image"
+                  name="profile"
                   onChange={handleEditImage}
+                  accept=".jpg, .jpeg, .png"
                 />
               </div>
               <strong className="text-black">Name</strong>

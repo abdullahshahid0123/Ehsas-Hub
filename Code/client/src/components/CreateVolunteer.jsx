@@ -158,11 +158,13 @@ const CreateVolunteer = () => {
                   <div className="mb-3 col-md-6">
                     <label className="form-label">Phone Number</label>
                     <input
-                      type="text"
+                      type="number"
                       className="form-control"
                       required
                       name="phone"
                       onChange={handleInput}
+                      placeholder="03xxxxxxxxx"
+                      min={11}
                     />
                   </div>
                 </div>

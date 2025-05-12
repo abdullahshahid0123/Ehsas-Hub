@@ -168,7 +168,7 @@ const verifyUpdateProfile = (req, res) => {
 
   console.log(req.body);
 
-  const sql1 = "SELECT * FROM `verify` WHERE `email` = ?";
+  const sql1 = "SELECT * FROM `verify` WHERE `email` = ? ORDER BY id DESC LIMIT 1";
   con.query(sql1, [email, code], (err, data) => {
     if (err) {
       return res.json(err);

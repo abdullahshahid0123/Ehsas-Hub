@@ -226,7 +226,7 @@ const Profile = () => {
                               Book Edition
                             </label>
                             <input
-                              type="text"
+                              type="number"
                               className="form-control rounded-pill home-input"
                               id="Edition"
                               placeholder="Book Edition"

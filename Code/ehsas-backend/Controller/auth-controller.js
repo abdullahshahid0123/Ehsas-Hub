@@ -59,7 +59,8 @@ const CreateUser = async (req, res) => {
     if (data.length > 0) {
       return res.json({ msg: "user already exist", data });
     }
-    const sql1 = "SELECT * FROM `verify` WHERE `email` = ?";
+    const sql1 =
+      "SELECT * FROM `verify` WHERE `email` = ? ORDER BY id DESC LIMIT 1";
     con.query(sql1, [email], async (err, verifydata) => {
       if (err) {
         return res.json(err);
@@ -184,7 +185,8 @@ const userResetPass = (req, res) => {
     return res.json({ msg: "Passsword must have special character" });
   }
 
-  const sql = "SELECT * FROM `verify` WHERE email = ? AND code = ? ";
+  const sql =
+    "SELECT * FROM `verify` WHERE email = ? AND code = ? ORDER BY id DESC LIMIT 1";
   con.query(sql, [email, code], async (err, result) => {
     if (err) res.json({ message: "field not match" });
     if (result.length === 0) {

@@ -140,7 +140,7 @@ const RejectNeedy = (req, res) => {
       console.log(err);
       return res.status(500).json({ msg: "error in reject donor", err });
     } else {
-      return res.json({ msg: "donor request reject" });
+      return res.json({ msg: "Needy request reject" });
     }
   });
 };

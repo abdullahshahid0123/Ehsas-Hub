@@ -150,7 +150,7 @@ router.post("/create-donor", CreateDonor);
 router.put("/approve-donor/:id", ApproveDonor);
 router.put("/complete-donor/:id", CompleteDonor);
 router.put("/update-deliver/:id", UpdateDelivere);
-router.put("/Reject-donor/:id", RejectDonor);
+router.delete("/reject-donor/:id", RejectDonor);
 router.get("/fetch-donor-pending", FetchDonor);
 router.get("/fetch-donor-approved", FetchDonorApproved);
 router.get("/fetch-d-process", FetchDonProcessReq);
