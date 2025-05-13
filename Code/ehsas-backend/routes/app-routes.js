@@ -215,8 +215,9 @@ router.get("/vol-process-count/:id", CountVolProcess);
 router.get("/vol-completed-count/:id", CountVolCompleted);
 router.get("/get-volunteer-image/:userId", GetVolunteerImage);
 
-// feedback routes
+// feedback and activites routes
 router.post("/feed-back", FeedBack);
+// 
 router.post("/log-activity", GetLogActivity);
 router.get("/search-book/:search", SearchBook);
 router.get("/get-fav-books/:id", GetFavBooks);
