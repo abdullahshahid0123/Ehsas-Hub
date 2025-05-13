@@ -53,7 +53,7 @@ const AdminSignup = () => {
 
   return (
     <>
-      <div className="signup-container d-flex align-items-center justify-content-center min-vh-100 ">
+      <div className="signup-container d-flex align-items-center justify-content-center min-vh-100 signup-bg signup-bg-overlay">
         <div
           className="card shadow-lg p-4 mt-5 "
           style={{

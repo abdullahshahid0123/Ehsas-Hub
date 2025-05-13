@@ -1,41 +1,65 @@
 /* src/components/Preloader.css */
 .preloader {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(45deg, #00a9e0, #007ea7);
-    /* Ehsaas Hub colors */
-    color: white;
-    z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(45deg, #00a9e0, #007ea7);
+  /* Ehsaas Hub colors */
+  color: white;
+  z-index: 1000;
 }
 
 .spinner {
-    width: 50px;
-    height: 50px;
-    border: 6px solid rgba(255, 255, 255, 0.3);
-    border-top: 6px solid white;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
+  width: 50px;
+  height: 50px;
+  border: 6px solid rgba(255, 255, 255, 0.3);
+  border-top: 6px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
+  from {
+    transform: rotate(0deg);
+  }
 
-    to {
-        transform: rotate(360deg);
-    }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .preloader p {
-    margin-top: 1rem;
-    font-size: 1.2rem;
-    font-weight: bold;
+  margin-top: 1rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.home-input {
+  height: 40px;
+}
+
+.signup-bg {
+  /* background-image: url("https://cdn.pixabay.com/photo/2015/05/31/14/20/colorful-791927_1280.jpg"); */
+  background-image: url("https://cdn.pixabay.com/photo/2024/04/19/12/13/ai-generated-8706226_960_720.png");
+  background-size: cover;
+  background-position: center center;
+  height: 100vh !important;
+  min-height: 100px;
+}
+.signup-bg.signup-bg-overlay::before {
+  background: rgba(0, 0, 0, 0.5);
+  content: "";
+  position: absolute;
+  height: 100vh !important;
+  min-height: 100px;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
 }

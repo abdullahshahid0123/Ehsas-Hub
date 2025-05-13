@@ -226,6 +226,15 @@ const Profileview = () => {
               onChange={handleEdit}
             />
 
+            <strong className="text-black">Address</strong>
+            <input
+              type="text"
+              name="address"
+              value={editData.address}
+              readOnly={isEditing}
+              onChange={handleEdit}
+            />
+
             {isEditing ? (
               <>
                 <strong className="text-black">gender</strong>

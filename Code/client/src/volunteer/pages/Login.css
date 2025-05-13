@@ -1,3 +1,23 @@
-.home-input{
-    height:40px;
+.home-input {
+  height: 40px;
+}
+
+.signup-bg {
+  /* background-image: url("https://cdn.pixabay.com/photo/2015/05/31/14/20/colorful-791927_1280.jpg"); */
+  background-image: url("https://cdn.pixabay.com/photo/2024/04/19/12/13/ai-generated-8706226_960_720.png");
+  background-size: cover;
+  background-position: center center;
+  height: 100vh;
+  min-height: 700px;
+}
+.signup-bg.signup-bg-overlay::before {
+  background: rgba(0, 0, 0, 0.5);
+  content: "";
+  position: absolute;
+  height: 100vh;
+  min-height: 700px;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
 }

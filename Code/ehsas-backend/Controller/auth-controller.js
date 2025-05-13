@@ -296,12 +296,13 @@ const FetchUserById = (req, res) => {
 };
 const UpdateProfile = (req, res) => {
   const { userId } = req.params;
-  const { name, email, phone, gender, image, code } = req.body;
+  const { name, email, phone, gender, image, address, code } = req.body;
   let checkCode = parseInt(code);
 
   // console.log(req.body);
 
-  const sql1 = "SELECT * FROM `verify` WHERE `email` = ?";
+  const sql1 =
+    "SELECT * FROM `verify` WHERE `email` = ? ORDER BY id DESC LIMIT 1";
   con.query(sql1, [email, code], (err, data) => {
     if (err) {
       return res.json(err);
@@ -311,10 +312,10 @@ const UpdateProfile = (req, res) => {
         return res.json({ msg: "Invalid Verifcation Code!!!" });
       } else {
         const sql2 =
-          "UPDATE `users` SET name= ?, email= ?, phone= ?, gender= ? , image= ? WHERE user_id = ?";
+          "UPDATE `users` SET name= ?, email= ?, phone= ?, gender= ? , image= ?, address = ?  WHERE user_id = ?";
         con.query(
           sql2,
-          [name, email, phone, gender, image, userId],
+          [name, email, phone, gender, image, address, userId],
           (err, result) => {
             if (err) {
               return res.json(err);

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { useNavigate , NavLink } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 import axios from "axios";
-import "./Login.css"
+import "./Login.css";
 
 const login = () => {
   const [errorMessage, setErrorMessage] = useState("");
@@ -23,9 +23,8 @@ const login = () => {
       const token = res.data.token;
       sessionStorage.setItem("token", token);
       sessionStorage.setItem("id", res.data.user.user_id);
-      sessionStorage.setItem("email",res.data.user.email)
-      sessionStorage.setItem("username",res.data.user.name)
-
+      sessionStorage.setItem("email", res.data.user.email);
+      sessionStorage.setItem("username", res.data.user.name);
 
       alert("Login Successfully");
       setErrorMessage("");
@@ -37,7 +36,7 @@ const login = () => {
   };
   return (
     <>
-      <div className="signup-container d-flex align-items-center justify-content-center min-vh-100 ">
+      <div className="signup-container d-flex align-items-center justify-content-center min-vh-50 login-bg login-bg-overlay">
         <div
           className="card shadow-lg p-4 "
           style={{
@@ -105,8 +104,8 @@ const login = () => {
               </button>
             </div>
             <p className="d-flex justify-content-center mt-4">
-            Not Have account? <NavLink to="/register">Signup here</NavLink>
-          </p>
+              Not Have account? <NavLink to="/register">Signup here</NavLink>
+            </p>
           </form>
         </div>
       </div>

@@ -78,7 +78,8 @@ const CreateVolunteer = (req, res) => {
       return res.json({ msg: "Email Already Register" });
     }
 
-    const verify = "SELECT * FROM `verify` WHERE `email` = ? ORDER BY id DESC LIMIT 1";
+    const verify =
+      "SELECT * FROM `verify` WHERE `email` = ? ORDER BY id DESC LIMIT 1";
     con.query(verify, [email], async (err, verifyData) => {
       if (err) throw err;
       if (verifyData[0].code.toString() !== code) {
@@ -296,12 +297,13 @@ const GetVolunteer = (req, res) => {
 };
 const UpdateProfileVolunteer = (req, res) => {
   const { userId } = req.params;
-  const { name, email, phone, profile, code } = req.body;
+  const { name, email, phone, profile, address, code } = req.body;
   let checkCode = parseInt(code);
 
   console.log(req.body);
 
-  const sql1 = "SELECT * FROM `verify` WHERE `email` = ? ORDER BY id DESC LIMIT 1";
+  const sql1 =
+    "SELECT * FROM `verify` WHERE `email` = ? ORDER BY id DESC LIMIT 1";
   con.query(sql1, [email], (err, data) => {
     if (err) {
       return res.json(err);
@@ -310,10 +312,10 @@ const UpdateProfileVolunteer = (req, res) => {
         return res.json({ msg: "Invalid Verifcation Code!!!" });
       } else {
         const sql2 =
-          "UPDATE `volunteer` SET name= ?, email= ?, phone= ?, profile= ? WHERE id = ?";
+          "UPDATE `volunteer` SET name= ?, email= ?, phone= ?, profile= ?, address = ? WHERE id = ?";
         con.query(
           sql2,
-          [name, email, phone, profile, userId],
+          [name, email, phone, profile, address, userId],
           (err, result) => {
             if (err) {
               return res.json(err);
