@@ -36,7 +36,7 @@ const login = () => {
   };
   return (
     <>
-      <div className="signup-container d-flex align-items-center justify-content-center min-vh-50 login-bg login-bg-overlay">
+      <div className="signup-container d-flex align-items-center justify-content-center min-vh-100">
         <div
           className="card shadow-lg p-4 "
           style={{

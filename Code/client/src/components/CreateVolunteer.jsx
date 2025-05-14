@@ -80,7 +80,7 @@ const CreateVolunteer = () => {
   };
   return (
     <>
-      <section className="signup-bg signup-bg-overlay">
+      <section>
         <div className="container">
           <div className="container-fluid">
             <div className="row">
